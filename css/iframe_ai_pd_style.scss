@@ -30,12 +30,12 @@
       &:hover,
       &:active {
         .ai-pd-container__icon {
-          background-image: url("./../img/ai-pd-trigger-hover.svg");
+          background-image: url("https://github.com/infFITSDevelopment/pop-ad/blob/main/ai-pd-trigger-hover.svg");
         }
       }
 
       .ai-pd-container__icon {
-        background-image: url("./../img/ai-pd-trigger.svg");
+        background-image: url("https://github.com/infFITSDevelopment/pop-ad/blob/main/ai-pd-trigger.svg");
       }
     }
     .ai-pd-container__icon--alert{
@@ -43,12 +43,12 @@
     }
     &--result:not(.ai-pd-container__trigger--search) {
       .ai-pd-container__icon {
-        background-image: url("./../img/ai-pd-trigger-hover.svg");
+        background-image: url("https://github.com/infFITSDevelopment/pop-ad/blob/main/ai-pd-trigger-hover.svg");
       }
     }
     &--result:not(.ai-pd-container__trigger--close) {
       .ai-pd-container__icon {
-        background-image: url("./../img/ai-pd-trigger.svg");
+        background-image: url("https://github.com/infFITSDevelopment/pop-ad/blob/main/ai-pd-trigger.svg");
       }
     }
     &--result {
@@ -74,7 +74,7 @@
       }
 
       .ai-pd-container__icon {
-        background-image: url("./../img/ai-pd-trigger-close.svg");
+        background-image: url("https://github.com/infFITSDevelopment/pop-ad/blob/main/ai-pd-trigger-close-hover.svg");
         opacity: 0.5;
       }
     }
