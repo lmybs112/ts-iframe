@@ -181,16 +181,17 @@
           margin-right: 30px;
         }
 
-        .overflow-opacity {
+        /* .overflow-opacity {
           opacity: 0.5; /* 半透明 */
-        }
+        } */
 
         .four-elements .axd_selection {
           width: 43.6%;
         }
 
         .four-elements .axd_selections {
-          justify-content: center;
+          /* FIXME */
+          /* justify-content: center; */
         }
 
         /* .selection_scroll::before,
@@ -266,15 +267,23 @@
         float: left;
         overflow-y: visible;
       }
-
+      .dot-btns.pag-margin{
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        column-gap: 4px;
+      }
       .dot {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        margin: 0 5px;
+        display: block;
+        /* width: 10px;
+        height: 10px; */
+        width: 6.5px;
+        height: 6.5px;
+        /* margin: 0 5px; */
         background-color: #bbb;
         border-radius: 50%;
-        /* cursor: pointer; */
+        cursor: pointer !important;
       }
 
       .dot.active {
@@ -351,7 +360,7 @@
         height: inherit;
         border-radius: 8px !important;
       }
-/* 
+      /* 
       #container-recom a {
         display: flex;
         justify-content: center;
@@ -394,8 +403,10 @@
     <!-- container -->
     <div class="container back" id="containerback"></div>
     <div class="container mbinfo animX" id="container-recom">
-      <div class="c_header" id="container-container-recom-header"
-      style="border-bottom: 4px solid #F5F5F4"
+      <div
+        class="c_header"
+        id="container-container-recom-header"
+        style="border-bottom: 4px solid #f5f5f4"
       >
         <div class="header-text">
           <span>適合您的商品</span>
@@ -409,19 +420,18 @@
       </div>
       <div class="footer">
         <!-- <button class="enabled" id="confirm-button_recom" style="margin: auto;">選取商品</button> -->
-        <!-- <button
+        <button
           id="startover"
           class="startover enabled"
           onclick="reset()"
           style="width: auto; margin-bottom: 5px; margin-top: 3em"
         >
-          重新輸入
-        </button> -->
-        <div id="confirm-button_recom" class='c-recom'  onclick="reset()">
-          <img src="./img/icon-reselect.svg" width="100%"
-          height="100%">
-        </div>
-            <!-- <a id="confirm-button_recom"  class='c-recom' onclick="reset()">略過</a> -->
+          <div class="icon--recom"></div>
+          <div class="text--recom">重新挑選</div>
+        </button>
+        <!-- <div id="confirm-button_recom" class="c-recom" onclick="reset()">
+        </div> -->
+        <!-- <a id="confirm-button_recom"  class='c-recom icon--recom' onclick="reset()">略過</a> -->
       </div>
     </div>
 
@@ -438,8 +448,12 @@
           <div class="intro-modal__icon--inffits">
             <img src="./img/icon-inffits.svg" alt="icon-inffits" />
           </div>
-          <div>
-            <img src="./img/icon-reminder.svg" alt="icon-reminder" />
+          <div class="intro-modal__icon--reminder">
+            <div class="icon-reminder"></div>
+            <div class="text-reminder">
+              <p>您可以跳過部分提問，但我們建議完成整個選購流程，推薦結果將更精準。</p>
+            </div>
+            <!-- <img src="./img/icon-reminder.svg" alt="icon-reminder" /> -->
           </div>
         </div>
       </div>
@@ -456,6 +470,11 @@
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
     <style>
+      .image-container.tag-selected {
+        border: 0.5px solid rgba(59, 59, 50, 0.18) !important;
+        background: #f3f3ef !important;
+        box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.12);
+      }
       #pback {
         opacity: 0;
       }
@@ -507,7 +526,7 @@
         color: #0a0101;
         text-transform: none;
         text-align: left;
-        margin-top: 8px !important;
+        /* margin-top: 8px !important; */
         max-height: 48px;
         overflow: scroll;
         margin-bottom: 1rem;
