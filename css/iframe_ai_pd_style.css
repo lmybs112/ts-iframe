@@ -110,6 +110,14 @@
 #loadingbar_recom.mbinfo {
   width: 100%;
 }
+#loadingbar_recom.mbinfo .intro-modal__logo img {
+  max-width: 106px;
+}
+@media screen and (min-width: 480px) {
+  #loadingbar_recom.mbinfo .intro-modal__logo img {
+    max-width: 135px;
+  }
+}
 
 .intro-modal {
   position: relative;
