@@ -311,12 +311,6 @@
   background-color: transparent !important;
 }
 
-a img {
-  aspect-ratio: 9/16;
-  width: 100%;
-  border-radius: 4px;
-}
-
 .four-elements .axd_selection {
   padding: 8px !important;
 }
@@ -629,6 +623,7 @@ a.update_delete {
   /* 縮小動畫 */
 }
 a.update_delete img {
+  aspect-ratio: 9/16;
   box-sizing: border-box;
   padding: 8px;
   border-radius: 12px;
