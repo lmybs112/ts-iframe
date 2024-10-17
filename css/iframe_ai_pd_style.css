@@ -321,6 +321,7 @@
 
 .four-elements .axd_selection {
   padding: 0 !important;
+  /* border: 1px solid red; */
   box-sizing: border-box;
 }
 
