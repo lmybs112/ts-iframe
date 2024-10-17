@@ -645,7 +645,9 @@ const fetchData = async () => {
 
     //function series
     // var mytap =  ( window.ontouchstart === null ) ? 'touchend' : 'click';
-    var mytap = "pointerdown";
+    // var mytap = "pointerdown";
+    var mytap = window.ontouchstart === null ? "touchend" : "click";
+
     // $('#container-'+all_Route[0]).show();
     // 添加開始按鈕的點擊事件處理器
     //device improve
