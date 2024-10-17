@@ -321,7 +321,7 @@
 
 .four-elements .axd_selection {
   padding: 0 !important;
-  /* border: 1px solid red; */
+  border: 1px solid red;
   box-sizing: border-box;
 }
 
@@ -594,6 +594,9 @@
   }
 }
 
+#container-recom .axd_selection {
+  transform: scale(1);
+}
 @media screen and (min-width: 480px) {
   #container-recom .axd_selection img {
     padding-bottom: 8px;
