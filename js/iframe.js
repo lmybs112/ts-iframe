@@ -507,11 +507,9 @@ const fetchData = async () => {
 
           const swiper = new Swiper(`.swiper-container-${target}`, {
             direction: "horizontal",
-            loop: true,
-
+            loop: false,
             threshold: 10,
             resistanceRatio: 0,
-
             speed: 300,
             on: {
               // slideChange: function() {
