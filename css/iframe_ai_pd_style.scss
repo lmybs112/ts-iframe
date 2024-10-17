@@ -340,16 +340,18 @@
 }
 
 .four-elements .axd_selection {
-  padding: 8px !important;
+  padding: 0 !important;
+  // border: 1px solid red;
+  box-sizing: border-box;
 }
 .four-elements .image-container {
+  margin: 0 8px;
   padding: 9px 20px !important;
   box-sizing: border-box;
   // overflow: visible;
-  transform: scale(0.9);
+  // transform: scale(0.9);
   > div {
     position: relative;
-    height: 100%;
     padding: 0 !important;
     padding-top: 100% !important;
 
