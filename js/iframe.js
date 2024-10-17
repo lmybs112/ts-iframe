@@ -805,7 +805,7 @@ $(".icon-reminder").on("pointerdown", function () {
   $(".icon-reminder").toggleClass("open");
   $(".text-reminder").toggleClass("visible");
 });
-$("#start-button").on("pointerdown", function () {
+$("#start-button").on(tap, function () {
   console.log("all_Route", all_Route);
   // 隱藏介紹頁面，顯示第一個推薦內容頁面
   $("#intro-page").hide();
