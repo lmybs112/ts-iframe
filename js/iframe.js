@@ -85,7 +85,7 @@ const show_results = (response) => {
   const finalitemCount = 3;
   console.log(finalitem);
   //for(let i = 0 ; i < itemCount; i++){
-  $(`#container-recom`).find(".axd_selections").html("")
+  $(`#container-recom`).find(".axd_selections").html("");
 
   for (let ii in finalitem) {
     let i = finalitem[ii];
@@ -446,9 +446,9 @@ const fetchData = async () => {
             for (let rr = 0; rr < render_num && start < itemCount; rr++) {
               $(`#container-${target}`).find(`.selection-${i}`).append(`
                                 <div class="axd_selection ">
-                                    <div class="image-container">
+                                    <div class="image-container c-${target} tagId-${Route_in_frame[target][start].Tag.S}">
                                          <div>
-                                             <img class="axd_img c-${target} tagId-${Route_in_frame[target][start].Tag.S}" src="${Route_in_frame[target][start].Imgsrc.S}" onerror="this.style.opacity='0'; this.parentNode.style.backgroundImage='url(./../img/img-default.png)';" id="container-x-0" data-item="0">
+                                             <img class="axd_img" src="${Route_in_frame[target][start].Imgsrc.S}" onerror="this.style.opacity='0'; this.parentNode.style.backgroundImage='url(./../img/img-default.png)';" id="container-x-0" data-item="0">
                                         </div>
                                         <p>${Route_in_frame[target][start].Name.S}</p>
                                         
@@ -493,16 +493,19 @@ const fetchData = async () => {
             );
           }
 
-          document.querySelectorAll(`.pagination-${target} .dot`).forEach(dot => {
-              dot.addEventListener('click', function() {
-                  const pageIndex = parseInt(this.getAttribute('data-page'), 10) - 1; // 將 data-page 轉為索引
-                  swiper.slideTo(pageIndex); // 指示 Swiper 切換到該幻燈片
+          document
+            .querySelectorAll(`.pagination-${target} .dot`)
+            .forEach((dot) => {
+              dot.addEventListener("click", function () {
+                const pageIndex =
+                  parseInt(this.getAttribute("data-page"), 10) - 1; // 將 data-page 轉為索引
+                swiper.slideTo(pageIndex); // 指示 Swiper 切換到該幻燈片
               });
-          });
+            });
 
-          $(`.pagination-${target} .dot`).click(function() {
-              currentPage = $(this).data('page');
-              renderPage(currentPage);
+          $(`.pagination-${target} .dot`).click(function () {
+            currentPage = $(this).data("page");
+            // renderPage(currentPage);
           });
 
           const swiper = new Swiper(`.swiper-container-${target}`, {
@@ -553,7 +556,7 @@ const fetchData = async () => {
           //     `
           //                       <button class="nav-button remove-button left-button" >◀</button>
           //                       <button class="nav-button remove-button right-button">▶</button>
-    
+
           //                   `
           //   );
 
@@ -642,7 +645,7 @@ const fetchData = async () => {
 
     //function series
     // var mytap =  ( window.ontouchstart === null ) ? 'touchend' : 'click';
-    var mytap ="pointerdown"
+    var mytap = "pointerdown";
     // $('#container-'+all_Route[0]).show();
     // 添加開始按鈕的點擊事件處理器
     //device improve
@@ -686,7 +689,7 @@ const fetchData = async () => {
             mytap,
             function (e) {
               if ($(this).text() == "略過") {
-                var tag = `c-${all_Route[fs]}`
+                var tag = `c-${all_Route[fs]}`;
                 $(`.${tag}.tag-selected`).removeClass("tag-selected");
                 $(".tag-selected").removeClass("tag-selected");
               }
@@ -709,7 +712,7 @@ const fetchData = async () => {
                 .attr("class")
                 .match(/tagId-(\d+)/)[1];
 
-              var tag = `c-${all_Route[fs]}`
+              var tag = `c-${all_Route[fs]}`;
               $(`.${tag}.tag-selected`).removeClass("tag-selected");
               $(this).addClass("tag-selected");
 
@@ -756,11 +759,26 @@ const fetchData = async () => {
 
           if (fs == 0) {
             reset = async function () {
-              $('.tag-selected').removeClass("tag-selected");
-              $("#intro-page").show();
-              $("#container-" + all_Route[fs].replaceAll(" ", "")).hide();
-              $("#container-recom").hide();
-              $(`#container-recom`).find(".axd_selections").children().remove();
+              // $('.tag-selected').removeClass("tag-selected");
+              // $("#intro-page").show();
+              // $('.dot.active').removeClass('active');
+              // $('.dot[data-page="1"]').addClass('active');
+              // $("#container-" + all_Route[fs].replaceAll(" ", "")).hide();
+              // $("#container-recom").hide();
+              // $(`#container-recom`).find(".axd_selections").children().remove();
+
+              const message = {
+                header: "from_preview",
+                id: ClothID,
+                brand: Brand,
+                // id: "TDA_All",
+                // brand: "TDA"
+              };
+
+              // 發送消息到接收窗口
+              window.dispatchEvent(
+                new MessageEvent("message", { data: message })
+              );
               const messageData = {
                 type: "result",
                 value: false,
@@ -783,17 +801,20 @@ const fetchData = async () => {
   }
 };
 var tap = window.ontouchstart === null ? "touchend" : "click";
-$(".icon-reminder").on(tap, function () {
+$(".icon-reminder").on("pointerdown", function () {
   $(".icon-reminder").toggleClass("open");
   $(".text-reminder").toggleClass("visible");
-})
-$("#start-button").on(tap, function () {
+});
+$("#start-button").on("pointerdown", function () {
   console.log("all_Route", all_Route);
   // 隱藏介紹頁面，顯示第一個推薦內容頁面
   $("#intro-page").hide();
   $("#container-" + all_Route[0]).show();
 });
 
+$("#startover").on("pointerdown", function () {
+  reset();
+});
 const Initial = () => {
   $(".update_delete").remove();
   $("#container-recom").hide();
@@ -802,6 +823,7 @@ const Initial = () => {
 };
 
 window.addEventListener("message", async (event) => {
+  console.warn("message", event);
   if (event.data.header == "from_preview") {
     // location.reload();
     await Initial();
