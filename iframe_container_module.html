@@ -93,7 +93,11 @@
       }
       .axd_selections {
         padding: 0px 15px;
-        height: inherit;
+        /* height: inherit; */
+        height: fit-content;
+      }
+      .axd_selection {
+        background-color: transparent !important;
       }
 
       .pag-margin {
@@ -117,7 +121,8 @@
         aspect-ratio: 1 / 1;
       }
       .image-container {
-        height: inherit;
+        /* height: inherit; */
+        aspect-ratio: 5/12;
       }
       .image-container img {
         object-fit: cover;
@@ -149,14 +154,20 @@
         height: 100%;
       }
 
-      @media (min-width: 400px) {
+      @media (min-width: 480px) {
         .four-elements .axd_selection {
           width: 33.33333333333333%;
           height: 49%;
         }
       }
       .selection_scroll {
-        top: 24px;
+        top: 9px !important;
+      }
+
+      @media (min-width: 480px) {
+        .selection_scroll {
+          top: 19px !important;
+        }
       }
 
       .axd_selection {
@@ -165,32 +176,36 @@
       @media (max-width: 400px) {
         .three-elements .axd_selections {
           flex-wrap: nowrap !important;
-          overflow-x: scroll;
+          overflow-x: scroll !important;
           justify-content: flex-start !important;
+          align-items: flex-start !important;
         }
         .three-elements .axd_selection {
           width: 40%;
-          height: 98%;
+          height: fit-content;
+          /* height: 98%; */
+          /* justify-content: flex-start !important; */
         }
 
         .three-elements .axd_selection:first-child {
-          margin-left: 30px;
+          margin-left: 40px;
         }
 
         .three-elements .axd_selection:last-child {
-          margin-right: 30px;
+          margin-right: 40px;
         }
 
         /* .overflow-opacity {
           opacity: 0.5; /* 半透明 */
         /* } */
-        */ .four-elements .axd_selection {
+     
+        .four-elements .axd_selection {
           width: 43.6%;
         }
 
         .four-elements .axd_selections {
           /* FIXME */
-          /* justify-content: center; */
+          justify-content: center;
         }
 
         /* .selection_scroll::before,
@@ -267,11 +282,16 @@
         overflow-y: visible;
       }
       .dot-btns.pag-margin {
-        margin-top: 20px;
         display: flex;
         justify-content: center;
         align-items: center;
         column-gap: 4px;
+        margin-top: 12px;
+      }
+      @media screen and (min-width: 400px) {
+        .dot-btns.pag-margin {
+          margin-top: 32px;
+        }
       }
       .dot {
         display: block;
@@ -315,8 +335,24 @@
       }
 
       .container {
+        box-sizing: border-box !important;
         border-radius: 21px;
-        /* border-radius: 10px; */
+        width: 100vw !important;
+        min-height: 400px !important;
+        height: 100vw !important;
+      }
+      @media screen and (min-width: 480px) {
+        .container {
+          width: 400px !important;
+        }
+      }
+      @media screen and (min-width: 480px) {
+        .container {
+          border-radius: 28px;
+          height: 480px !important;
+          width: 480px !important;
+
+        }
       }
 
       /* .img-container {
@@ -384,7 +420,7 @@
       <div class="spinner spinner-circle"></div>
     </div>
     <!-- load recom -->
-    <div class="mbinfo animX" id="loadingbar_recom" style="display: none">
+    <div class="mbinfo animFadeOut" id="loadingbar_recom" style="display: none">
       <div class="intro-content">
         <div class="intro-logo intro-modal__logo">
           <!-- <img
@@ -401,7 +437,7 @@
 
     <!-- container -->
     <div class="container back" id="containerback"></div>
-    <div class="container mbinfo animX" id="container-recom">
+    <div class="container mbinfo animFadeIn" id="container-recom">
       <div
         class="c_header"
         id="container-container-recom-header"
@@ -422,13 +458,12 @@
         <button
           id="startover"
           class="startover enabled"
-          style="width: auto; margin-bottom: 5px; margin-top: 3em"
+          onclick="reset()"
         >
           <div class="icon--recom"></div>
           <div class="text--recom">重新挑選</div>
         </button>
-        <!-- <div id="confirm-button_recom" class="c-recom" onclick="reset()">
-        </div> -->
+        <div id="confirm-button_recom" class="c-recom"></div>
         <!-- <a id="confirm-button_recom"  class='c-recom icon--recom' onclick="reset()">略過</a> -->
       </div>
     </div>
@@ -486,24 +521,38 @@
         display: flex;
         justify-content: center;
         box-sizing: border-box;
-        padding: 5px;
+        /* padding: 5px; */
+        padding: 8px;
         flex-direction: column;
         flex: 0 0 auto;
         display: flex !important;
-        transform: scale(0.9);
-        margin: 0 auto;
+        /* transform: scale(0.9); */
+        /* margin: 0 auto; */
       }
       .selection_scroll {
         /* top:24px; */
         height: inherit;
+        /* max-height: 300px; */
         /* overflow: scroll; */
         scroll-behavior: smooth; /* 平滑滚动效果 */
       }
       .selection {
         /* height: 90%; */
+        /* justify-content: flex-start !important; */
         justify-content: center;
         flex-wrap: wrap;
+        gap: 16px 0;
+
+        /* align-items: flex-start; */
+        /* gap: 2px 0; */
       }
+
+      @media screen and (min-width: 480px) {
+        .selection {
+          gap: 20px 0;
+        }
+      }
+
       /* .axd_selection p {
         font-size: 12px;
         letter-spacing: 0.1em;

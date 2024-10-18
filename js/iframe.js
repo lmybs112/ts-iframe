@@ -1,8 +1,8 @@
 var reset;
-var ClothID = "INFS_All";
-var Brand = "INFS";
-// var ClothID = "TDA_All";
-// var Brand = "TDA";
+// var ClothID = "INFS_All";
+// var Brand = "INFS";
+var ClothID = "TDA_All";
+var Brand = "TDA";
 var tags_chosen = {};
 let startX, endX;
 let all_Route;
@@ -11,8 +11,24 @@ let all_Route;
 // $('#loadingbar').hide();
 // $('#pback').show();
 // $("#containerback").show();
-
 $(document).ready(function () {
+  // 動態添加 Google 字體連結
+  var googleFontLink = document.createElement("link");
+  googleFontLink.rel = "preconnect";
+  googleFontLink.href = "https://fonts.googleapis.com";
+  document.head.appendChild(googleFontLink);
+
+  var googleFontLink2 = document.createElement("link");
+  googleFontLink2.rel = "preconnect";
+  googleFontLink2.href = "https://fonts.gstatic.com";
+  googleFontLink2.crossorigin = "anonymous";
+  document.head.appendChild(googleFontLink2);
+
+  var googleFontLink3 = document.createElement("link");
+  googleFontLink3.rel = "stylesheet";
+  googleFontLink3.href =
+    "https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Figtree:ital,wght@0,300..900;1,300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap";
+  document.head.appendChild(googleFontLink3);
   fetchData();
   $("#intro-page").show();
 
@@ -121,10 +137,8 @@ const show_results = (response) => {
           response.Item[i].Link
         }" target="_blank" class="update_delete" style="text-decoration: none;">
            <div style="overflow: hidden;">
-                <img class="c-recom" id="container-recom-${i}" data-item="0" src="${
-      response.Item[i].Imgsrc
-    }"
-                 onerror="this.onerror=null;this.src='./../../img/img-default.png'"
+                <img class="c-recom" id="container-recom-${i}" data-item="0"  src="./../../img/img-default-large.png" data-src=" ${
+                 response.Item[i].Imgsrc}" onerror="this.onerror=null;this.src='./../../img/img-default-large.png'"
                 ></div>
                 <div class="recom-info">
                 <p class="recom-text item-title line-ellipsis-2" id="recom-${i}-text">${ItemName}</p>
@@ -151,10 +165,30 @@ const show_results = (response) => {
                      }</p>`
                }
                 </div>
-           
         </a>
          </div>
         `);
+
+        $(`#container-recom img.c-recom`).each(function() {
+          var $img = $(this);
+          
+          // 設置圖片初始 opacity 為 0
+          $img.css('opacity', 0);
+          
+          // 創建一個新的 Image 對象來監聽加載事件
+          var realImg = new Image();
+          realImg.src = $img.data('src');
+          
+          // 當圖片加載完成後，替換佔位符並做淡入效果
+          $(realImg).on('load', function() {
+              $img.attr('src', $img.data('src')); // 將佔位符圖片替換為真實圖片
+              $img.animate({ opacity: 1 }, 100); // 在100毫秒內淡入圖片
+          }).on('error', function() {
+              // 處理圖片加載錯誤的情況
+              $img.attr('src', './../../img/img-default-large.png'); // 顯示預設錯誤圖片
+              $img.animate({ opacity: 1 }, 100); // 錯誤圖片也淡入
+          });
+        });
 
     //     $(`#container-recom`).find('.axd_selections').append(`
     //         <div class="axd_selection cursor-pointer update_delete">
@@ -285,7 +319,7 @@ const fetchData = async () => {
                            ""
                          )} pag-margin dot-btns" style="text-align: center; ">
                         </div>
-                     <div class="footer">
+                     <div class="con-footer">
                         <a class='c-${r.replaceAll(" ", "")} skip'>略過</a>
                      </div>
                        
@@ -698,6 +732,21 @@ const fetchData = async () => {
               console.log("skip", all_Route[fs]);
               if (fs == all_Route.length - 1) {
                 $("#container-" + all_Route[fs].replaceAll(" ", "")).hide();
+                if ($.isEmptyObject(tags_chosen)) {
+                  var firstEl = $("#container-" + all_Route[fs]).find(".image-container").first();
+                  var tagid =firstEl.attr("class")
+                  .match(/tagId-(\d+)/)[1];
+                  console.warn("tagid", tagid);
+                  tags_chosen[all_Route[fs].replaceAll(" ", "")] = [
+                    {
+                      Description: "example",
+                      Imgsrc: "https://example.com/imageB1.png",
+                      Name: "example",
+                      Tag: tagid,
+                      TagGroup: all_Route[fs],
+                    },
+                  ];
+                }
                 get_recom_res();
               } else {
                 console.log(".c-" + all_Route[fs + 1].replaceAll(" ", ""));
@@ -708,7 +757,7 @@ const fetchData = async () => {
           );
 
           $(".c-" + all_Route[fs].replaceAll(" ", "") + ":not(.skip)").on(
-            mytap,
+            "click",
             function (e) {
               var tagid = $(this)
                 .attr("class")
@@ -803,7 +852,7 @@ const fetchData = async () => {
   }
 };
 var tap = window.ontouchstart === null ? "touchend" : "click";
-$(".icon-reminder").on("pointerdown", function () {
+$(".icon-reminder").on(tap, function () {
   $(".icon-reminder").toggleClass("open");
   $(".text-reminder").toggleClass("visible");
 });
@@ -814,7 +863,7 @@ $("#start-button").on(tap, function () {
   $("#container-" + all_Route[0]).show();
 });
 
-$("#startover").on("pointerdown", function () {
+$("#confirm-button_recom").on(tap, function () {
   reset();
 });
 const Initial = () => {
@@ -836,7 +885,7 @@ window.addEventListener("message", async (event) => {
 
     fetchData();
 
-    $("#intro-page").show();
+    $("#intro-page").fadeIn(800);
 
     //finish Loading
     $("#loadingbar").hide();
