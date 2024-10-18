@@ -182,11 +182,11 @@ const show_results = (response) => {
           // 當圖片加載完成後，替換佔位符並做淡入效果
           $(realImg).on('load', function() {
               $img.attr('src', $img.data('src')); // 將佔位符圖片替換為真實圖片
-              $img.animate({ opacity: 1 }, 100); // 在100毫秒內淡入圖片
+              $img.animate({ opacity: 1 }, 1500); // 在1500毫秒內淡入圖片
           }).on('error', function() {
               // 處理圖片加載錯誤的情況
               $img.attr('src', './../../img/img-default-large.png'); // 顯示預設錯誤圖片
-              $img.animate({ opacity: 1 }, 100); // 錯誤圖片也淡入
+              $img.animate({ opacity: 1 }, 1500); // 錯誤圖片也淡入
           });
         });
 

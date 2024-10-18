@@ -224,6 +224,7 @@ body {
 @media screen and (min-width: 480px) {
   .intro-modal__icon {
     width: 95%;
+    margin-bottom: 12px !important;
   }
 }
 .intro-modal__icon--reminder {
@@ -321,11 +322,11 @@ body {
 }
 
 .animFadeIn {
-  animation: animFadeIn 0.3s ease-out;
+  animation: animFadeIn 1s ease-out;
 }
 
 .animFadeOut {
-  animation: animFadeOut 1s ease-out;
+  animation: animFadeOut 5s ease-out;
 }
 
 .four-elements .axd_selection {
@@ -634,7 +635,7 @@ body {
 
 @media (max-width: 400px) {
   #container-recom .three-elements .axd_selection {
-    width: 38% !important;
+    width: 36% !important;
   }
 }
 @media (max-width: 400px) {

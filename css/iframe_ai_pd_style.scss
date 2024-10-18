@@ -248,6 +248,7 @@ body {
 
     @media screen and (min-width: 480px) {
       width: 95%;
+      margin-bottom: 12px !important;
     }
     &--reminder {
       position: relative;
@@ -355,10 +356,10 @@ body {
 }
 
 .animFadeIn {
-  animation: animFadeIn .3s ease-out;
+  animation: animFadeIn 1s ease-out;
 }
 .animFadeOut {
-  animation: animFadeOut 1s ease-out;
+  animation: animFadeOut 5s ease-out;
 }
 
 .four-elements .axd_selection {
@@ -675,7 +676,7 @@ body {
 #container-recom {
   .three-elements .axd_selection {
     @media (max-width: 400px) {
-      width: 38% !important;
+      width: 36% !important;
     }
   }
 
