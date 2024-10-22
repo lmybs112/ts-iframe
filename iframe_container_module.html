@@ -120,6 +120,10 @@
       .four-elements .image-container {
         aspect-ratio: 1 / 1 !important;
       }
+      .four-elements .image-container img {
+        width: 70px !important;
+        height: 70px !important;
+      }
       .image-container {
         /* height: inherit; */
         aspect-ratio: 5/12;
@@ -212,10 +216,10 @@
           /* width: 36%; */
           /* width: 38%; */
           /* width: 30%; */
-          /* transform: scale(0.9); */
+          transform: scale(0.95);
           aspect-ratio: 1;
-          max-width: 38%;
-          flex: 1 1 38%; /* 添加一個偽元素用來佔據剩餘空間 */
+          max-width: 33.33%;
+          flex: 1 1 33.33%; /* 添加一個偽元素用來佔據剩餘空間 */
           box-sizing: border-box;
         }
 
@@ -226,8 +230,8 @@
         }
         .four-elements .axd_selections::after {
           content: "";
-          max-width: 38%;
-          flex: 1 1 38%; /* 添加一個偽元素用來佔據剩餘空間 */
+          max-width: 33.33%;
+          flex: 1 1 33.33%; /* 添加一個偽元素用來佔據剩餘空間 */
         }
 
         /* .selection_scroll::before,
@@ -347,7 +351,7 @@
         border-radius: 7px;
         font-size: 16px; */
         position: absolute;
-        top: 55%;
+        top: 50%;
         transform: translateY(-50%);
         background-color: rgba(107, 107, 107, 0.5);
         color: white;
