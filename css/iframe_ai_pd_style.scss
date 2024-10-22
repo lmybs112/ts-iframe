@@ -676,7 +676,7 @@ body {
 #container-recom {
   .three-elements .axd_selection {
     @media (max-width: 400px) {
-      width: 34% !important;
+      width: 37% !important;
       // width: 33.33333333333333%;
       box-sizing: border-box;
     }
@@ -684,13 +684,13 @@ body {
 
   .three-elements .axd_selection:first-child {
     @media (max-width: 400px) {
-      margin-left: 60px;
+      margin-left: 45px;
     }
   }
 
   .three-elements .axd_selection:last-child {
     @media (max-width: 400px) {
-      margin-right: 60px;
+      margin-right: 45px;
     }
   }
 }

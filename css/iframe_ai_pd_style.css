@@ -633,18 +633,18 @@ body {
 
 @media (max-width: 400px) {
   #container-recom .three-elements .axd_selection {
-    width: 34% !important;
+    width: 37% !important;
     box-sizing: border-box;
   }
 }
 @media (max-width: 400px) {
   #container-recom .three-elements .axd_selection:first-child {
-    margin-left: 60px;
+    margin-left: 45px;
   }
 }
 @media (max-width: 400px) {
   #container-recom .three-elements .axd_selection:last-child {
-    margin-right: 60px;
+    margin-right: 45px;
   }
 }
 
