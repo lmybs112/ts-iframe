@@ -676,19 +676,21 @@ body {
 #container-recom {
   .three-elements .axd_selection {
     @media (max-width: 400px) {
-      width: 36% !important;
+      width: 34% !important;
+      // width: 33.33333333333333%;
+      box-sizing: border-box;
     }
   }
 
   .three-elements .axd_selection:first-child {
     @media (max-width: 400px) {
-      margin-left: 45px;
+      margin-left: 60px;
     }
   }
 
   .three-elements .axd_selection:last-child {
     @media (max-width: 400px) {
-      margin-right: 45px;
+      margin-right: 60px;
     }
   }
 }
@@ -699,6 +701,7 @@ body {
 }
 #container-recom .axd_selection {
   padding: 0 8px;
+  padding-bottom: 8px;
   transform: scale(1);
   @media screen and (min-width: 480px) {
     padding: 0 10px;

@@ -635,17 +635,18 @@ body {
 
 @media (max-width: 400px) {
   #container-recom .three-elements .axd_selection {
-    width: 36% !important;
+    width: 34% !important;
+    box-sizing: border-box;
   }
 }
 @media (max-width: 400px) {
   #container-recom .three-elements .axd_selection:first-child {
-    margin-left: 45px;
+    margin-left: 60px;
   }
 }
 @media (max-width: 400px) {
   #container-recom .three-elements .axd_selection:last-child {
-    margin-right: 45px;
+    margin-right: 60px;
   }
 }
 
@@ -657,6 +658,7 @@ body {
 
 #container-recom .axd_selection {
   padding: 0 8px;
+  padding-bottom: 8px;
   transform: scale(1);
 }
 @media screen and (min-width: 480px) {

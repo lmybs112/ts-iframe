@@ -1,8 +1,8 @@
 var reset;
-// var ClothID = "INFS_All";
-// var Brand = "INFS";
-var ClothID = "TDA_All";
-var Brand = "TDA";
+var ClothID = "INFS_All";
+var Brand = "INFS";
+// var ClothID = "TDA_All";
+// var Brand = "TDA";
 var tags_chosen = {};
 let startX, endX;
 let all_Route;
@@ -585,25 +585,25 @@ const fetchData = async () => {
             },
           });
 
-          // if (!mediaQuery.matches) {
-          //   $(`#container-${target}`).append(
-          //     `
-          //                       <button class="nav-button remove-button left-button" >◀</button>
-          //                       <button class="nav-button remove-button right-button">▶</button>
+          if (!mediaQuery.matches) {
+            $(`#container-${target}`).append(
+              `
+                                <button class="nav-button remove-button left-button" >◀</button>
+                                <button class="nav-button remove-button right-button">▶</button>
 
-          //                   `
-          //   );
+                            `
+            );
 
-          //   $(`#container-${target} .left-button`).click(function () {
-          //     swiper.slidePrev();
-          //     console.log("left");
-          //   });
+            $(`#container-${target} .left-button`).click(function () {
+              swiper.slidePrev();
+              console.log("left");
+            });
 
-          //   $(`#container-${target} .right-button`).click(function () {
-          //     swiper.slideNext();
-          //     console.log("right");
-          //   });
-          // }
+            $(`#container-${target} .right-button`).click(function () {
+              swiper.slideNext();
+              console.log("right");
+            });
+          }
         }
 
         bind();
@@ -820,10 +820,10 @@ const fetchData = async () => {
 
               const message = {
                 header: "from_preview",
-                id: ClothID,
-                brand: Brand,
-                // id: "TDA_All",
-                // brand: "TDA"
+                // id: ClothID,
+                // brand: Brand,
+                id: "TDA_All",
+                brand: "TDA"
               };
 
               // 發送消息到接收窗口

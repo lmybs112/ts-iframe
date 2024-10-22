@@ -118,7 +118,7 @@
         justify-content: flex-start;
       }
       .four-elements .image-container {
-        aspect-ratio: 1 / 1;
+        aspect-ratio: 1 / 1 !important;
       }
       .image-container {
         /* height: inherit; */
@@ -190,16 +190,16 @@
         .three-elements .axd_selection {
           box-sizing: border-box;
           padding-bottom: 8px;
-          /* width: 40%; */
+          width: 36%;
           /* justify-content: flex-start !important; */
         }
 
         .three-elements .axd_selection:first-child {
-          margin-left: 40px;
+          margin-left: 45px;
         }
 
         .three-elements .axd_selection:last-child {
-          margin-right: 40px;
+          margin-right: 45px;
         }
 
         /* .overflow-opacity {
@@ -208,13 +208,26 @@
 
         .four-elements .axd_selection {
           /* width: 43.6%; */
-          width: 40%;
-          transform: scale(0.9);
+          /* width: 40%; */
+          /* width: 36%; */
+          /* width: 38%; */
+          /* width: 30%; */
+          /* transform: scale(0.9); */
+          aspect-ratio: 1;
+          max-width: 38%;
+          flex: 1 1 38%; /* 添加一個偽元素用來佔據剩餘空間 */
           box-sizing: border-box;
         }
 
         .four-elements .axd_selections {
           justify-content: center;
+          /* align-items: flex-start; */
+          /* margin: 0 auto; */
+        }
+        .four-elements .axd_selections::after {
+          content: "";
+          max-width: 38%;
+          flex: 1 1 38%; /* 添加一個偽元素用來佔據剩餘空間 */
         }
 
         /* .selection_scroll::before,
@@ -287,7 +300,7 @@
 
       .selection {
         /* width: 50%; if you have 3 pages */
-        float: left;
+        /* float: left; */
         overflow-y: visible;
       }
       .dot-btns.pag-margin {
@@ -295,11 +308,11 @@
         justify-content: center;
         align-items: center;
         column-gap: 4px;
-        margin-top: 12px;
+        margin-top: 20px;
       }
       @media screen and (min-width: 400px) {
         .dot-btns.pag-margin {
-          margin-top: 32px;
+          margin-top: 48px;
         }
       }
       .dot {
@@ -535,7 +548,7 @@
       }
       .selection_scroll {
         /* top:24px; */
-        height: inherit;
+        /* height: inherit; */
         /* max-height: 300px; */
         /* overflow: scroll; */
         scroll-behavior: smooth; /* 平滑滚动效果 */
