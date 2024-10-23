@@ -588,8 +588,8 @@ const fetchData = async () => {
           if (!mediaQuery.matches) {
             $(`#container-${target}`).append(
               `
-                                <button class="nav-button remove-button left-button" >◀</button>
-                                <button class="nav-button remove-button right-button">▶</button>
+                                <button class="nav-button remove-button left-button"></button>
+                                <button class="nav-button remove-button right-button"></button>
 
                             `
             );

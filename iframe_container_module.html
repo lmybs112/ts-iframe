@@ -123,8 +123,8 @@
 
       .image-container {
         /* height: inherit; */
-        aspect-ratio: 5/12;
-        max-height: 220px;
+        /* aspect-ratio: 5/12; */
+        max-height: 224px;
         box-sizing: border-box;
       }
       @media (min-width: 400px) {
@@ -143,13 +143,14 @@
         padding: 0.2rem;
       }
 
-      /* .image-container p {
-        width: 100%;
+      .image-container p {
+        /* width: 100%;
         text-align: center;
         color: black;
         font-size: 20px;
-        margin: 0;
-      } */
+        margin: 0; */
+        font-size: 12px;
+      }
       .four-elements .image-container {
         padding: 1.25rem;
       }
@@ -191,7 +192,7 @@
         .three-elements .axd_selection {
           box-sizing: border-box;
           padding-bottom: 8px;
-          width: 37%;
+          width: 36.5%;
           /* justify-content: flex-start !important; */
         }
 
@@ -213,7 +214,7 @@
           /* width: 36%; */
           /* width: 38%; */
           /* width: 30%; */
-          transform: scale(0.95);
+          /* transform: scale(0.95); */
           aspect-ratio: 1;
           max-width: 38%;
           flex: 1 1 38%; /* 添加一個偽元素用來佔據剩餘空間 */
@@ -333,9 +334,11 @@
       }
 
       .nav-button:hover {
-        background-color: rgba(0, 0, 0, 0.5);
+        opacity: 1;
+        /* background-color: rgba(0, 0, 0, 0.5); */
       }
       .nav-button {
+        opacity: 0.75;
         /* position: absolute;
         top: 50%;
         transform: translateY(-50%);
@@ -351,15 +354,16 @@
         /* top: 50%; */
         bottom: 43%;
         /* transform: translateY(-50%); */
-        background-color: rgba(107, 107, 107, 0.5);
+        /* background-color: rgba(107, 107, 107, 0.5); */
+        background-color:transparent;
         color: white;
         border: none;
         padding: 4px;
         cursor: pointer;
         z-index: 1000;
         border-radius: 50%;
-        height: 24px;
-        width: 24px;
+        height: 20px;
+        width: 20px;
         display: flex;
         font-size: 12px;
         justify-content: center;
@@ -368,11 +372,18 @@
       }
 
       .left-button {
-        left: 0;
+        left: 3px;
+        background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --%3E%3Csvg width='800px' height='800px' viewBox='0 0 1024 1024' class='icon' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M768 903.232l-50.432 56.768L256 512l461.568-448 50.432 56.768L364.928 512z' fill='%23000000' /%3E%3C/svg%3E");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
       }
 
       .right-button {
-        right: 0;
+        right: 3px;
+        background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --%3E%3Csvg width='800px' height='800px' viewBox='0 0 1024 1024' class='icon' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z' fill='%23000000' /%3E%3C/svg%3E");        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
       }
 
       .container {
