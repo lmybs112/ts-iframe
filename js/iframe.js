@@ -876,7 +876,7 @@ const Initial = () => {
 window.addEventListener("message", async (event) => {
   console.warn("message", event);
   if (event.data.header == "from_preview") {
-    // location.reload();
+    location.reload();
     await Initial();
 
     ClothID = event.data.id;
