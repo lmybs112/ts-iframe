@@ -60,14 +60,12 @@ const get_recom_res = () => {
     .then((response) => response.json())
     .then((response) => {
       console.error("response", response);
-      const resData =  response.json()
-      console.error("resData", resData);
       const messageData = {
         type: "result",
         value: true,
       };
       window.parent.postMessage(messageData, "*");
-      show_results(resData);
+      show_results(response);
     })
     .catch((err) => {
       console.error("err", err);
