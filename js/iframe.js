@@ -820,10 +820,10 @@ const fetchData = async () => {
 
               const message = {
                 header: "from_preview",
-                // id: ClothID,
-                // brand: Brand,
-                id: "TDA_All",
-                brand: "TDA"
+                id: ClothID,
+                brand: Brand,
+                // id: "TDA_All",
+                // brand: "TDA"
               };
 
               // 發送消息到接收窗口
