@@ -32,7 +32,7 @@ $(document).ready(function () {
   // fetchData();
   // $("#intro-page").show();
 
-  // //finish Loading
+  //finish Loading
   // $("#loadingbar").hide();
   // $("#pback").show();
   // $("#containerback").show();
@@ -59,7 +59,7 @@ const get_recom_res = () => {
   )
     .then((response) => response.json())
     .then((response) => {
-      console.error("err response", response);
+      console.error("response", response);
       const messageData = {
         type: "result",
         value: true,
@@ -77,9 +77,24 @@ const show_results = (response) => {
   $("#loadingbar_recom").hide();
   $("#container-recom").show();
   const itemCount = response?.Item?.length || 0;
-  console.log(itemCount, "itemcount");
-  console.log(response, "responessssss");
-  function getRandomNumbers(max, count) {
+  console.log("itemcount", itemCount);
+  console.log('response', response);
+  console.log('response.Item', response?.Item);
+    console.log('response.Item', response?.Item[0]);
+  
+  // 如果項目數量小於 3，只顯示所有可用的項目
+  const displayCount = Math.min(itemCount, 3);
+  // function getRandomNumbers(max, count) {
+  //   let randomNumbers = [];
+  //   while (randomNumbers.length < count) {
+  //     let num = Math.floor(Math.random() * max);
+  //     if (!randomNumbers.includes(num)) {
+  //       randomNumbers.push(num);
+  //     }
+  //   }
+  //   return randomNumbers;
+  // }
+    function getRandomNumbers(max, count) {
     let randomNumbers = [];
     while (randomNumbers.length < count) {
       let num = Math.floor(Math.random() * max);
@@ -97,11 +112,10 @@ const show_results = (response) => {
                  `);
     return;
   }
-  const displayCount = Math.min(itemCount, 3);
-  const finalitem = getRandomNumbers(itemCount, displayCount);
   // const finalitem = getRandomNumbers(itemCount - 1, 3);
+   const finalitem = getRandomNumbers(itemCount, displayCount);
   const finalitemCount = 3;
-  console.log(finalitem);
+  console.log('finalitem', finalitem);
   //for(let i = 0 ; i < itemCount; i++){
   $(`#container-recom`).find(".axd_selections").html("");
 
@@ -111,28 +125,6 @@ const show_results = (response) => {
     if (ItemName.length >= 16) {
       ItemName = ItemName.substring(0, 15) + "...";
     }
-    //     $(`#container-recom`).find('.axd_selections').append(`
-    //         <div class="axd_selection cursor-pointer update_delete" onclick="window.open('${response.Item[i].Link}')" data-title="${img.alt}" data-link="${response.Item[i].Link}">
-    //             <div class="item-img">
-    //                 <img class="image-responsive update_delete" src="${img.src}" data-src="${
-    //       img.src
-    //     }" alt="${img.alt || "Image"}" />
-    //             </div>
-    //               <div class="item-info">
-    //                 <h3 class="item-title">${ItemName}</h3>
-    //              ${
-    //                 response.Item[i].price
-    //                  ? `
-    //            <div class="discount-content">
-    //                 <p class="item-price">$${response.Item[i].price}</p>
-    //                 <p class="item-price--original">$${response.Item[i].price}</p>
-    //                 </div>
-    //             `
-    //                  : ` <p class="item-price--original">$${response.Item[i].price}</p>`
-    //              }
-    //             </div>
-    //         </div>
-    // `)
     $(`#container-recom`).find(".axd_selections").append(`
              <div class="axd_selection cursor-pointer update_delete">
         <a href="${
@@ -191,21 +183,6 @@ const show_results = (response) => {
               $img.animate({ opacity: 1 }, 1500); // 錯誤圖片也淡入
           });
         });
-
-    //     $(`#container-recom`).find('.axd_selections').append(`
-    //         <div class="axd_selection cursor-pointer update_delete">
-    //    <a href="${response.Item[i].Link}" target="_blank" class="update_delete" style="text-decoration: none;">
-
-    //            <img class="c-recom" id="container-recom-${i}" data-item="0" src="${response.Item[i].Imgsrc}">
-    //            <div>
-    //            <p class="recom-text line-ellipsis-2" id="recom-${i}-text">${ItemName}</p>
-    //            <p class="recom-price">NT$ ${response.Item[i].price}</p>
-    //            </div>
-    //            <div style="position: absolute;right: 14px;top: 10px;border-radius: 3px;width: 60px;height: 30px;background: rgba(255, 255, 255, 0.75);"></div>
-
-    //    </a>
-    //     </div>
-    //    `)
   }
 
   const selectionContainer = document.querySelector(
