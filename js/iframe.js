@@ -100,7 +100,7 @@ const show_results = (response) => {
   }
   const finalitem = getRandomNumbers(itemCount - 1, 3);
   const finalitemCount = 3;
-  console.log(finalitem);
+  console.log('finalitem', finalitem);
   //for(let i = 0 ; i < itemCount; i++){
   $(`#container-recom`).find(".axd_selections").html("");
 
