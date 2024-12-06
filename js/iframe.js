@@ -77,9 +77,9 @@ const show_results = (response) => {
   $("#loadingbar_recom").hide();
   $("#container-recom").show();
   const itemCount = response?.Item?.length || 0;
-  console.log(itemCount, "itemcount");
-  console.log(response, response);
-  console.log(response, "responessssss");
+  console.log("itemcount", itemCount);
+  console.log('response', response);
+  console.log('response.Item', response?.Item);
   function getRandomNumbers(max, count) {
     let randomNumbers = [];
     while (randomNumbers.length < count) {
