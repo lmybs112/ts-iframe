@@ -142,9 +142,10 @@ const show_results = (response) => {
                <div class="discount-content">
                     <p class="item-price recom-price">$
                     
-                    ${parseInt(
-                      response.Item[i].price.replace(/\D/g, "")
-                    ).toLocaleString()}</p>
+                   ${parseInt(
+  (typeof response.Item[i].price === "string" ? response.Item[i].price : String(response.Item[i].price) || "0").replace(/\D/g, "")
+).toLocaleString()}
+</p>
                     <p class="item-price--original">$${parseInt(
                       response.Item[i].sale_price.replace(/\D/g, "")
                     ).toLocaleString()}</p>
