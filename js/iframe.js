@@ -143,8 +143,8 @@ const show_results = (response) => {
                     <p class="item-price recom-price">$
                     
                     ${parseInt(
-                      response.Item[i].price.replace(/\D/g, "")
-                    ).toLocaleString()}</p>
+  (typeof response.Item[i].price === "string" ? response.Item[i].price : String(response.Item[i].price) || "0").replace(/\D/g, "")
+).toLocaleString()}</p>
                     <p class="item-price--original">$${parseInt(
                       response.Item[i].sale_price.replace(/\D/g, "")
                     ).toLocaleString()}</p>
@@ -153,8 +153,8 @@ const show_results = (response) => {
                    : ` <p class="item-price--original recom-price">$${
                        response.Item[i].price
                          ? parseInt(
-                             response.Item[i].price.replace(/\D/g, "")
-                           ).toLocaleString()
+  (typeof response.Item[i].price === "string" ? response.Item[i].price : String(response.Item[i].price) || "0").replace(/\D/g, "")
+).toLocaleString()
                          : ""
                      }</p>`
                }
