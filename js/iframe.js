@@ -59,7 +59,7 @@ const get_recom_res = () => {
   )
     .then((response) => response.json())
     .then((response) => {
-      console.error("err response", response);
+      console.error("response", response);
       const messageData = {
         type: "result",
         value: true,
@@ -78,6 +78,7 @@ const show_results = (response) => {
   $("#container-recom").show();
   const itemCount = response?.Item?.length || 0;
   console.log(itemCount, "itemcount");
+  console.log(response, response);
   console.log(response, "responessssss");
   function getRandomNumbers(max, count) {
     let randomNumbers = [];
