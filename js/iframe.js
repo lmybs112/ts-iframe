@@ -153,9 +153,9 @@ const show_results = (response) => {
                 `
                    : ` <p class="item-price--original recom-price">$${
                        response.Item[i].price
-                         ? parseInt(
-                             response.Item[i].price.replace(/\D/g, "")
-                           ).toLocaleString()
+                         ?parseInt(
+  (typeof response.Item[i].price === "string" ? response.Item[i].price : String(response.Item[i].price) || "0").replace(/\D/g, "")
+).toLocaleString()
                          : ""
                      }</p>`
                }
