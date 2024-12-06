@@ -82,17 +82,7 @@ const show_results = (response) => {
   
   // 如果項目數量小於 3，只顯示所有可用的項目
   const displayCount = Math.min(itemCount, 3);
-  // function getRandomNumbers(max, count) {
-  //   let randomNumbers = [];
-  //   while (randomNumbers.length < count) {
-  //     let num = Math.floor(Math.random() * max);
-  //     if (!randomNumbers.includes(num)) {
-  //       randomNumbers.push(num);
-  //     }
-  //   }
-  //   return randomNumbers;
-  // }
-    function getRandomNumbers(max, count) {
+  function getRandomNumbers(max, count) {
     let randomNumbers = [];
     while (randomNumbers.length < count) {
       let num = Math.floor(Math.random() * max);
@@ -102,6 +92,7 @@ const show_results = (response) => {
     }
     return randomNumbers;
   }
+
   if (itemCount === 0 || !response) {
     $(`#container-recom`).find(".axd_selections").html(`
                   <div class="update_delete" style="font-size:14px">
@@ -111,7 +102,7 @@ const show_results = (response) => {
     return;
   }
   // const finalitem = getRandomNumbers(itemCount - 1, 3);
-   const finalitem = getRandomNumbers(itemCount, displayCount);
+   const finalitem = getRandomNumbers(itemCount - 1, displayCount);
   const finalitemCount = 3;
   console.log('finalitem', finalitem);
   //for(let i = 0 ; i < itemCount; i++){
