@@ -79,8 +79,6 @@ const show_results = (response) => {
   const itemCount = response?.Item?.length || 0;
   console.log("itemcount", itemCount);
   console.log('response', response);
-  console.log('response.Item', response?.Item);
-    console.log('response.Item', response?.Item[0]);
   
   // 如果項目數量小於 3，只顯示所有可用的項目
   const displayCount = Math.min(itemCount, 3);
