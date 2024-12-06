@@ -80,6 +80,7 @@ const show_results = (response) => {
   console.log("itemcount", itemCount);
   console.log('response', response);
   console.log('response.Item', response?.Item);
+    console.log('response.Item', response?.Item[0);
   function getRandomNumbers(max, count) {
     let randomNumbers = [];
     while (randomNumbers.length < count) {
