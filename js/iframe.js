@@ -1,6 +1,6 @@
 var reset;
-var ClothID = "INFS_All";
-var Brand = "INFS";
+var ClothID = "";
+var Brand = "";
 // var ClothID = "TDA_All";
 // var Brand = "TDA";
 var tags_chosen = {};
@@ -29,13 +29,13 @@ $(document).ready(function () {
   googleFontLink3.href =
     "https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Figtree:ital,wght@0,300..900;1,300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap";
   document.head.appendChild(googleFontLink3);
-  fetchData();
-  $("#intro-page").show();
+  // fetchData();
+  // $("#intro-page").show();
 
-  //finish Loading
-  $("#loadingbar").hide();
-  $("#pback").show();
-  $("#containerback").show();
+  // //finish Loading
+  // $("#loadingbar").hide();
+  // $("#pback").show();
+  // $("#containerback").show();
 
   // fetchData();
 });
@@ -97,7 +97,9 @@ const show_results = (response) => {
                  `);
     return;
   }
-  const finalitem = getRandomNumbers(itemCount - 1, 3);
+  const displayCount = Math.min(itemCount, 3);
+  const finalitem = getRandomNumbers(itemCount, displayCount);
+  // const finalitem = getRandomNumbers(itemCount - 1, 3);
   const finalitemCount = 3;
   console.log(finalitem);
   //for(let i = 0 ; i < itemCount; i++){
@@ -820,10 +822,10 @@ const fetchData = async () => {
 
               const message = {
                 header: "from_preview",
-                // id: ClothID,
-                // brand: Brand,
-                id: "TDA_All",
-                brand: "TDA"
+                id: ClothID,
+                brand: Brand,
+                // id: "TDA_All",
+                // brand: "TDA"
               };
 
               // 發送消息到接收窗口
