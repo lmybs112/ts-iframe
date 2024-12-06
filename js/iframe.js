@@ -1,6 +1,6 @@
 var reset;
-var ClothID = "INFS_All";
-var Brand = "INFS";
+var ClothID = "";
+var Brand = "";
 // var ClothID = "TDA_All";
 // var Brand = "TDA";
 var tags_chosen = {};
@@ -29,7 +29,7 @@ $(document).ready(function () {
   googleFontLink3.href =
     "https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Figtree:ital,wght@0,300..900;1,300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap";
   document.head.appendChild(googleFontLink3);
-  fetchData();
+  // fetchData();
   $("#intro-page").show();
 
   //finish Loading
@@ -876,7 +876,7 @@ const Initial = () => {
 window.addEventListener("message", async (event) => {
   console.warn("message", event);
   if (event.data.header == "from_preview") {
-    location.reload();
+    // location.reload();
     await Initial();
 
     ClothID = event.data.id;
