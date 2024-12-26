@@ -164,6 +164,10 @@
         height: 100%;
       }
 
+      .three-elements .axd_selection img:not(.c-recom) {
+        min-height: 220px;
+      }
+
       @media (min-width: 480px) {
         .four-elements .axd_selection {
           width: 33.33333333333333%;
@@ -176,7 +180,8 @@
 
       @media (min-width: 480px) {
         .selection_scroll {
-          top: 28px !important;
+          /* top: 28px !important; */
+          top: 30px !important;
         }
       }
 
@@ -322,8 +327,8 @@
         display: block;
         /* width: 10px;
         height: 10px; */
-        width: 6.5px;
-        height: 6.5px;
+        width: 8px;
+        height: 8px;
         /* margin: 0 5px; */
         background-color: #bbb;
         border-radius: 50%;
@@ -335,54 +340,46 @@
       }
 
       .nav-button:hover {
-        opacity: 1;
-        /* background-color: rgba(0, 0, 0, 0.5); */
+        background-color: #e0e0df;
       }
       .nav-button {
-        opacity: 0.75;
-        /* position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(107, 107, 107, 0.5);
-        color: white;
-        border: none;
-        padding: 0.6rem 0.6rem;
-        cursor: pointer;
-        z-index: 1000;
-        border-radius: 7px;
-        font-size: 16px; */
         position: absolute;
-        /* top: 50%; */
-        bottom: 43%;
-        /* transform: translateY(-50%); */
-        /* background-color: rgba(107, 107, 107, 0.5); */
-        background-color:transparent;
+        bottom: 40%;
+        background-color: transparent;
         color: white;
         border: none;
         padding: 4px;
         cursor: pointer;
         z-index: 1000;
         border-radius: 50%;
-        height: 20px;
-        width: 20px;
+        height: 30px;
+        width: 30px;
         display: flex;
         font-size: 12px;
         justify-content: center;
         align-items: center;
         transition: all 0.3s ease-out;
+        background: rgba(30, 30, 25, 0.07);
+        backdrop-filter: blur(20px);
+        --webkit-backdrop-filter: blur(20px);
       }
 
       .left-button {
         left: 3px;
-        background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --%3E%3Csvg width='800px' height='800px' viewBox='0 0 1024 1024' class='icon' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M768 903.232l-50.432 56.768L256 512l461.568-448 50.432 56.768L364.928 512z' fill='%23000000' /%3E%3C/svg%3E");
-        background-position: center;
+        background: rgba(30, 30, 25, 0.07);
+        backdrop-filter: blur(20px);
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M12.8%2014.8L8.00005%2010L12.8%205.2%22%20stroke%3D%22%23FCFCF8%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E");
+        background-position: -2px center;
         background-repeat: no-repeat;
         background-size: contain;
       }
 
       .right-button {
         right: 3px;
-        background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --%3E%3Csvg width='800px' height='800px' viewBox='0 0 1024 1024' class='icon' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z' fill='%23000000' /%3E%3C/svg%3E");        background-position: center;
+        background: rgba(30, 30, 25, 0.07);
+        backdrop-filter: blur(20px);
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7.2002%2014.8L12.0002%209.99995L7.2002%205.19995%22%20stroke%3D%22%23FCFCF8%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E");
+        background-position: 2px center;
         background-repeat: no-repeat;
         background-size: contain;
       }
@@ -482,7 +479,8 @@
           <img src="img/loading-animation.gif" alt="loading animation" />
         </div>
         <p class="loading-text">
-          找尋適合您的商品中 <span class="dots"></span>
+          翻箱倒櫃找好物中，心動清單即將送上!
+          <!-- <span class="dots"></span> -->
         </p>
       </div>
     </div>
@@ -496,8 +494,8 @@
         style="border-bottom: 6px solid #f5f5f4"
       >
         <div class="header-text">
-          <span>適合您的商品</span>
-          <p>根據您的喜好，以下是推薦單品</p>
+          <span id="recommend-title">專屬商品推薦</span>
+          <p id="recommend-desc">根據您的偏好，精選以下單品。</p>
         </div>
       </div>
       <div class="selection_scroll">
@@ -506,28 +504,52 @@
         </div>
       </div>
       <div class="footer">
-        <!-- <button class="enabled" id="confirm-button_recom" style="margin: auto;">選取商品</button> -->
-        <button id="startover" class="startover enabled" onclick="reset()">
-          <div class="icon--recom"></div>
-          <div class="text--recom">重新挑選</div>
-        </button>
-        <div id="confirm-button_recom" class="c-recom"></div>
-        <!-- <a id="confirm-button_recom"  class='c-recom icon--recom' onclick="reset()">略過</a> -->
+        <div class="result-actions">
+          <button id="startover" class="startover enabled" onclick="reset()">
+            <div class="iconContainer--recom">
+              <div class="icon--recom"></div>
+            </div>
+          </button>
+          <button id="recommend-btn">刷新推薦</button>
+        </div>
+        <!-- <div id="confirm-button_recom" class="c-recom"></div> -->
       </div>
     </div>
 
     <!-- Intro Page -->
     <div id="intro-page" class="intro-page intro-modal mbinfo animX">
       <div class="intro-content intro-modal__content">
+        <div class="intro-logo intro-modal__logo intro-modal__logo--inf">
+          <img src="img/intro-logo.png" alt="intro logo" />
+        </div>
         <div class="intro-logo intro-modal__logo">
           <!-- <img src="img/product suggestion loading animation (better).gif" alt="logo"> -->
           <img src="img/start-animation.gif" alt="start animation" />
         </div>
-        <p class="intro-modal__title">與 infFITS AI 尋找個人化商品</p>
-        <button id="start-button" class="intro-modal__btn--start">開始</button>
+        <p class="intro-modal__title">開啟精準購物之旅</p>
+        <button id="start-button" class="intro-modal__btn--start">
+          <div>開始</div>
+          <img
+            src="img/start-arrow.svg"
+            alt="start arrow"
+            class="intro-modal__btn--arrow"
+          />
+        </button>
         <div class="intro-modal__icon">
           <div class="intro-modal__icon--inffits">
-            <img src="./img/icon-inffits.svg" alt="icon-inffits" />
+            <div class="icon-inffits"></div>
+            <div class="text-inffits">
+              <p>
+                使用本服務，即代表您同意 infFITS
+                <a href="https://inffits.com/Privacy.html" target="_blank"
+                  >隱私權聲明</a
+                >
+                及
+                <a href="https://inffits.com/Terms.html" target="_blank"
+                  >使用條款</a
+                >。
+              </p>
+            </div>
           </div>
           <div class="intro-modal__icon--reminder">
             <div class="icon-reminder"></div>
@@ -536,7 +558,6 @@
                 您可以跳過部分提問，但我們建議完成整個選購流程，推薦結果將更精準。
               </p>
             </div>
-            <!-- <img src="./img/icon-reminder.svg" alt="icon-reminder" /> -->
           </div>
         </div>
       </div>
@@ -633,14 +654,27 @@
       }
 
       .recom-price {
-        letter-spacing: 0 !important;
+        /* letter-spacing: 0 !important;
         color: gray;
         font-size: 12px;
         font-weight: 400;
         color: #0a0101;
         text-align: left;
-        line-height: 1.2em;
+        line-height: 1.2em; */
         /* font-family: 'Noto Sans TC'; */
+        text-align: left;
+        color: #3c3c39;
+        font-family: Figtree;
+        font-size: 13px !important;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 13px; /* 100% */
+      }
+      @media screen and (min-width: 480px) {
+        .recom-price {
+          font-size: 15px !important;
+          line-height: 17px; /* 113.333% */
+        }
       }
 
       #container-recom .axd_selection:hover {
@@ -652,8 +686,9 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        width: 70%;
+        width: 100%;
         margin: auto;
+        text-align: center;
       }
       .intro-page {
         width: inherit;
