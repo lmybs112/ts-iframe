@@ -82,25 +82,22 @@
         style="
           z-index: 60;
           display: block;
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          margin: auto;
+          position: absolute; inset: 0;
         "
       >
-        <div id="tryon">
+        <div id="tryon" style="height: 100%;width:100%;display:flex;justify-content:center;align-items:center;">
           <iframe
             id="inffits_tryon_window"
             style="
-              width: 100%;
               height: 100%;
-              visibility: visible;
-              position: relative;
-              border: none;
-              outline: none;
-              z-index: 14;
+                width: 100%;
+                visibility: visible;
+                position: relative;
+                border: none;
+                outline: none;
+                z-index: 14;
+                max-width: 95vw;
+                margin: 0 auto;
             "
            src="./iframe_container_module.html"
           ></iframe>
@@ -130,7 +127,7 @@
         right: 0;
         bottom: 0;
         height: 580px;
-        width: 355px !important;
+        // width: 355px !important;
       }
       #tryon {
         margin: auto;
