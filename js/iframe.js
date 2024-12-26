@@ -831,15 +831,63 @@ const fetchData = async () => {
   }
 };
 var tap = window.ontouchstart === null ? "touchend" : "click";
+
+$(".icon-inffits").on(tap, function () {
+  $(".icon-inffits").toggleClass("open");
+  $(".text-inffits").toggleClass("visible");
+  $(".icon-reminder").removeClass("open");
+  $(".text-reminder").removeClass("visible");
+});
 $(".icon-reminder").on(tap, function () {
   $(".icon-reminder").toggleClass("open");
   $(".text-reminder").toggleClass("visible");
+  $(".icon-inffits").removeClass("open");
+  $(".text-inffits").removeClass("visible");
 });
 $("#start-button").on(tap, function () {
   console.log("all_Route", all_Route);
   // 隱藏介紹頁面，顯示第一個推薦內容頁面
   $("#intro-page").hide();
   $("#container-" + all_Route[0]).show();
+});
+
+$("#recommend-btn").on(tap, function () {
+  // 顯示滿版 GIF
+  const $loadingOverlay = $('<div id="loading-overlay"></div>')
+    .css({
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(255, 255, 255, 0.9) url('./../img/recom-loading-desktop.gif') no-repeat center center / contain",
+      zIndex: 9999,
+    })
+    .appendTo("#container-recom");
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isMobile = /mobile|android|iphone|ipad|phone|tablet|ipod/.test(userAgent); // 手機版的條件，寬度小於等於 768px
+    const backgroundImage = isMobile
+      ? "./../img/recom-loading-mobile.gif" // 手機版背景
+      : "./../img/recom-loading-desktop.gif"; // 桌面版背景
+  console.error('isMobile', isMobile)
+  console.error('backgroundImage', backgroundImage)
+    $("#loading-overlay").css("background", `rgba(255, 255, 255, 0.9) url('${backgroundImage}') no-repeat center center / contain`);
+  get_recom_res();
+  $("#loadingbar_recom").hide();
+  setTimeout(function () {
+    $("#recommend-title")
+      .hide() // 先隱藏元素
+      .text("新精選商品清單") // 更新文本內容
+      .fadeIn(500); // 使用淡入動畫
+    $("#recommend-desc")
+      .hide() // 先隱藏元素
+      .text("商品推薦已更新，希望符合您的期待。") // 更新文本內容
+      .fadeIn(500); // 使用淡入動畫
+    // 移除滿版 GIF
+    $loadingOverlay.fadeOut(300, function () {
+      $(this).remove();
+    });
+  }, 500);
 });
 
 $("#confirm-button_recom").on(tap, function () {
