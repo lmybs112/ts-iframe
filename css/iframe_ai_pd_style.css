@@ -179,7 +179,7 @@ body {
   margin: 0;
   color: #1e1e19;
   text-align: center;
-  font-family: "Noto Sans TC";
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 15px;
   font-style: normal;
   font-weight: 700;
@@ -190,7 +190,7 @@ body {
   .intro-modal__title {
     color: #1e1e19;
     text-align: center;
-    font-family: "Noto Sans TC";
+    font-family: "Noto Sans TC", "Figtree", sans-serif;
     font-size: 18px;
     font-style: normal;
     font-weight: 700;
@@ -211,7 +211,7 @@ body {
   background: #1e1e19;
   color: #fcfcf8;
   text-align: center;
-  font-family: "Noto Sans TC";
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 15px;
   font-weight: 700;
   line-height: 17px; /* 113.333% */
@@ -312,7 +312,7 @@ body {
 }
 .intro-modal__icon--reminder .text-reminder p {
   color: #3c3c39;
-  font-family: "Noto Sans TC";
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 14px;
   text-align: left;
   font-style: normal;
@@ -379,7 +379,7 @@ body {
 }
 .intro-modal__icon--inffits .text-inffits p {
   color: #3c3c39;
-  font-family: "Noto Sans TC";
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
@@ -388,7 +388,7 @@ body {
 }
 .intro-modal__icon--inffits .text-inffits p a {
   color: #0c8ce9;
-  font-family: "Noto Sans TC";
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -485,7 +485,7 @@ body {
   color: #a3a39f;
   text-align: center;
   /* Body/CH */
-  font-family: "Noto Sans TC";
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 15px !important;
   font-style: normal !important;
   font-weight: 400 !important;
@@ -568,7 +568,7 @@ body {
   border-radius: 100px;
   color: #fcfcf8;
   text-align: center;
-  font-family: "Noto Sans TC";
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 15px;
   font-style: normal;
   font-weight: 700;
@@ -720,7 +720,7 @@ body {
 .c_header .header-text p {
   color: #a3a39f;
   text-align: center;
-  font-family: "Noto Sans TC";
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -731,7 +731,7 @@ body {
   .c_header .header-text p {
     color: #a3a39f;
     text-align: center;
-    font-family: "Noto Sans TC";
+    font-family: "Noto Sans TC", "Figtree", sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -742,7 +742,7 @@ body {
 
 .loading-text {
   color: #787974;
-  font-family: "Noto Sans TC";
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 15px;
   font-style: normal;
   font-weight: 500;
@@ -877,7 +877,7 @@ a.update_delete .item-title.line-ellipsis-2 {
 a.update_delete .item-price {
   cursor: pointer !important;
   color: #eb7454;
-  font-family: "Figtree", sans-serif;
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -896,7 +896,7 @@ a.update_delete .discount-content {
 }
 a.update_delete .discount-content .item-price {
   color: #eb7454;
-  font-family: "Figtree", sans-serif;
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -904,7 +904,7 @@ a.update_delete .discount-content .item-price {
 }
 a.update_delete .discount-content .item-price--original {
   color: #3b3b32;
-  font-family: "Figtree", sans-serif;
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 8px;
   font-style: normal;
   font-weight: 500;

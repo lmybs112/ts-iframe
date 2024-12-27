@@ -192,7 +192,7 @@ body {
   background: #1e1e19;
   color: #fcfcf8;
   text-align: center;
-  font-family: "Noto Sans TC";
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 15px;
   font-weight: 700;
   line-height: 17px; /* 113.333% */
@@ -554,7 +554,7 @@ body {
   border-radius: 100px;
   color: #fcfcf8;
   text-align: center;
-  font-family: "Noto Sans TC";
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 15px;
   font-style: normal;
   font-weight: 700;
@@ -710,7 +710,7 @@ body {
   .loading-text {
     color: #787974;
     text-align: center;
-    font-family: "Noto Sans TC";
+    font-family: "Noto Sans TC", "Figtree", sans-serif;
     font-size: 18px;
     font-style: normal;
     font-weight: 500;
@@ -827,7 +827,7 @@ a.update_delete .item-title.line-ellipsis-2 {
 a.update_delete .item-price {
   cursor: pointer !important;
   color: #eb7454;
-  font-family: "Figtree", sans-serif;
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -846,7 +846,7 @@ a.update_delete .discount-content {
 }
 a.update_delete .discount-content .item-price {
   color: #eb7454;
-  font-family: "Figtree", sans-serif;
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -854,7 +854,7 @@ a.update_delete .discount-content .item-price {
 }
 a.update_delete .discount-content .item-price--original {
   color: #3b3b32;
-  font-family: "Figtree", sans-serif;
+  font-family: "Noto Sans TC", "Figtree", sans-serif;
   font-size: 8px;
   font-style: normal;
   font-weight: 500;
