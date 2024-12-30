@@ -44,7 +44,6 @@ $(document).ready(function () {
     window.parent.postMessage(messageData, "*");
   });
   $(".intro-content").on("pointerdown", function (e) {
-    console.error(e.target);
     $(".icon-reminder").removeClass("open");
     $(".text-reminder").removeClass("visible");
     $(".icon-inffits").removeClass("open");
