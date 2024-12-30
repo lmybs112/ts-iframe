@@ -37,7 +37,18 @@ $(document).ready(function () {
       type: "closeModal",
       value: true,
     };
+    $(".icon-reminder").removeClass("open");
+    $(".text-reminder").removeClass("visible");
+    $(".icon-inffits").removeClass("open");
+    $(".text-inffits").removeClass("visible");
     window.parent.postMessage(messageData, "*");
+  });
+  $(".intro-content").on("pointerdown", function (e) {
+    console.error(e.target);
+    $(".icon-reminder").removeClass("open");
+    $(".text-reminder").removeClass("visible");
+    $(".icon-inffits").removeClass("open");
+    $(".text-inffits").removeClass("visible");
   });
 
   // fetchData();
@@ -85,10 +96,8 @@ const get_recom_res = () => {
 
 const show_results = (response) => {
   //只出現其中三個
-  setTimeout(() => {
-    $("#loadingbar_recom").hide();
-    $("#container-recom").show();
-  }, 300);
+  $("#loadingbar_recom").hide();
+  $("#container-recom").show();
   const itemCount = response?.Item?.length || 0;
   console.log("itemcount", itemCount);
   console.log("response", response);
@@ -875,6 +884,7 @@ $("#start-button").on(tap, function () {
 });
 
 $("#recommend-btn").on(tap, function () {
+  get_recom_res();
   // 顯示滿版 GIF
   const $loadingOverlay = $('<div id="loading-overlay"></div>')
     .css({
@@ -901,8 +911,7 @@ $("#recommend-btn").on(tap, function () {
     "background",
     `rgba(255, 255, 255, 0.9) url('${backgroundImage}') no-repeat center center / contain`
   );
-  get_recom_res();
-  $("#loadingbar_recom").hide();
+
   setTimeout(function () {
     $("#recommend-title")
       .hide() // 先隱藏元素
