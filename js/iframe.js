@@ -85,8 +85,10 @@ const get_recom_res = () => {
 
 const show_results = (response) => {
   //只出現其中三個
-  $("#loadingbar_recom").hide();
-  $("#container-recom").show();
+  setTimeout(() => {
+    $("#loadingbar_recom").hide();
+    $("#container-recom").show();
+  }, 300);
   const itemCount = response?.Item?.length || 0;
   console.log("itemcount", itemCount);
   console.log("response", response);
@@ -160,7 +162,7 @@ const show_results = (response) => {
                         : String(response.Item[i].price) || "0"
                       ).replace(/\D/g, "")
                     ).toLocaleString()}</p>
-                    <p class="item-price--original">$${parseInt(
+                    <p class="item-price--original" style="display:none">$${parseInt(
                       response.Item[i].sale_price.replace(/\D/g, "")
                     ).toLocaleString()}</p>
                     </div>
