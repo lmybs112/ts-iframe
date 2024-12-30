@@ -29,6 +29,17 @@ $(document).ready(function () {
   googleFontLink3.href =
     "https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Figtree:ital,wght@0,300..900;1,300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap";
   document.head.appendChild(googleFontLink3);
+  $("#intro-page").on("pointerdown", function (e) {
+    if ($(e.target).closest(".intro-content").length) {
+      return; // 如果點擊在 .intro-content 內，則不執行後續操作
+    }
+    const messageData = {
+      type: "closeModal",
+      value: true,
+    };
+    window.parent.postMessage(messageData, "*");
+  });
+
   // fetchData();
   // $("#intro-page").show();
 
@@ -78,10 +89,10 @@ const show_results = (response) => {
   $("#container-recom").show();
   const itemCount = response?.Item?.length || 0;
   console.log("itemcount", itemCount);
-  console.log('response', response);
-  console.log('response.Item', response?.Item);
-    console.log('response.Item', response?.Item[0]);
-  
+  console.log("response", response);
+  console.log("response.Item", response?.Item);
+  console.log("response.Item", response?.Item[0]);
+
   // 如果項目數量小於 3，只顯示所有可用的項目
   const displayCount = Math.min(itemCount, 3);
   // function getRandomNumbers(max, count) {
@@ -94,7 +105,7 @@ const show_results = (response) => {
   //   }
   //   return randomNumbers;
   // }
-    function getRandomNumbers(max, count) {
+  function getRandomNumbers(max, count) {
     let randomNumbers = [];
     while (randomNumbers.length < count) {
       let num = Math.floor(Math.random() * max);
@@ -113,9 +124,9 @@ const show_results = (response) => {
     return;
   }
   // const finalitem = getRandomNumbers(itemCount - 1, 3);
-   const finalitem = getRandomNumbers(itemCount, displayCount);
+  const finalitem = getRandomNumbers(itemCount, displayCount);
   const finalitemCount = 3;
-  console.log('finalitem', finalitem);
+  console.log("finalitem", finalitem);
   //for(let i = 0 ; i < itemCount; i++){
   $(`#container-recom`).find(".axd_selections").html("");
 
@@ -132,7 +143,8 @@ const show_results = (response) => {
         }" target="_blank" class="update_delete" style="text-decoration: none;">
            <div style="overflow: hidden;">
                 <img class="c-recom" id="container-recom-${i}" data-item="0"  src="./../../img/img-default-large.png" data-src=" ${
-                 response.Item[i].Imgsrc}" onerror="this.onerror=null;this.src='./../../img/img-default-large.png'"
+      response.Item[i].Imgsrc
+    }" onerror="this.onerror=null;this.src='./../../img/img-default-large.png'"
                 ></div>
                 <div class="recom-info">
                 <p class="recom-text item-title line-ellipsis-2" id="recom-${i}-text">${ItemName}</p>
@@ -143,8 +155,11 @@ const show_results = (response) => {
                     <p class="item-price recom-price">$
                     
                     ${parseInt(
-  (typeof response.Item[i].price === "string" ? response.Item[i].price : String(response.Item[i].price) || "0").replace(/\D/g, "")
-).toLocaleString()}</p>
+                      (typeof response.Item[i].price === "string"
+                        ? response.Item[i].price
+                        : String(response.Item[i].price) || "0"
+                      ).replace(/\D/g, "")
+                    ).toLocaleString()}</p>
                     <p class="item-price--original">$${parseInt(
                       response.Item[i].sale_price.replace(/\D/g, "")
                     ).toLocaleString()}</p>
@@ -153,8 +168,11 @@ const show_results = (response) => {
                    : ` <p class="item-price--original recom-price">$${
                        response.Item[i].price
                          ? parseInt(
-  (typeof response.Item[i].price === "string" ? response.Item[i].price : String(response.Item[i].price) || "0").replace(/\D/g, "")
-).toLocaleString()
+                             (typeof response.Item[i].price === "string"
+                               ? response.Item[i].price
+                               : String(response.Item[i].price) || "0"
+                             ).replace(/\D/g, "")
+                           ).toLocaleString()
                          : ""
                      }</p>`
                }
@@ -163,26 +181,28 @@ const show_results = (response) => {
          </div>
         `);
 
-        $(`#container-recom img.c-recom`).each(function() {
-          var $img = $(this);
-          
-          // 設置圖片初始 opacity 為 0
-          $img.css('opacity', 0);
-          
-          // 創建一個新的 Image 對象來監聽加載事件
-          var realImg = new Image();
-          realImg.src = $img.data('src');
-          
-          // 當圖片加載完成後，替換佔位符並做淡入效果
-          $(realImg).on('load', function() {
-              $img.attr('src', $img.data('src')); // 將佔位符圖片替換為真實圖片
-              $img.animate({ opacity: 1 }, 1500); // 在1500毫秒內淡入圖片
-          }).on('error', function() {
-              // 處理圖片加載錯誤的情況
-              $img.attr('src', './../../img/img-default-large.png'); // 顯示預設錯誤圖片
-              $img.animate({ opacity: 1 }, 1500); // 錯誤圖片也淡入
-          });
+    $(`#container-recom img.c-recom`).each(function () {
+      var $img = $(this);
+
+      // 設置圖片初始 opacity 為 0
+      $img.css("opacity", 0);
+
+      // 創建一個新的 Image 對象來監聽加載事件
+      var realImg = new Image();
+      realImg.src = $img.data("src");
+
+      // 當圖片加載完成後，替換佔位符並做淡入效果
+      $(realImg)
+        .on("load", function () {
+          $img.attr("src", $img.data("src")); // 將佔位符圖片替換為真實圖片
+          $img.animate({ opacity: 1 }, 1500); // 在1500毫秒內淡入圖片
+        })
+        .on("error", function () {
+          // 處理圖片加載錯誤的情況
+          $img.attr("src", "./../../img/img-default-large.png"); // 顯示預設錯誤圖片
+          $img.animate({ opacity: 1 }, 1500); // 錯誤圖片也淡入
         });
+    });
   }
 
   const selectionContainer = document.querySelector(
@@ -712,9 +732,10 @@ const fetchData = async () => {
               if (fs == all_Route.length - 1) {
                 $("#container-" + all_Route[fs].replaceAll(" ", "")).hide();
                 if ($.isEmptyObject(tags_chosen)) {
-                  var firstEl = $("#container-" + all_Route[fs]).find(".image-container").first();
-                  var tagid =firstEl.attr("class")
-                  .match(/tagId-(\d+)/)[1];
+                  var firstEl = $("#container-" + all_Route[fs])
+                    .find(".image-container")
+                    .first();
+                  var tagid = firstEl.attr("class").match(/tagId-(\d+)/)[1];
                   console.warn("tagid", tagid);
                   tags_chosen[all_Route[fs].replaceAll(" ", "")] = [
                     {
@@ -860,18 +881,24 @@ $("#recommend-btn").on(tap, function () {
       left: 0,
       width: "100%",
       height: "100%",
-      background: "rgba(255, 255, 255, 0.9) url('./../img/recom-loading-desktop.gif') no-repeat center center / contain",
+      background:
+        "rgba(255, 255, 255, 0.9) url('./../img/recom-loading-desktop.gif') no-repeat center center / contain",
       zIndex: 9999,
     })
     .appendTo("#container-recom");
-    const userAgent = navigator.userAgent.toLowerCase();
-    const isMobile = /mobile|android|iphone|ipad|phone|tablet|ipod/.test(userAgent); // 手機版的條件，寬度小於等於 768px
-    const backgroundImage = isMobile
-      ? "./../img/recom-loading-mobile.gif" // 手機版背景
-      : "./../img/recom-loading-desktop.gif"; // 桌面版背景
-  console.error('isMobile', isMobile)
-  console.error('backgroundImage', backgroundImage)
-    $("#loading-overlay").css("background", `rgba(255, 255, 255, 0.9) url('${backgroundImage}') no-repeat center center / contain`);
+  const userAgent = navigator.userAgent.toLowerCase();
+  const isMobile = /mobile|android|iphone|ipad|phone|tablet|ipod/.test(
+    userAgent
+  ); // 手機版的條件，寬度小於等於 768px
+  const backgroundImage = isMobile
+    ? "./../img/recom-loading-mobile.gif" // 手機版背景
+    : "./../img/recom-loading-desktop.gif"; // 桌面版背景
+  console.error("isMobile", isMobile);
+  console.error("backgroundImage", backgroundImage);
+  $("#loading-overlay").css(
+    "background",
+    `rgba(255, 255, 255, 0.9) url('${backgroundImage}') no-repeat center center / contain`
+  );
   get_recom_res();
   $("#loadingbar_recom").hide();
   setTimeout(function () {
