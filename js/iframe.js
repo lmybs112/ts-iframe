@@ -80,29 +80,27 @@ const get_recom_res = () => {
   )
     .then((response) => response.json())
     .then((response) => {
-      console.error("response", response);
-      const messageData = {
-        type: "result",
-        value: true,
-      };
-      window.parent.postMessage(messageData, "*");
-      show_results(response);
+      setTimeout(() => {
+        const messageData = {
+          type: "result",
+          value: true,
+        };
+        window.parent.postMessage(messageData, "*");
+        show_results(response);
+      }, 1500);
     })
     .catch((err) => {
       console.error("err", err);
+    })
+    .finally(() => {
+      $("#loadingbar_recom").fadeOut(3000);
     });
 };
 
 const show_results = (response) => {
-  //只出現其中三個
-  $("#loadingbar_recom").hide();
   $("#container-recom").show();
+  //只出現其中三個}
   const itemCount = response?.Item?.length || 0;
-  console.log("itemcount", itemCount);
-  console.log("response", response);
-  console.log("response.Item", response?.Item);
-  console.log("response.Item", response?.Item[0]);
-
   // 如果項目數量小於 3，只顯示所有可用的項目
   const displayCount = Math.min(itemCount, 3);
   // function getRandomNumbers(max, count) {
@@ -876,6 +874,8 @@ $(".icon-reminder").on(tap, function () {
   $(".text-inffits").removeClass("visible");
 });
 $("#start-button").on(tap, function () {
+  $("#recommend-title").text("專屬商品推薦");
+  $("#recommend-desc").text("根據您的偏好，精選以下單品。"); // 使用淡入動畫
   console.log("all_Route", all_Route);
   // 隱藏介紹頁面，顯示第一個推薦內容頁面
   $("#intro-page").hide();
@@ -883,8 +883,7 @@ $("#start-button").on(tap, function () {
 });
 
 $("#recommend-btn").on(tap, function () {
-  get_recom_res();
-  // 顯示滿版 GIF
+  $("#loadingbar_recom").hide();
   const $loadingOverlay = $('<div id="loading-overlay"></div>')
     .css({
       position: "absolute",
@@ -897,39 +896,66 @@ $("#recommend-btn").on(tap, function () {
       zIndex: 9999,
     })
     .appendTo("#container-recom");
-  const userAgent = navigator.userAgent.toLowerCase();
-  const isMobile = /mobile|android|iphone|ipad|phone|tablet|ipod/.test(
-    userAgent
-  ); // 手機版的條件，寬度小於等於 768px
-  const backgroundImage = isMobile
-    ? "./../img/recom-loading-mobile.gif" // 手機版背景
-    : "./../img/recom-loading-desktop.gif"; // 桌面版背景
-  console.error("isMobile", isMobile);
-  console.error("backgroundImage", backgroundImage);
-  $("#loading-overlay").css(
-    "background",
-    `rgba(255, 255, 255, 0.9) url('${backgroundImage}') no-repeat center center / contain`
-  );
 
-  setTimeout(function () {
-    $("#recommend-title")
-      .hide() // 先隱藏元素
-      .text("新精選商品清單") // 更新文本內容
-      .fadeIn(500); // 使用淡入動畫
-    $("#recommend-desc")
-      .hide() // 先隱藏元素
-      .text("商品推薦已更新，希望符合您的期待。") // 更新文本內容
-      .fadeIn(500); // 使用淡入動畫
-    // 移除滿版 GIF
-    $loadingOverlay.fadeOut(300, function () {
-      $(this).remove();
+  let options = {
+    method: "POST",
+    headers: { accept: "application/json", "content-type": "application/json" },
+    body: JSON.stringify({
+      Brand: Brand,
+      Tags: tags_chosen,
+      NUM: 12,
+    }),
+  };
+
+  console.log("tags chosen:", tags_chosen);
+
+  fetch(
+    "https://ldiusfc4ib.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
+    options
+  )
+    .then((response) => response.json())
+    .then((response) => {
+      const messageData = {
+        type: "result",
+        value: true,
+      };
+      window.parent.postMessage(messageData, "*");
+      show_results(response);
+      $("#recommend-title").text("新精選商品清單");
+      $("#recommend-desc").text("商品推薦已更新，希望符合您的期待。");
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobile = /mobile|android|iphone|ipad|phone|tablet|ipod/.test(
+        userAgent
+      ); // 手機版的條件，寬度小於等於 768px
+      const backgroundImage = isMobile
+        ? "./../img/recom-loading-mobile.gif" // 手機版背景
+        : "./../img/recom-loading-desktop.gif"; // 桌面版背景
+      $("#loading-overlay").css(
+        "background",
+        `rgba(255, 255, 255, 0.9) url('${backgroundImage}') no-repeat center center / contain`
+      );
+    })
+    .catch((err) => {
+      console.error("err", err);
+    })
+    .finally(() => {
+      setTimeout(() => {
+        $loadingOverlay.fadeOut(300, function () {
+          $(this).remove();
+        });
+      }, 1000);
     });
-  }, 500);
 });
 
-$("#confirm-button_recom").on(tap, function () {
+$("#startover").on(tap, function () {
+  $("#loadingbar_recom").hide();
+  Initial();
   reset();
 });
+
+// $("#confirm-button_recom").on(tap, async function () {
+//   reset();
+// });
 const Initial = () => {
   $(".update_delete").remove();
   $("#container-recom").hide();

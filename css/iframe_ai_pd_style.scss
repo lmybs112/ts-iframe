@@ -284,12 +284,12 @@ body {
       &:hover,
       &:active {
         .ai-pd-container__icon {
-          background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M25.4872 28.4127C31.4405 24.6273 33.1979 16.7326 29.4126 10.7794C25.6272 4.82615 17.7325 3.06872 11.7793 6.85405C5.82606 10.6394 4.06862 18.5341 7.85396 24.4873C11.6393 30.4406 19.534 32.198 25.4872 28.4127Z' fill='url(%23paint0_linear_842_3176)'/%3e%3cpath d='M18.6665 31.4583C26.4675 31.4583 32.7915 25.1343 32.7915 17.3333C32.7915 9.53223 26.4675 3.20825 18.6665 3.20825C10.8655 3.20825 4.5415 9.53223 4.5415 17.3333C4.5415 25.1343 10.8655 31.4583 18.6665 31.4583Z' stroke='black' stroke-width='4.25' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M35.25 36.5833L28 29.3333' stroke='black' stroke-width='4.25' stroke-linecap='round'/%3e%3cpath d='M27.4287 14.2856C25.2196 14.2856 23.4287 12.4948 23.4287 10.2856C23.4287 12.4948 21.6378 14.2856 19.4287 14.2856C21.6378 14.2856 23.4287 16.0765 23.4287 18.2856C23.4287 16.0765 25.2196 14.2856 27.4287 14.2856Z' fill='black' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3e%3cdefs%3e%3clinearGradient id='paint0_linear_842_3176' x1='7.85396' y1='24.4873' x2='27.8071' y2='11.8002' gradientUnits='userSpaceOnUse'%3e%3cstop stop-color='%23F9FE9F'/%3e%3cstop offset='1' stop-color='%23CBE2E2'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e");
+          background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20fill%3D%22none%22%3E%3Cg%20clip-path%3D%22url(%23clip0_3305_2871)%22%3E%3Cpath%20d%3D%22M5.24895%2019.1485C7.59554%2025.3933%2014.5602%2028.5533%2020.8049%2026.2067C27.0496%2023.8602%2030.2097%2016.8955%2027.8631%2010.6508C25.5165%204.40604%2018.5519%201.24597%2012.3072%203.59256C6.06243%205.93914%202.90236%2012.9038%205.24895%2019.1485Z%22%20fill%3D%22url(%23paint0_linear_3305_2871)%22%2F%3E%3Cpath%20d%3D%22M16.956%2030.812C25.285%2030.812%2032.037%2024.06%2032.037%2015.731C32.037%207.40202%2025.285%200.650024%2016.956%200.650024C8.627%200.650024%201.875%207.40202%201.875%2015.731C1.875%2024.06%208.627%2030.812%2016.956%2030.812ZM27.787%2015.731C27.787%2021.7128%2022.9378%2026.562%2016.956%2026.562C10.9742%2026.562%206.125%2021.7128%206.125%2015.731C6.125%209.74923%2010.9742%204.90002%2016.956%204.90002C22.9378%204.90002%2027.787%209.74923%2027.787%2015.731Z%22%20fill%3D%22%231E1E19%22%20stroke%3D%22%231E1E19%22%20stroke-width%3D%220.25%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M24.0633%2025.2728C24.8444%2024.4917%2026.1107%2024.4917%2026.8918%2025.2728L33.511%2031.8921C34.2921%2032.6731%2034.2921%2033.9394%2033.511%2034.7205C32.73%2035.5015%2031.4636%2035.5015%2030.6826%2034.7205L24.0633%2028.1012C23.2823%2027.3202%2023.2823%2026.0538%2024.0633%2025.2728Z%22%20fill%3D%22%231E1E19%22%2F%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M21.3034%2016.6005H22.0534C22.0534%2014.9978%2023.3527%2013.6985%2024.9554%2013.6985V12.9485V12.1985C23.3527%2012.1985%2022.0534%2010.8992%2022.0534%209.29651H21.3034H20.5534C20.5534%2010.8992%2019.2541%2012.1985%2017.6514%2012.1985V12.9485V13.6985C19.2541%2013.6985%2020.5534%2014.9978%2020.5534%2016.6005H21.3034Z%22%20fill%3D%22%231E1E19%22%2F%3E%3Crect%20x%3D%2225.978%22%20y%3D%2231.7047%22%20width%3D%226.33129%22%20height%3D%2210.7663%22%20rx%3D%223%22%20transform%3D%22rotate(-45%2025.978%2031.7047)%22%20fill%3D%22%231E1E19%22%2F%3E%3C%2Fg%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22paint0_linear_3305_2871%22%20x1%3D%2212.3072%22%20y1%3D%223.59256%22%20x2%3D%2220.1721%22%20y2%3D%2224.5227%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20stop-color%3D%22%23F9FE9F%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23CBE2E2%22%2F%3E%3C%2FlinearGradient%3E%3CclipPath%20id%3D%22clip0_3305_2871%22%3E%3Crect%20width%3D%2240%22%20height%3D%2240%22%20fill%3D%22white%22%2F%3E%3C%2FclipPath%3E%3C%2Fdefs%3E%3C%2Fsvg%3E");
         }
       }
 
       .ai-pd-container__icon {
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cg id='Product Logo'%3e%3cpath id='Vector' d='M18.6665 31.4583C26.4675 31.4583 32.7915 25.1343 32.7915 17.3333C32.7915 9.53223 26.4675 3.20825 18.6665 3.20825C10.8655 3.20825 4.5415 9.53223 4.5415 17.3333C4.5415 25.1343 10.8655 31.4583 18.6665 31.4583Z' stroke='black' stroke-width='4.25' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath id='Vector_2' d='M35.25 36.5833L28 29.3333' stroke='black' stroke-width='4.25' stroke-linecap='round'/%3e%3cpath id='Vector_3' d='M27.4287 14.2856C25.2196 14.2856 23.4287 12.4948 23.4287 10.2856C23.4287 12.4948 21.6378 14.2856 19.4287 14.2856C21.6378 14.2856 23.4287 16.0765 23.4287 18.2856C23.4287 16.0765 25.2196 14.2856 27.4287 14.2856Z' fill='black' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3e%3c/g%3e%3c/svg%3e ");
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20fill%3D%22none%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M24.0633%2025.2728C24.8444%2024.4917%2026.1107%2024.4917%2026.8918%2025.2728L33.511%2031.8921C34.2921%2032.6731%2034.2921%2033.9394%2033.511%2034.7205C32.73%2035.5015%2031.4636%2035.5015%2030.6826%2034.7205L24.0633%2028.1012C23.2823%2027.3202%2023.2823%2026.0538%2024.0633%2025.2728Z%22%20fill%3D%22%231E1E19%22%2F%3E%3Crect%20x%3D%2225.978%22%20y%3D%2231.7047%22%20width%3D%226.33129%22%20height%3D%2210.7663%22%20rx%3D%223%22%20transform%3D%22rotate(-45%2025.978%2031.7047)%22%20fill%3D%22%231E1E19%22%2F%3E%3Cg%20filter%3D%22url(%23filter0_b_3305_3475)%22%3E%3Cellipse%20cx%3D%2216.9998%22%20cy%3D%2215.8828%22%20rx%3D%2213.3714%22%20ry%3D%2213.3714%22%20fill%3D%22%23FCFCF8%22%20fill-opacity%3D%220.3%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M16.956%2030.812C25.285%2030.812%2032.037%2024.06%2032.037%2015.731C32.037%207.40202%2025.285%200.650024%2016.956%200.650024C8.627%200.650024%201.875%207.40202%201.875%2015.731C1.875%2024.06%208.627%2030.812%2016.956%2030.812ZM27.787%2015.731C27.787%2021.7128%2022.9378%2026.562%2016.956%2026.562C10.9742%2026.562%206.125%2021.7128%206.125%2015.731C6.125%209.74923%2010.9742%204.90002%2016.956%204.90002C22.9378%204.90002%2027.787%209.74923%2027.787%2015.731Z%22%20fill%3D%22%233C3C39%22%20stroke%3D%22%233C3C39%22%20stroke-width%3D%220.25%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M21.3034%2016.6005H22.0534C22.0534%2014.9978%2023.3527%2013.6985%2024.9554%2013.6985V12.9485V12.1985C23.3527%2012.1985%2022.0534%2010.8992%2022.0534%209.29651H21.3034H20.5534C20.5534%2010.8992%2019.2541%2012.1985%2017.6514%2012.1985V12.9485V13.6985C19.2541%2013.6985%2020.5534%2014.9978%2020.5534%2016.6005H21.3034Z%22%20fill%3D%22%231E1E19%22%2F%3E%3Cdefs%3E%3Cfilter%20id%3D%22filter0_b_3305_3475%22%20x%3D%22-28.3716%22%20y%3D%22-29.4886%22%20width%3D%2290.7427%22%20height%3D%2290.7429%22%20filterUnits%3D%22userSpaceOnUse%22%20color-interpolation-filters%3D%22sRGB%22%3E%3CfeFlood%20flood-opacity%3D%220%22%20result%3D%22BackgroundImageFix%22%2F%3E%3CfeGaussianBlur%20in%3D%22BackgroundImageFix%22%20stdDeviation%3D%2216%22%2F%3E%3CfeComposite%20in2%3D%22SourceAlpha%22%20operator%3D%22in%22%20result%3D%22effect1_backgroundBlur_3305_3475%22%2F%3E%3CfeBlend%20mode%3D%22normal%22%20in%3D%22SourceGraphic%22%20in2%3D%22effect1_backgroundBlur_3305_3475%22%20result%3D%22shape%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3C%2Fsvg%3E");
       }
     }
 
@@ -1006,8 +1006,12 @@ body {
 
 .c_header {
   padding: 14px 21px !important;
+  max-height: 65px ;
+  box-sizing: border-box;
   @media screen and (min-width: 480px) {
     padding: 21px 18px !important;
+    max-height: 85px;
+    box-sizing: border-box;
   }
 
   .type_backarrow {
@@ -1029,25 +1033,21 @@ body {
 
   .header-text {
     span {
-      color: #3b3b32;
+      color:  #1E1E19;
       text-align: center;
-      font-family: "Noto Sans";
+      font-family: "Noto Sans TC", "Figtree", sans-serif;
       font-style: normal;
-      font-weight: 500;
-      font-size: 16px;
-      font-weight: 500;
-      line-height: 19px; /* 118.75% */
-      letter-spacing: 0.64px;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 18px; /* 120% */
+      letter-spacing: 0.6px;
       margin-bottom: 0 !important;
       padding-bottom: 5px;
       @media screen and (min-width: 480px) {
         text-align: center;
-        font-family: "Chocolate Classical Sans";
-        font-size: 17px;
-        font-style: normal;
-        font-weight: 400;
+        font-size: 18px;
         line-height: 20px; /* 117.647% */
-        letter-spacing: 1.36px;
+        letter-spacing: 1.44px;
         padding-bottom: 8px;
       }
     }
@@ -1075,12 +1075,7 @@ body {
         // font-weight: 400;
         // line-height: 20px; /* 133.333% */
         // letter-spacing: 0.75px;
-        color: #a3a39f;
-        text-align: center;
-        font-family: "Noto Sans TC", "Figtree", sans-serif;
         font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
         line-height: 18px; /* 112.5% */
         letter-spacing: 0.8px;
       }
@@ -1170,12 +1165,15 @@ a.update_delete {
   // box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
 
-  border: 1px solid E8E8E8;
+  border: 1px solid #E8E8E8;
   background: rgba(255, 255, 255, 0.7);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  // width: 130px;
+  // height: 270px;
   img {
     // aspect-ratio: 9/16;
     aspect-ratio: 3/4;
+    object-fit: cover;
     box-sizing: border-box;
     padding: 8px;
     border-radius: 12px;
@@ -1185,6 +1183,7 @@ a.update_delete {
     -o-border-radius: 12px;
     @media screen and (min-width: 480px) {
       aspect-ratio: 2/3;
+      object-fit: cover;
       border-radius: 0;
       padding: 0;
     }
@@ -1210,10 +1209,10 @@ a.update_delete {
     line-clamp: 2;
     -webkit-line-clamp: 2;
     line-height: 1.2;
-    height: 2.4em;
-    padding-bottom: 8px;
+    height: 3em;
+    margin-bottom: 8px;
     @media screen and (min-width: 480px) {
-      padding-bottom: 14px;
+      margin-bottom: 14px;
       font-size: 15px;
       line-height: 20px; /* 133.333% */
       letter-spacing: 1.5px;
