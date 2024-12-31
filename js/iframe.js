@@ -860,7 +860,6 @@ const fetchData = async () => {
   }
 };
 var tap = window.ontouchstart === null ? "touchend" : "click";
-
 $(".icon-inffits").on(tap, function () {
   $(".icon-inffits").toggleClass("open");
   $(".text-inffits").toggleClass("visible");
@@ -873,6 +872,30 @@ $(".icon-reminder").on(tap, function () {
   $(".icon-inffits").removeClass("open");
   $(".text-inffits").removeClass("visible");
 });
+if (tap === "click") {
+  $(".icon-inffits").hover(
+    function () {
+      $(".icon-inffits").addClass("open");
+      $(".text-inffits").addClass("visible");
+    },
+    function () {
+      $(".icon-inffits").removeClass("open");
+      $(".text-inffits").removeClass("visible");
+    }
+  );
+
+  $(".icon-reminder").hover(
+    function () {
+      $(".icon-reminder").addClass("open");
+      $(".text-reminder").addClass("visible");
+    },
+    function () {
+      $(".icon-reminder").removeClass("open");
+      $(".text-reminder").removeClass("visible");
+    }
+  );
+}
+
 $("#start-button").on(tap, function () {
   $("#recommend-title").text("專屬商品推薦");
   $("#recommend-desc").text("根據您的偏好，精選以下單品。"); // 使用淡入動畫
