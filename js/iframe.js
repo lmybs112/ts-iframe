@@ -906,6 +906,17 @@ $("#recommend-btn").on(tap, function () {
       NUM: 12,
     }),
   };
+  const userAgent = navigator.userAgent.toLowerCase();
+  const isMobile = /mobile|android|iphone|ipad|phone|tablet|ipod/.test(
+    userAgent
+  ); // 手機版的條件，寬度小於等於 768px
+  const backgroundImage = isMobile
+    ? "./../img/recom-loading-mobile.gif" // 手機版背景
+    : "./../img/recom-loading-desktop.gif"; // 桌面版背景
+  $("#loading-overlay").css(
+    "background",
+    `rgba(255, 255, 255, 0.9) url('${backgroundImage}') no-repeat center center / contain`
+  );
 
   console.log("tags chosen:", tags_chosen);
 
@@ -923,17 +934,6 @@ $("#recommend-btn").on(tap, function () {
       show_results(response);
       $("#recommend-title").text("新精選商品清單");
       $("#recommend-desc").text("商品推薦已更新，希望符合您的期待。");
-      const userAgent = navigator.userAgent.toLowerCase();
-      const isMobile = /mobile|android|iphone|ipad|phone|tablet|ipod/.test(
-        userAgent
-      ); // 手機版的條件，寬度小於等於 768px
-      const backgroundImage = isMobile
-        ? "./../img/recom-loading-mobile.gif" // 手機版背景
-        : "./../img/recom-loading-desktop.gif"; // 桌面版背景
-      $("#loading-overlay").css(
-        "background",
-        `rgba(255, 255, 255, 0.9) url('${backgroundImage}') no-repeat center center / contain`
-      );
     })
     .catch((err) => {
       console.error("err", err);

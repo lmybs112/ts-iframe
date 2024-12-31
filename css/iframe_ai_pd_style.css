@@ -797,12 +797,14 @@ body {
   padding: 14px 21px !important;
   max-height: 65px;
   box-sizing: border-box;
+  border-bottom: 4px solid #f5f5f4;
 }
 @media screen and (min-width: 480px) {
   .c_header {
     padding: 21px 18px !important;
     max-height: 85px;
     box-sizing: border-box;
+    border-bottom: 6px solid #f5f5f4;
   }
 }
 .c_header .type_backarrow {
@@ -859,6 +861,10 @@ body {
     line-height: 18px; /* 112.5% */
     letter-spacing: 0.8px;
   }
+}
+
+#container-recom .c_header {
+  max-height: 93px;
 }
 
 .loading-text {
@@ -945,10 +951,11 @@ a.update_delete {
   border: 1px solid #E8E8E8;
   background: rgba(255, 255, 255, 0.7);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
   /* 縮小動畫 */
 }
 a.update_delete img {
-  aspect-ratio: 3/4;
+  aspect-ratio: 5/6;
   -o-object-fit: cover;
      object-fit: cover;
   box-sizing: border-box;
@@ -961,9 +968,8 @@ a.update_delete img {
 }
 @media screen and (min-width: 480px) {
   a.update_delete img {
-    aspect-ratio: 2/3;
-    -o-object-fit: cover;
-       object-fit: cover;
+    aspect-ratio: 130/185;
+    max-height: 185px;
     border-radius: 0;
     padding: 0;
   }
