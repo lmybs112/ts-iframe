@@ -402,7 +402,7 @@ const fetchData = async () => {
                             <div class="axd_selection ">
                                 <div class="image-container c-${target} tagId-${Route_in_frame[target][rr].Tag.S}">
                                 <div>
-                                    <img class="axd_img" src="${Route_in_frame[target][rr].Imgsrc.S}" onerror="this.style.opacity='0'; this.parentNode.style.backgroundImage='url(./../img/img-default.png)';"  id="container-x-0" data-item="0">
+                                    <img class="axd_img" src="${Route_in_frame[target][rr].Imgsrc.S}" onerror="this.style.opacity='0'; this.parentNode.style.backgroundImage='url(./../img/img-default-large.png)';"  id="container-x-0" data-item="0">
                                 </div>
                                 
                                     <p>${Route_in_frame[target][rr].Name.S}</p>
@@ -489,7 +489,7 @@ const fetchData = async () => {
                                 <div class="axd_selection ">
                                     <div class="image-container c-${target} tagId-${Route_in_frame[target][start].Tag.S}">
                                          <div>
-                                             <img class="axd_img" src="${Route_in_frame[target][start].Imgsrc.S}" onerror="this.style.opacity='0'; this.parentNode.style.backgroundImage='url(./../img/img-default.png)';" id="container-x-0" data-item="0">
+                                             <img class="axd_img" src="${Route_in_frame[target][start].Imgsrc.S}" onerror="this.style.opacity='0'; this.parentNode.style.backgroundImage='url(./../img/img-default-large.png)';" id="container-x-0" data-item="0">
                                         </div>
                                         <p>${Route_in_frame[target][start].Name.S}</p>
                                         
