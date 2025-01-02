@@ -11,7 +11,7 @@ let all_Route;
 // $('#loadingbar').hide();
 // $('#pback').show();
 // $("#containerback").show();
-$(document).ready(async function () {
+$(document).ready(function () {
   // 動態添加 Google 字體連結
   var googleFontLink = document.createElement("link");
   googleFontLink.rel = "preconnect";
@@ -59,24 +59,6 @@ $(document).ready(async function () {
   // $("#containerback").show();
 
   // fetchData();
-
-
-
-
-  await Initial();
-
-  ClothID = 'INFS_All';
-  Brand = 'INFS';
-  console.log("change clothID: brand:", ClothID, Brand);
-
-  fetchData();
-
-  $("#intro-page").fadeIn(800);
-
-  //finish Loading
-  $("#loadingbar").hide();
-  $("#pback").show();
-  $("#containerback").show();
 });
 const get_recom_res = () => {
   $("#loadingbar_recom").show();
