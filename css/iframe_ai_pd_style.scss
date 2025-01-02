@@ -1187,8 +1187,8 @@ a.update_delete {
     -ms-border-radius: 12px;
     -o-border-radius: 12px;
     @media screen and (min-width: 480px) {
-      aspect-ratio: 130/185;
-      max-height: 185px;
+      // aspect-ratio: 130/185;
+      height: 185px !important;
       border-radius: 0;
       padding: 0;
     }

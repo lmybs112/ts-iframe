@@ -11,7 +11,7 @@ let all_Route;
 // $('#loadingbar').hide();
 // $('#pback').show();
 // $("#containerback").show();
-$(document).ready(function () {
+$(document).ready(async function () {
   // 動態添加 Google 字體連結
   var googleFontLink = document.createElement("link");
   googleFontLink.rel = "preconnect";
@@ -59,6 +59,24 @@ $(document).ready(function () {
   // $("#containerback").show();
 
   // fetchData();
+
+
+
+
+  await Initial();
+
+  ClothID = 'INFS_All';
+  Brand = 'INFS';
+  console.log("change clothID: brand:", ClothID, Brand);
+
+  fetchData();
+
+  $("#intro-page").fadeIn(800);
+
+  //finish Loading
+  $("#loadingbar").hide();
+  $("#pback").show();
+  $("#containerback").show();
 });
 const get_recom_res = () => {
   $("#loadingbar_recom").show();
@@ -930,9 +948,11 @@ $("#recommend-btn").on(tap, function () {
     }),
   };
   const userAgent = navigator.userAgent.toLowerCase();
-  const isMobile = /mobile|android|iphone|ipad|phone|tablet|ipod/.test(
-    userAgent
-  ); // 手機版的條件，寬度小於等於 768px
+  // const isMobile = /mobile|android|iphone|ipad|phone|tablet|ipod/.test(
+  //   userAgent
+  // ); // 手機版的條件，寬度小於等於 768px
+  const isMobile = /mobile|android|iphone|ipod|phone/.test(userAgent);
+
   const backgroundImage = isMobile
     ? "./../img/recom-loading-mobile.gif" // 手機版背景
     : "./../img/recom-loading-desktop.gif"; // 桌面版背景
