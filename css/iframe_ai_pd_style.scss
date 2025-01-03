@@ -735,11 +735,33 @@ body {
     box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.15),
       0px 0px 0px 0.5px rgba(0, 0, 0, 0.05);
     background: #f3f3ef !important;
+    p{
+      color: #1e1e19;
+      text-align: center;
+      /* Headline/CH */
+      font-family: "Noto Sans TC";
+      font-size: 15px;
+      font-style: normal;
+      font-weight: 700 !important;
+      line-height: 17px; /* 113.333% */
+      letter-spacing: 0.9px;
+    }
   }
 
   &:active {
     background: #f3f3ef !important;
     box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.12) !important;
+    p{
+      color: #1e1e19;
+      text-align: center;
+      /* Headline/CH */
+      font-family: "Noto Sans TC";
+      font-size: 15px;
+      font-style: normal;
+      font-weight: 700 !important;
+      line-height: 17px; /* 113.333% */
+      letter-spacing: 0.9px;
+    }
   }
 
   > div {
@@ -773,6 +795,7 @@ body {
     line-height: 17px !important;
     letter-spacing: 0.6px !important;
     white-space: nowrap; /* 強制文字不換行 */
+    transition:  color 0.3s ease-in-out !important;
     // padding-top: 7px;
     // color: rgba(59, 59, 50, 0.5);
     // text-align: center;
