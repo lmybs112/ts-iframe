@@ -360,7 +360,11 @@ const fetchData = async () => {
       Route_in_frame[item.TagGroup.S].push(item);
     }
     console.log(Route_in_frame, "dog");
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isMobile = /mobile|android|iphone|ipod|phone/.test(userAgent);
 
+    const iconNext = isMobile?"./../img/icon-next.svg" : "./../img/icon-next-large.svg";
+  
     for (var r in Route_in_frame) {
       console.log("TagGroup : " + r);
       document.getElementById("pback").insertAdjacentHTML(
@@ -374,7 +378,7 @@ const fetchData = async () => {
                         <img class="type_backarrow" id="container-${r.replaceAll(
                           " ",
                           ""
-                        )}-backarrow" src="./../img/icon-next.svg" width="100%"
+                        )}-backarrow" src="${iconNext}" width="100%"
                         height="100%" >
                         <div class="header-text">
                             <span style="margin-bottom: 0.3em">${r}</span>
@@ -387,7 +391,7 @@ const fetchData = async () => {
                         <img class='c-${r.replaceAll(
                           " ",
                           ""
-                        )} skip icon-next type_backarrow flipped-image' src="./../img/icon-next.svg" width="100%"
+                        )} skip icon-next type_backarrow flipped-image' src="${iconNext}" width="100%"
                         height="100%" >
                     </div>
 
@@ -673,8 +677,9 @@ const fetchData = async () => {
           if (!mediaQuery.matches) {
             $(`#container-${target}`).append(
               `
-                                <button class="nav-button remove-button left-button"></button>
-                                <button class="nav-button remove-button right-button"></button>
+                                <button class="nav-button remove-button left-button">
+                                <div></div></button>
+                                <button class="nav-button remove-button right-button"><div></div></button>
 
                             `
             );
@@ -1035,8 +1040,8 @@ $("#recommend-btn").on(tap, function () {
       };
       window.parent.postMessage(messageData, "*");
       show_results(response);
-      $("#recommend-title").text("新精選商品清單");
-      $("#recommend-desc").text("商品推薦已更新，希望符合您的期待。");
+      $("#recommend-title").text("精選推薦商品");
+      $("#recommend-desc").text("更多您可能喜愛的商品");
     })
     .catch((err) => {
       console.error("err", err);
