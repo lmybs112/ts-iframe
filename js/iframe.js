@@ -86,6 +86,7 @@ const get_recom_res = () => {
           value: true,
         };
         window.parent.postMessage(messageData, "*");
+        console.error('Message', response)
         show_results(response);
       }, 1500);
     })
@@ -97,7 +98,60 @@ const get_recom_res = () => {
     });
 };
 
+
+const getEmbedded = () => {
+  const requestData = {
+    Brand: Brand,
+    LGVID: "",
+    MRID: "",
+    recom_num: "12",
+  };
+  const options = {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(requestData),
+  };
+  fetch(
+    "https://gha6kqf5ff.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
+    options
+  )
+    .then((response) => response.json())
+    .then((response) => {
+      let jsonData = response.map((item) => {
+        let newItem = Object.assign({}, item);
+        newItem.sale_price = item.sale_price
+          ? parseInt(item.sale_price.replace(/\D/g, "")).toLocaleString()
+          : "";
+        newItem.price = parseInt(
+          item.price.replace(/\D/g, "")
+        ).toLocaleString();
+        return newItem;
+      });
+      const formatItems =jsonData.map((jsonDataItem) => {
+        return {
+          Imgsrc: jsonDataItem.image_link,
+          Link: jsonDataItem.link,
+          ItemName:jsonDataItem.title,
+          ...jsonDataItem
+        }
+      })
+
+      const formatData = {
+        Item: formatItems
+      }
+      console.log('format data', formatData)
+      show_results(formatData)
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
 const show_results = (response) => {
+  console.error('show_results', response)
   $("#container-recom").show();
   //只出現其中三個}
   const itemCount = response?.Item?.length || 0;
@@ -123,12 +177,14 @@ const show_results = (response) => {
     }
     return randomNumbers;
   }
+
   if (itemCount === 0 || !response) {
-    $(`#container-recom`).find(".axd_selections").html(`
-                  <div class="update_delete" style="font-size:14px">
-                您選擇的商品沒有最合適建議 請您參考相關商品
-                </div>
-                 `);
+   getEmbedded()
+    // $(`#container-recom`).find(".axd_selections").html(`
+    //               <div class="update_delete" style="font-size:14px">
+    //             您選擇的商品沒有最合適建議 請您參考相關商品
+    //             </div>
+    //              `);
     return;
   }
   // const finalitem = getRandomNumbers(itemCount - 1, 3);
@@ -145,49 +201,71 @@ const show_results = (response) => {
       ItemName = ItemName.substring(0, 15) + "...";
     }
     $(`#container-recom`).find(".axd_selections").append(`
-             <div class="axd_selection cursor-pointer update_delete">
-        <a href="${
-          response.Item[i].Link
-        }" target="_blank" class="update_delete" style="text-decoration: none;">
-           <div style="overflow: hidden;">
-                <img class="c-recom" id="container-recom-${i}" data-item="0"  src="./../../img/img-default-large.png" data-src=" ${
-      response.Item[i].Imgsrc
-    }" onerror="this.onerror=null;this.src='./../../img/img-default-large.png'"
-                ></div>
-                <div class="recom-info">
-                <p class="recom-text item-title line-ellipsis-2" id="recom-${i}-text">${ItemName}</p>
-               ${
-                 response.Item[i].sale_price
-                   ? `
-               <div class="discount-content">
-                    <p class="item-price recom-price">$
-                    
-                    ${parseInt(
-                      (typeof response.Item[i].price === "string"
-                        ? response.Item[i].price
-                        : String(response.Item[i].price) || "0"
-                      ).replace(/\D/g, "")
-                    ).toLocaleString()}</p>
-                    <p class="item-price--original" style="display:none">$${parseInt(
-                      response.Item[i].sale_price.replace(/\D/g, "")
-                    ).toLocaleString()}</p>
-                    </div>
-                `
-                   : ` <p class="item-price--original recom-price">$${
-                       response.Item[i].price
-                         ? parseInt(
-                             (typeof response.Item[i].price === "string"
-                               ? response.Item[i].price
-                               : String(response.Item[i].price) || "0"
-                             ).replace(/\D/g, "")
-                           ).toLocaleString()
-                         : ""
-                     }</p>`
-               }
-                </div>
-        </a>
+      <div class="axd_selection cursor-pointer update_delete">
+ <a href="${
+   response.Item[i].Link
+ }" target="_blank" class="update_delete" style="text-decoration: none;">
+    <div style="overflow: hidden;">
+         <img class="c-recom" id="container-recom-${i}" data-item="0"  src="./../../img/img-default-large.png" data-src=" ${
+response.Item[i].Imgsrc
+}" onerror="this.onerror=null;this.src='./../../img/img-default-large.png'"
+         ></div>
+         <div class="recom-info">
+         <p class="recom-text item-title line-ellipsis-2" id="recom-${i}-text">${ItemName}</p>
+           <div class="discount-content">
+             <p class="item-price recom-price">NT$ ${parseInt(
+    (response.Item[i].sale_price && response.Item[i].sale_price.replace(/\D/g, "")) ||
+    String(response.Item[i].price).replace(/\D/g, "")
+  ).toLocaleString()}</p>
+             </div>
          </div>
-        `);
+ </a>
+  </div>
+ `);
+    // $(`#container-recom`).find(".axd_selections").append(`
+    //          <div class="axd_selection cursor-pointer update_delete">
+    //     <a href="${
+    //       response.Item[i].Link
+    //     }" target="_blank" class="update_delete" style="text-decoration: none;">
+    //        <div style="overflow: hidden;">
+    //             <img class="c-recom" id="container-recom-${i}" data-item="0"  src="./../../img/img-default-large.png" data-src=" ${
+    //   response.Item[i].Imgsrc
+    // }" onerror="this.onerror=null;this.src='./../../img/img-default-large.png'"
+    //             ></div>
+    //             <div class="recom-info">
+    //             <p class="recom-text item-title line-ellipsis-2" id="recom-${i}-text">${ItemName}</p>
+    //            ${
+    //              response.Item[i].sale_price
+    //                ? `
+    //            <div class="discount-content">
+    //                 <p class="item-price recom-price">$
+                    
+    //                 ${parseInt(
+    //                   (typeof response.Item[i].price === "string"
+    //                     ? response.Item[i].price
+    //                     : String(response.Item[i].price) || "0"
+    //                   ).replace(/\D/g, "")
+    //                 ).toLocaleString()}</p>
+    //                 <p class="item-price--original" style="display:none">$${parseInt(
+    //                   response.Item[i].sale_price.replace(/\D/g, "")
+    //                 ).toLocaleString()}</p>
+    //                 </div>
+    //             `
+    //                : ` <p class="item-price--original recom-price">$${
+    //                    response.Item[i].price
+    //                      ? parseInt(
+    //                          (typeof response.Item[i].price === "string"
+    //                            ? response.Item[i].price
+    //                            : String(response.Item[i].price) || "0"
+    //                          ).replace(/\D/g, "")
+    //                        ).toLocaleString()
+    //                      : ""
+    //                  }</p>`
+    //            }
+    //             </div>
+    //     </a>
+    //      </div>
+    //     `);
 
     $(`#container-recom img.c-recom`).each(function () {
       var $img = $(this);

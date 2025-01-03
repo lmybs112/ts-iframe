@@ -33,7 +33,7 @@
       customCSS.type = "text/css";
       // customCSS.href = "./../css/iframe_ai_pd_style.css";
       customCSS.href =
-        "https://cdn.jsdelivr.net/gh/lmybs112/ts-iframe@1.0.16/css/iframe_ai_pd_style.css";
+        "https://cdn.jsdelivr.net/gh/lmybs112/ts-iframe@1.0.17/css/iframe_ai_pd_style.css";
       document.head.appendChild(customCSS);
 
       $(function () {
@@ -158,19 +158,19 @@
           // 確保 iframe 加載完成再傳送 postMessage
           iframeElement.onload = () => {
             // 透過 prompt 輸入 id 和 brand
-            const id = prompt("請輸入 ID：", "INFS_All");
-            const brand = prompt("請輸入品牌名稱：", "INFS");
+            const id = prompt("請輸入 ID：", "JERSCY_All");
+            const brand = prompt("請輸入品牌名稱：", "JERSCY");
 
             const iframe_preview_obj = {
-              id: id || "INFS_All",
+              id: id || "JERSCY_All",
               header: "from_preview",
-              brand: brand || "INFS",
+              brand: brand || "JERSCY",
             };
 
             // const iframe_preview_obj = {
-            //   id: "INFS_All",
+            //   id: "JERSCY_All",
             //   header: "from_preview",
-            //   brand: "INFS",
+            //   brand: "JERSCY",
             // };
 
             // 傳送 postMessage 到 iframe
