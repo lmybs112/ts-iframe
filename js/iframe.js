@@ -62,17 +62,46 @@ $(document).ready(function () {
 });
 const get_recom_res = () => {
   $("#loadingbar_recom").show();
+  const formatTags = Object.fromEntries(
+    Object.entries(tags_chosen)
+      .map(([key, value]) => [
+        key,
+        value.filter((item) => item.Name !== "example"), // 過濾掉 Name 為 "example" 的項目
+      ])
+      .filter(([_, value]) => value.length > 0) // 移除值為空陣列的鍵
+  );
   let options = {
     method: "POST",
     headers: { accept: "application/json", "content-type": "application/json" },
     body: JSON.stringify({
       Brand: Brand,
-      Tags: tags_chosen,
+      Tags: formatTags,
       NUM: 12,
     }),
   };
 
   console.log("tags chosen:", tags_chosen);
+  // 取得 'INFS_RECOMMENDED_ROUTE_RES' 並轉換為 JSON 物件
+  let INFS_RECOMMENDED_ROUTE_RES =
+    JSON.parse(localStorage.getItem(`INFS_RECOMMENDED_ROUTE_RES_${Brand}`)) || [];
+  // 檢查 tags_chosen 是否已存在於 INFS_RECOMMENDED_ROUTE_RES
+  let isDuplicate = INFS_RECOMMENDED_ROUTE_RES.some(
+    (item) => JSON.stringify(item) === JSON.stringify(tags_chosen)
+  );
+  // 如果 tags_chosen 不存在，則將其加入 INFS_RECOMMENDED_ROUTE_RES
+  if (!isDuplicate) {
+    INFS_RECOMMENDED_ROUTE_RES.push(tags_chosen);
+    // 更新 localStorage
+    localStorage.setItem(
+      `INFS_RECOMMENDED_ROUTE_RES_${Brand}`,
+      JSON.stringify(INFS_RECOMMENDED_ROUTE_RES)
+    );
+  }
+  tags_chosen = {};
+  localStorage.removeItem(`INFS_RECOMMENDED_ROUTE_${Brand}`);
+  localStorage.removeItem(`INFS_RECOMMENDED_ROUTE_ORDER_${Brand}`);
+  // INFS_RECOMMENDED_ROUTE_ORDER = [];
+  // INFS_RECOMMENDED_ROUTE = {};
 
   fetch(
     "https://ldiusfc4ib.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
@@ -86,7 +115,7 @@ const get_recom_res = () => {
           value: true,
         };
         window.parent.postMessage(messageData, "*");
-        console.error('Message', response)
+        console.error("Message", response);
         show_results(response);
       }, 1500);
     })
@@ -97,7 +126,6 @@ const get_recom_res = () => {
       $("#loadingbar_recom").fadeOut(3000);
     });
 };
-
 
 const getEmbedded = () => {
   const requestData = {
@@ -130,20 +158,26 @@ const getEmbedded = () => {
         ).toLocaleString();
         return newItem;
       });
-      const formatItems =jsonData.map((jsonDataItem) => {
+      const formatItems = jsonData.map((jsonDataItem) => {
         return {
           Imgsrc: jsonDataItem.image_link,
           Link: jsonDataItem.link,
-          ItemName:jsonDataItem.title,
-          ...jsonDataItem
-        }
-      })
+          ItemName: jsonDataItem.title,
+          pdt_price_sale: parseInt(
+            String(jsonDataItem.sale_price || 0).replace(/\D/g, "")
+          ).toLocaleString(),
+          pdt_price: parseInt(
+            String(jsonDataItem.price || 0).replace(/\D/g, "")
+          ).toLocaleString(),
+          ...jsonDataItem,
+        };
+      });
 
       const formatData = {
-        Item: formatItems
-      }
-      console.log('format data', formatData)
-      show_results(formatData)
+        Item: formatItems,
+      };
+      console.log("format data", formatData);
+      show_results(formatData);
     })
     .catch((err) => {
       console.error(err);
@@ -151,7 +185,7 @@ const getEmbedded = () => {
 };
 
 const show_results = (response) => {
-  console.error('show_results', response)
+  console.error("show_results", response);
   $("#container-recom").show();
   //只出現其中三個}
   const itemCount = response?.Item?.length || 0;
@@ -179,7 +213,7 @@ const show_results = (response) => {
   }
 
   if (itemCount === 0 || !response) {
-   getEmbedded()
+    getEmbedded();
     // $(`#container-recom`).find(".axd_selections").html(`
     //               <div class="update_delete" style="font-size:14px">
     //             您選擇的商品沒有最合適建議 請您參考相關商品
@@ -207,16 +241,17 @@ const show_results = (response) => {
  }" target="_blank" class="update_delete" style="text-decoration: none;">
     <div style="overflow: hidden;">
          <img class="c-recom" id="container-recom-${i}" data-item="0"  src="./../../img/img-default-large.png" data-src=" ${
-response.Item[i].Imgsrc
-}" onerror="this.onerror=null;this.src='./../../img/img-default-large.png'"
+      response.Item[i].Imgsrc
+    }" onerror="this.onerror=null;this.src='./../../img/img-default-large.png'"
          ></div>
          <div class="recom-info">
          <p class="recom-text item-title line-ellipsis-2" id="recom-${i}-text">${ItemName}</p>
            <div class="discount-content">
-             <p class="item-price recom-price">NT$ ${parseInt(
-    (response.Item[i].sale_price && response.Item[i].sale_price.replace(/\D/g, "")) ||
-    String(response.Item[i].price).replace(/\D/g, "")
-  ).toLocaleString()}</p>
+             <p class="item-price recom-price">${
+               response.Item[i].pdt_price_sale ||
+               response.Item[i].pdt_price ||
+               "-"
+             }</p>
              </div>
          </div>
  </a>
@@ -239,7 +274,7 @@ response.Item[i].Imgsrc
     //                ? `
     //            <div class="discount-content">
     //                 <p class="item-price recom-price">$
-                    
+
     //                 ${parseInt(
     //                   (typeof response.Item[i].price === "string"
     //                     ? response.Item[i].price
@@ -300,9 +335,13 @@ response.Item[i].Imgsrc
   } else if (finalitemCount === 3) {
     selectionContainer.classList.add("three-elements");
 
-    selectionContainer
-      .querySelectorAll(".axd_selection")[2]
-      .classList.add("overflow-opacity");
+    if (selectionContainer) {
+      const axdSelections =
+        selectionContainer.querySelectorAll(".axd_selection");
+      if (axdSelections.length > 2) {
+        axdSelections[2].classList.add("overflow-opacity");
+      }
+    }
 
     document
       .querySelector(".three-elements .axd_selections")
@@ -349,7 +388,34 @@ const fetchData = async () => {
     obj = data;
     console.log("obj", obj);
     if (!obj.Product) return;
-    all_Route = obj.Product.Routes[0]["TagGroups_order"];
+    all_Route = obj.Product.Routes[0]["TagGroups_order"] || [];
+    // 比較當前路線順序與之前的順序是否相同
+    var INFS_RECOMMENDED_ROUTE_ORDER =
+      JSON.parse(
+        localStorage.getItem(`INFS_RECOMMENDED_ROUTE_ORDER_${Brand}`)
+      ) || [];
+    const isSameRoute =
+      INFS_RECOMMENDED_ROUTE_ORDER &&
+      JSON.stringify(all_Route) ===
+        JSON.stringify(INFS_RECOMMENDED_ROUTE_ORDER);
+
+    // 如果路線順序不同，更新 localStorage
+    if (!isSameRoute) {
+      localStorage.setItem(
+        `INFS_RECOMMENDED_ROUTE_ORDER_${Brand}`,
+        JSON.stringify(all_Route)
+      );
+      var INFS_RECOMMENDED_ROUTE_STORE =
+      JSON.parse(localStorage.getItem(`INFS_RECOMMENDED_ROUTE_STORE_${Brand}`)) || [];
+      const lastRecord  = JSON.parse(localStorage.getItem(`INFS_RECOMMENDED_ROUTE_${Brand}`)) || {};
+      INFS_RECOMMENDED_ROUTE_STORE.push(lastRecord)
+      localStorage.removeItem(`INFS_RECOMMENDED_ROUTE_${Brand}`);
+    } else {
+      var INFS_RECOMMENDED_ROUTE =
+        JSON.parse(localStorage.getItem(`INFS_RECOMMENDED_ROUTE_${Brand}`)) || {};
+      tags_chosen = INFS_RECOMMENDED_ROUTE;
+      // console.error("tags_chosen", tags_chosen);
+    }
     let Route_in_frame = {};
     for (var n = 0; n < all_Route.length; n++) {
       Route_in_frame[all_Route[n]] = [];
@@ -359,12 +425,14 @@ const fetchData = async () => {
       // let idx = all_Route.indexOf(item.TagGroup.S)
       Route_in_frame[item.TagGroup.S].push(item);
     }
-    console.log(Route_in_frame, "dog");
+    // console.error(Route_in_frame, "dog");
     const userAgent = navigator.userAgent.toLowerCase();
     const isMobile = /mobile|android|iphone|ipod|phone/.test(userAgent);
 
-    const iconNext = isMobile?"./../img/icon-next.svg" : "./../img/icon-next-large.svg";
-  
+    const iconNext = isMobile
+      ? "./../img/icon-next.svg"
+      : "./../img/icon-next-large.svg";
+
     for (var r in Route_in_frame) {
       console.log("TagGroup : " + r);
       document.getElementById("pback").insertAdjacentHTML(
@@ -382,7 +450,7 @@ const fetchData = async () => {
                         height="100%" >
                         <div class="header-text">
                             <span style="margin-bottom: 0.3em">${r}</span>
-                            <p>${
+                            <p class="desc-container">${
                               Route_in_frame[r].length > 0
                                 ? Route_in_frame[r][0].Description?.S
                                 : ""
@@ -479,7 +547,7 @@ const fetchData = async () => {
           );
 
         for (let rr = 0; rr < render_num; rr++) {
-          console.log(Route_in_frame[target][rr], "dog");
+          // console.log(Route_in_frame[target][rr], "dog");
           $(`#container-${target}`).find(".axd_selections").append(`
                             <div class="axd_selection ">
                                 <div class="image-container c-${target} tagId-${Route_in_frame[target][rr].Tag.S}">
@@ -809,19 +877,65 @@ const fetchData = async () => {
     function bind() {
       for (var fs = 0; fs < all_Route.length; fs++) {
         (function (fs) {
-          console.log(".c-" + all_Route[fs].replaceAll(" ", ""));
+          const currentRoute = all_Route[fs].replaceAll(" ", "");
+          console.log(".c-" + currentRoute);
 
-          $(".c-" + all_Route[fs].replaceAll(" ", "") + ".skip").on(
-            mytap,
-            function (e) {
+          // 檢查並設定預設值
+         var INFS_RECOMMENDED_ROUTE =
+            JSON.parse(localStorage.getItem(`INFS_RECOMMENDED_ROUTE_${Brand}`)) || {};
+          // console.error(`INFS_RECOMMENDED_ROUTE_${Brand}`, INFS_RECOMMENDED_ROUTE);
+          if (Object.keys(INFS_RECOMMENDED_ROUTE).length > 0) {
+            if (
+              tags_chosen[currentRoute] &&
+              tags_chosen[currentRoute].length > 0
+            ) {
+              $("#intro-page").hide();
+              const preset = tags_chosen[currentRoute][0];
+              const tagIdClass = `tagId-${preset.Tag}`;
+              const container = $(`#container-${currentRoute}`);
+              // 找到對應的元素並標記為選中
+              const presetElement = container.find(
+                `.c-${currentRoute}.${tagIdClass}`
+              );
+              if (presetElement.length > 0) {
+                presetElement.addClass("tag-selected"); // 標記選中
+                // 模擬點擊以觸發點擊事件
+                $("#container-" + currentRoute).hide();
+                presetElement.trigger("click"); // 自動觸發click事件
+                // console.error(`已自動選中並點擊: ${preset.Name}`);
+              } else {
+                console.error(`skip ${currentRoute}`);
+                $(".c-" + currentRoute + ".skip").click();
+                // $("#container-" + currentRoute).hide();
+              }
+            }
+          }
+
+          $(".c-" + currentRoute + ".skip")
+            .off(mytap)
+            .on(mytap, function (e) {
               if ($(this).text() == "略過") {
                 var tag = `c-${all_Route[fs]}`;
                 $(`.${tag}.tag-selected`).removeClass("tag-selected");
                 $(".tag-selected").removeClass("tag-selected");
+                tags_chosen[all_Route[fs].replaceAll(" ", "")] = [
+                  {
+                    Description: "example",
+                    Imgsrc: "https://example.com/imageB1.png",
+                    Name: "example",
+                    Tag: tag,
+                    TagGroup: all_Route[fs],
+                  },
+                ];
+                localStorage.setItem(
+                  `INFS_RECOMMENDED_ROUTE_${Brand}`,
+                  JSON.stringify(tags_chosen)
+                );
+                // console.error("error skip add", tags_chosen);
               }
               console.log("skip", all_Route[fs]);
               if (fs == all_Route.length - 1) {
-                $("#container-" + all_Route[fs].replaceAll(" ", "")).hide();
+                $("#container-" + currentRoute).hide();
                 if ($.isEmptyObject(tags_chosen)) {
                   var firstEl = $("#container-" + all_Route[fs])
                     .find(".image-container")
@@ -841,15 +955,14 @@ const fetchData = async () => {
                 get_recom_res();
               } else {
                 console.log(".c-" + all_Route[fs + 1].replaceAll(" ", ""));
-                $("#container-" + all_Route[fs].replaceAll(" ", "")).hide();
+                $("#container-" + currentRoute).hide();
                 $("#container-" + all_Route[fs + 1].replaceAll(" ", "")).show();
               }
-            }
-          );
+            });
 
-          $(".c-" + all_Route[fs].replaceAll(" ", "") + ":not(.skip)").on(
-            "click",
-            function (e) {
+          $(".c-" + currentRoute + ":not(.skip)")
+            .off("click")
+            .on("click", function (e) {
               var tagid = $(this)
                 .attr("class")
                 .match(/tagId-(\d+)/)[1];
@@ -857,15 +970,18 @@ const fetchData = async () => {
               var tag = `c-${all_Route[fs]}`;
               $(`.${tag}.tag-selected`).removeClass("tag-selected");
               $(this).addClass("tag-selected");
-
               if (fs == all_Route.length - 1) {
-                $("#container-" + all_Route[fs].replaceAll(" ", "")).hide();
+                $("#container-" + currentRoute).hide();
 
                 tags_chosen[all_Route[fs].replaceAll(" ", "")] = [
                   {
-                    Description: "example",
-                    Imgsrc: "https://example.com/imageB1.png",
-                    Name: "example",
+                    Description: $(
+                      `#container-${all_Route[fs]} .desc-container`
+                    )
+                      .first()
+                      .text(),
+                    Imgsrc: $(this).find("img").attr("src"),
+                    Name: $(this).find("p").text(),
                     Tag: tagid,
                     TagGroup: all_Route[fs],
                   },
@@ -873,27 +989,33 @@ const fetchData = async () => {
 
                 get_recom_res();
               } else {
-                $("#container-" + all_Route[fs].replaceAll(" ", "")).hide();
+                $("#container-" + currentRoute).hide();
                 $("#container-" + all_Route[fs + 1].replaceAll(" ", "")).show();
                 tags_chosen[all_Route[fs].replaceAll(" ", "")] = [
                   {
-                    Description: "example",
-                    Imgsrc: "https://example.com/imageB1.png",
-                    Name: "example",
+                    Description: $(
+                      `#container-${all_Route[fs]} .desc-container`
+                    )
+                      .first()
+                      .text(),
+                    Imgsrc: $(this).find("img").attr("src"),
+                    Name: $(this).find("p").text(),
                     Tag: tagid,
                     TagGroup: all_Route[fs],
                   },
                 ];
               }
-
+              localStorage.setItem(
+                `INFS_RECOMMENDED_ROUTE_${Brand}`,
+                JSON.stringify(tags_chosen)
+              );
               console.log(tags_chosen);
-            }
-          );
+            });
           $(`#container-${all_Route[fs].replaceAll(" ", "")}-backarrow`).on(
             mytap,
             function (e) {
               if (fs != 0) {
-                $("#container-" + all_Route[fs].replaceAll(" ", "")).hide();
+                $("#container-" + currentRoute).hide();
                 $("#container-" + all_Route[fs - 1].replaceAll(" ", "")).show();
               }
             }
@@ -905,7 +1027,7 @@ const fetchData = async () => {
               // $("#intro-page").show();
               // $('.dot.active').removeClass('active');
               // $('.dot[data-page="1"]').addClass('active');
-              // $("#container-" + all_Route[fs].replaceAll(" ", "")).hide();
+              // $("#container-" +currentRoute).hide();
               // $("#container-recom").hide();
               // $(`#container-recom`).find(".axd_selections").children().remove();
 
@@ -1003,12 +1125,18 @@ $("#recommend-btn").on(tap, function () {
     })
     .appendTo("#container-recom");
 
+  const formatTags = Object.fromEntries(
+    Object.entries(tags_chosen).map(([key, value]) => [
+      key,
+      value.filter((item) => item.Name !== "example"),
+    ])
+  );
   let options = {
     method: "POST",
     headers: { accept: "application/json", "content-type": "application/json" },
     body: JSON.stringify({
       Brand: Brand,
-      Tags: tags_chosen,
+      Tags: formatTags,
       NUM: 12,
     }),
   };
