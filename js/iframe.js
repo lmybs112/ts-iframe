@@ -225,7 +225,7 @@ const show_results = (response) => {
     return randomNumbers;
   }
 
-  if (itemCount <= 3 || !response) {
+  if (itemCount === 0 || !response) {
     getEmbedded();
     // $(`#container-recom`).find(".axd_selections").html(`
     //               <div class="update_delete" style="font-size:14px">
