@@ -97,7 +97,7 @@ const get_recom_res = () => {
     headers: { accept: "application/json", "content-type": "application/json" },
     body: JSON.stringify({
       Brand: Brand,
-      Tags: formatTags,
+      Tags: tags_chosen,
       NUM: 12,
     }),
   };
@@ -1244,7 +1244,7 @@ $("#recommend-btn").on(tap, function () {
     headers: { accept: "application/json", "content-type": "application/json" },
     body: JSON.stringify({
       Brand: Brand,
-      Tags: formatTags,
+      Tags: tags_chosen,
       NUM: 12,
     }),
   };
