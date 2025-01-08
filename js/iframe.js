@@ -5,7 +5,10 @@ var Brand = "";
 // var Brand = "TDA";
 var tags_chosen = {};
 let startX, endX;
+let current_route_path;
+let current_Route;
 let all_Route;
+let isFirst = true;
 
 //finish Loading
 // $('#loadingbar').hide();
@@ -80,28 +83,40 @@ const get_recom_res = () => {
     }),
   };
 
-  console.log("tags chosen:", tags_chosen);
-  // 取得 'INFS_RECOMMENDED_ROUTE_RES' 並轉換為 JSON 物件
-  let INFS_RECOMMENDED_ROUTE_RES =
-    JSON.parse(localStorage.getItem(`INFS_RECOMMENDED_ROUTE_RES_${Brand}`)) || [];
-  // 檢查 tags_chosen 是否已存在於 INFS_RECOMMENDED_ROUTE_RES
-  let isDuplicate = INFS_RECOMMENDED_ROUTE_RES.some(
-    (item) => JSON.stringify(item) === JSON.stringify(tags_chosen)
+  // console.log("tags chosen:", tags_chosen);
+  var INFS_ROUTE_ORDER =
+    JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [];
+  INFS_ROUTE_ORDER.forEach((item, index) => {
+    if (deepEqualWithoutKey(item, current_route_path, ["Record"])) {
+      INFS_ROUTE_ORDER[index] = {
+        ...item,
+        Record: tags_chosen, // 修改 Record
+      };
+    }
+  });
+  var INFS_ROUTE_RES =
+    JSON.parse(localStorage.getItem(`INFS_ROUTE_RES_${Brand}`)) || [];
+
+  const matchIndex = INFS_ROUTE_ORDER.findIndex((item) =>
+    deepEqualWithoutKey(item, current_route_path, ["Record"])
   );
-  // 如果 tags_chosen 不存在，則將其加入 INFS_RECOMMENDED_ROUTE_RES
-  if (!isDuplicate) {
-    INFS_RECOMMENDED_ROUTE_RES.push(tags_chosen);
+
+  // 如果找到了，則將其移到 INFS_ROUTE_RES
+  if (matchIndex !== -1) {
+    const matchedItem = INFS_ROUTE_ORDER.splice(matchIndex, 1)[0]; // 移除並取得物件
+    INFS_ROUTE_RES.push(matchedItem); // 將物件推到 RES 陣列
+
     // 更新 localStorage
     localStorage.setItem(
-      `INFS_RECOMMENDED_ROUTE_RES_${Brand}`,
-      JSON.stringify(INFS_RECOMMENDED_ROUTE_RES)
+      `INFS_ROUTE_ORDER_${Brand}`,
+      JSON.stringify(INFS_ROUTE_ORDER)
+    );
+    localStorage.setItem(
+      `INFS_ROUTE_RES_${Brand}`,
+      JSON.stringify(INFS_ROUTE_RES)
     );
   }
-  tags_chosen = {};
-  localStorage.removeItem(`INFS_RECOMMENDED_ROUTE_${Brand}`);
-  localStorage.removeItem(`INFS_RECOMMENDED_ROUTE_ORDER_${Brand}`);
-  // INFS_RECOMMENDED_ROUTE_ORDER = [];
-  // INFS_RECOMMENDED_ROUTE = {};
+  // tags_chosen = {};
 
   fetch(
     "https://ldiusfc4ib.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
@@ -176,7 +191,6 @@ const getEmbedded = () => {
       const formatData = {
         Item: formatItems,
       };
-      console.log("format data", formatData);
       show_results(formatData);
     })
     .catch((err) => {
@@ -185,7 +199,6 @@ const getEmbedded = () => {
 };
 
 const show_results = (response) => {
-  console.error("show_results", response);
   $("#container-recom").show();
   //只出現其中三個}
   const itemCount = response?.Item?.length || 0;
@@ -212,7 +225,7 @@ const show_results = (response) => {
     return randomNumbers;
   }
 
-  if (itemCount === 0 || !response) {
+  if (itemCount <= 3 || !response) {
     getEmbedded();
     // $(`#container-recom`).find(".axd_selections").html(`
     //               <div class="update_delete" style="font-size:14px">
@@ -224,7 +237,6 @@ const show_results = (response) => {
   // const finalitem = getRandomNumbers(itemCount - 1, 3);
   const finalitem = getRandomNumbers(itemCount, displayCount);
   const finalitemCount = 3;
-  console.log("finalitem", finalitem);
   //for(let i = 0 ; i < itemCount; i++){
   $(`#container-recom`).find(".axd_selections").html("");
 
@@ -372,6 +384,37 @@ const show_results = (response) => {
   }
 };
 
+// 深度比較函數（排除指定屬性）
+function deepEqualWithoutKey(obj1, obj2, ignoreKeys = []) {
+  const filteredObj1 = Object.fromEntries(
+    Object.entries(obj1).filter(([key]) => !ignoreKeys.includes(key))
+  );
+  const filteredObj2 = Object.fromEntries(
+    Object.entries(obj2).filter(([key]) => !ignoreKeys.includes(key))
+  );
+  return deepEqual(filteredObj1, filteredObj2);
+}
+
+// 通用深度比較函數
+function deepEqual(obj1, obj2) {
+  if (obj1 === obj2) return true;
+  if (
+    typeof obj1 !== "object" ||
+    typeof obj2 !== "object" ||
+    obj1 === null ||
+    obj2 === null
+  ) {
+    return false;
+  }
+
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+
+  if (keys1.length !== keys2.length) return false;
+
+  return keys1.every((key) => deepEqual(obj1[key], obj2[key]));
+}
+
 const fetchData = async () => {
   const options = { method: "GET", headers: { accept: "application/json" } };
   try {
@@ -386,36 +429,44 @@ const fetchData = async () => {
     );
     const data = await response.json();
     obj = data;
-    console.log("obj", obj);
     if (!obj.Product) return;
+    current_Route = obj.Product.Routes[0]["Route"] || "";
     all_Route = obj.Product.Routes[0]["TagGroups_order"] || [];
-    // 比較當前路線順序與之前的順序是否相同
-    var INFS_RECOMMENDED_ROUTE_ORDER =
-      JSON.parse(
-        localStorage.getItem(`INFS_RECOMMENDED_ROUTE_ORDER_${Brand}`)
-      ) || [];
-    const isSameRoute =
-      INFS_RECOMMENDED_ROUTE_ORDER &&
-      JSON.stringify(all_Route) ===
-        JSON.stringify(INFS_RECOMMENDED_ROUTE_ORDER);
-
-    // 如果路線順序不同，更新 localStorage
-    if (!isSameRoute) {
-      localStorage.setItem(
-        `INFS_RECOMMENDED_ROUTE_ORDER_${Brand}`,
-        JSON.stringify(all_Route)
+    // 比較當前路線是否已存在
+    var INFS_ROUTE_ORDER =
+      JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [];
+    var INFS_ROUTE_RES =
+      JSON.parse(localStorage.getItem(`INFS_ROUTE_RES_${Brand}`)) || [];
+    // 當前路線
+    current_route_path = {
+      Route: current_Route,
+      TagGroups_order: all_Route,
+      Record: {},
+    };
+    // 過濾相符的物件
+    let match;
+    if (isFirst) {
+      isFirst = false;
+      match = INFS_ROUTE_RES.find((item) =>
+        deepEqualWithoutKey(item, current_route_path, ["Record"])
       );
-      var INFS_RECOMMENDED_ROUTE_STORE =
-      JSON.parse(localStorage.getItem(`INFS_RECOMMENDED_ROUTE_STORE_${Brand}`)) || [];
-      const lastRecord  = JSON.parse(localStorage.getItem(`INFS_RECOMMENDED_ROUTE_${Brand}`)) || {};
-      INFS_RECOMMENDED_ROUTE_STORE.push(lastRecord)
-      localStorage.removeItem(`INFS_RECOMMENDED_ROUTE_${Brand}`);
-    } else {
-      var INFS_RECOMMENDED_ROUTE =
-        JSON.parse(localStorage.getItem(`INFS_RECOMMENDED_ROUTE_${Brand}`)) || {};
-      tags_chosen = INFS_RECOMMENDED_ROUTE;
-      // console.error("tags_chosen", tags_chosen);
+      if (!match) {
+        match = INFS_ROUTE_ORDER.find((item) =>
+          deepEqualWithoutKey(item, current_route_path, ["Record"])
+        );
+      }
+
+      if (match) {
+        tags_chosen = match.Record;
+      } else {
+        INFS_ROUTE_ORDER.push(current_route_path);
+        localStorage.setItem(
+          `INFS_ROUTE_ORDER_${Brand}`,
+          JSON.stringify(INFS_ROUTE_ORDER)
+        );
+      }
     }
+
     let Route_in_frame = {};
     for (var n = 0; n < all_Route.length; n++) {
       Route_in_frame[all_Route[n]] = [];
@@ -434,7 +485,7 @@ const fetchData = async () => {
       : "./../img/icon-next-large.svg";
 
     for (var r in Route_in_frame) {
-      console.log("TagGroup : " + r);
+      // console.log("TagGroup : " + r);
       document.getElementById("pback").insertAdjacentHTML(
         "beforebegin",
         `<div class='container mbinfo animX update_delete' id="container-${r.replaceAll(
@@ -493,7 +544,7 @@ const fetchData = async () => {
       var numPerPage = 6;
       const mediaQuery = window.matchMedia("(max-width: 400px)");
       function handleMediaQueryChange(mediaQuery, tar) {
-        console.log(tar);
+        // console.log(tar);
         if (mediaQuery.matches) {
           // 如果屏幕寬度小於或等於 400px
           numPerPage = 4;
@@ -520,7 +571,7 @@ const fetchData = async () => {
         let currentPage = 1;
         var target = tar.replaceAll(" ", "");
 
-        console.log(numPerPage, "numPerPage");
+        // console.log(numPerPage, "numPerPage");
 
         $(`#container-${target}`).find(".selection").remove();
         $(`#container-${target}`).find(".remove-button").remove();
@@ -672,7 +723,7 @@ const fetchData = async () => {
 
         if (itemCount >= 5) {
           // 監聽媒體查詢事件
-          console.log(target, "listen");
+          // console.log(target, "listen");
           mediaQuery.addEventListener("change", (event) => {
             handleMediaQueryChange(mediaQuery, target);
           });
@@ -881,10 +932,17 @@ const fetchData = async () => {
           console.log(".c-" + currentRoute);
 
           // 檢查並設定預設值
-         var INFS_RECOMMENDED_ROUTE =
-            JSON.parse(localStorage.getItem(`INFS_RECOMMENDED_ROUTE_${Brand}`)) || {};
-          // console.error(`INFS_RECOMMENDED_ROUTE_${Brand}`, INFS_RECOMMENDED_ROUTE);
-          if (Object.keys(INFS_RECOMMENDED_ROUTE).length > 0) {
+          var INFS_ROUTE_ORDER =
+            JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [];
+          const match = INFS_ROUTE_ORDER.find((item) =>
+            deepEqualWithoutKey(item, current_route_path, ["Record"])
+          );
+          if (match) {
+            tags_chosen = match.Record;
+          }
+          // console.error(`BIND INFS_ROUTE_ORDER`, INFS_ROUTE_ORDER);
+          // console.error(`BIND current_route_path`, current_route_path);
+          if (Object.keys(tags_chosen).length > 0) {
             if (
               tags_chosen[currentRoute] &&
               tags_chosen[currentRoute].length > 0
@@ -904,7 +962,7 @@ const fetchData = async () => {
                 presetElement.trigger("click"); // 自動觸發click事件
                 // console.error(`已自動選中並點擊: ${preset.Name}`);
               } else {
-                console.error(`skip ${currentRoute}`);
+                // console.error(`skip ${currentRoute}`);
                 $(".c-" + currentRoute + ".skip").click();
                 // $("#container-" + currentRoute).hide();
               }
@@ -927,13 +985,28 @@ const fetchData = async () => {
                     TagGroup: all_Route[fs],
                   },
                 ];
+                // 修改符合條件的物件後更新 INFS_ROUTE_ORDER
+                var INFS_ROUTE_ORDER =
+                  JSON.parse(
+                    localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)
+                  ) || [];
+                INFS_ROUTE_ORDER.forEach((item, index) => {
+                  if (
+                    deepEqualWithoutKey(item, current_route_path, ["Record"])
+                  ) {
+                    INFS_ROUTE_ORDER[index] = {
+                      ...item,
+                      Record: tags_chosen, // 修改 Record
+                    };
+                  }
+                });
                 localStorage.setItem(
-                  `INFS_RECOMMENDED_ROUTE_${Brand}`,
-                  JSON.stringify(tags_chosen)
+                  `INFS_ROUTE_ORDER_${Brand}`,
+                  JSON.stringify(INFS_ROUTE_ORDER)
                 );
                 // console.error("error skip add", tags_chosen);
               }
-              console.log("skip", all_Route[fs]);
+              // console.log("skip", all_Route[fs]);
               if (fs == all_Route.length - 1) {
                 $("#container-" + currentRoute).hide();
                 if ($.isEmptyObject(tags_chosen)) {
@@ -941,7 +1014,7 @@ const fetchData = async () => {
                     .find(".image-container")
                     .first();
                   var tagid = firstEl.attr("class").match(/tagId-(\d+)/)[1];
-                  console.warn("tagid", tagid);
+                  // console.warn("tagid", tagid);
                   tags_chosen[all_Route[fs].replaceAll(" ", "")] = [
                     {
                       Description: "example",
@@ -954,7 +1027,7 @@ const fetchData = async () => {
                 }
                 get_recom_res();
               } else {
-                console.log(".c-" + all_Route[fs + 1].replaceAll(" ", ""));
+                // console.log(".c-" + all_Route[fs + 1].replaceAll(" ", ""));
                 $("#container-" + currentRoute).hide();
                 $("#container-" + all_Route[fs + 1].replaceAll(" ", "")).show();
               }
@@ -986,8 +1059,10 @@ const fetchData = async () => {
                     TagGroup: all_Route[fs],
                   },
                 ];
-
-                get_recom_res();
+                const hasRes = document.querySelector("#container-recom .update_delete") !== null;
+                if(!hasRes) {
+                  get_recom_res();
+                }
               } else {
                 $("#container-" + currentRoute).hide();
                 $("#container-" + all_Route[fs + 1].replaceAll(" ", "")).show();
@@ -1005,11 +1080,22 @@ const fetchData = async () => {
                   },
                 ];
               }
+              // 修改符合條件的物件後更新 INFS_ROUTE_ORDER
+              var INFS_ROUTE_ORDER =
+                JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) ||
+                [];
+              INFS_ROUTE_ORDER.forEach((item, index) => {
+                if (deepEqualWithoutKey(item, current_route_path, ["Record"])) {
+                  INFS_ROUTE_ORDER[index] = {
+                    ...item,
+                    Record: tags_chosen, // 修改 Record
+                  };
+                }
+              });
               localStorage.setItem(
-                `INFS_RECOMMENDED_ROUTE_${Brand}`,
-                JSON.stringify(tags_chosen)
+                `INFS_ROUTE_ORDER_${Brand}`,
+                JSON.stringify(INFS_ROUTE_ORDER)
               );
-              console.log(tags_chosen);
             });
           $(`#container-${all_Route[fs].replaceAll(" ", "")}-backarrow`).on(
             mytap,
@@ -1104,7 +1190,6 @@ if (tap === "click") {
 $("#start-button").on(tap, function () {
   $("#recommend-title").text("專屬商品推薦");
   $("#recommend-desc").text("根據您的偏好，精選以下單品。"); // 使用淡入動畫
-  console.log("all_Route", all_Route);
   // 隱藏介紹頁面，顯示第一個推薦內容頁面
   $("#intro-page").hide();
   $("#container-" + all_Route[0]).show();
@@ -1153,8 +1238,6 @@ $("#recommend-btn").on(tap, function () {
     "background",
     `rgba(255, 255, 255, 0.9) url('${backgroundImage}') no-repeat center center / contain`
   );
-
-  console.log("tags chosen:", tags_chosen);
 
   fetch(
     "https://ldiusfc4ib.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
@@ -1207,7 +1290,7 @@ window.addEventListener("message", async (event) => {
 
     ClothID = event.data.id;
     Brand = event.data.brand;
-    console.log("change clothID: brand:", ClothID, Brand);
+    // console.log("change clothID: brand:", ClothID, Brand);
 
     fetchData();
 
@@ -1219,5 +1302,5 @@ window.addEventListener("message", async (event) => {
     $("#containerback").show();
   } else {
   }
-  console.log("Message received from parent:", event.data);
+  // console.log("Message received from parent:", event.data);
 });
