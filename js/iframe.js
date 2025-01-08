@@ -991,7 +991,8 @@ const fetchData = async () => {
           $(".c-" + currentRoute + ".skip")
             .off(mytap)
             .on(mytap, function (e) {
-              if ($(this).text() == "略過") {
+              console.error('$(this) SKIP', $(this))
+              // if ($(this).text() == "略過") {
                 var tag = `c-${all_Route[fs]}`;
                 $(`.${tag}.tag-selected`).removeClass("tag-selected");
                 $(".tag-selected").removeClass("tag-selected");
@@ -1024,7 +1025,7 @@ const fetchData = async () => {
                   JSON.stringify(INFS_ROUTE_ORDER)
                 );
                 // console.error("error skip add", tags_chosen);
-              }
+              // }
               // console.log("skip", all_Route[fs]);
               if (fs == all_Route.length - 1) {
                 $("#container-" + currentRoute).hide();
