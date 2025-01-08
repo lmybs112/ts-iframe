@@ -9,6 +9,25 @@ let current_route_path;
 let current_Route;
 let all_Route;
 let isFirst = true;
+let throttleTimer = null;
+
+function throttle(fn, delay) {
+  let isFirstCall = true; // 用來判斷是否是第一次調用
+  return function (...args) {
+    if (isFirstCall) {
+      fn.apply(this, args); // 第一次調用立即執行
+      isFirstCall = false;
+      throttleTimer = setTimeout(() => {
+        throttleTimer = null; // 清除計時器
+      }, delay);
+    } else if (!throttleTimer) {
+      throttleTimer = setTimeout(() => {
+        fn.apply(this, args);
+        throttleTimer = null;
+      }, delay);
+    }
+  };
+}
 
 //finish Loading
 // $('#loadingbar').hide();
@@ -1059,9 +1078,13 @@ const fetchData = async () => {
                     TagGroup: all_Route[fs],
                   },
                 ];
-                const hasRes = document.querySelector("#container-recom .update_delete") !== null;
-                if(!hasRes) {
-                  get_recom_res();
+                const hasRes =
+                  document.querySelector("#container-recom .update_delete") !==
+                  null;
+                  const get_recom_res_throttled = throttle(get_recom_res, 3000);
+
+                if (!hasRes) {
+                  get_recom_res_throttled();
                 }
               } else {
                 $("#container-" + currentRoute).hide();
