@@ -197,10 +197,10 @@ const getEmbedded = () => {
           Imgsrc: jsonDataItem.image_link,
           Link: jsonDataItem.link,
           ItemName: jsonDataItem.title,
-          pdt_price_sale: parseInt(
+          sale_price: parseInt(
             String(jsonDataItem.sale_price || 0).replace(/\D/g, "")
           ).toLocaleString(),
-          pdt_price: parseInt(
+          price: parseInt(
             String(jsonDataItem.price || 0).replace(/\D/g, "")
           ).toLocaleString(),
           ...jsonDataItem,
@@ -279,8 +279,8 @@ const show_results = (response) => {
          <p class="recom-text item-title line-ellipsis-2" id="recom-${i}-text">${ItemName}</p>
            <div class="discount-content">
              <p class="item-price recom-price">${
-               response.Item[i].pdt_price_sale ||
-               response.Item[i].pdt_price ||
+               response.Item[i].sale_price ||
+               response.Item[i].price ||
                "-"
              }</p>
              </div>
