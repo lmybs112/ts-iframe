@@ -11,6 +11,7 @@ let all_Route;
 let isFirst = true;
 let throttleTimer = null;
 let isForPreview = window.location.href.includes("myinffits") || window.location.href.includes("localhost")
+console.error('isForPreview', isForPreview)
 
 function throttle(fn, delay) {
   let isFirstCall = true; // 用來判斷是否是第一次調用
