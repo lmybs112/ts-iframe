@@ -10,6 +10,7 @@ let current_Route;
 let all_Route;
 let isFirst = true;
 let throttleTimer = null;
+let isForPreview = window.location.href.includes("myinffits") || window.location.href.includes("localhost")
 
 function throttle(fn, delay) {
   let isFirstCall = true; // 用來判斷是否是第一次調用
@@ -76,14 +77,19 @@ $(document).ready(function () {
   // $("#intro-page").show();
 
   //finish Loading
-  // $("#loadingbar").hide();
-  // $("#pback").show();
-  // $("#containerback").show();
+  $("#loadingbar").hide();
+  $("#pback").show();
+  $("#containerback").show();
 
   // fetchData();
 });
 const get_recom_res = () => {
   $("#loadingbar_recom").show();
+  var resultActions = document.querySelector(".result-actions");
+  // 禁用該元素的點擊操作
+  if (resultActions) {
+    resultActions.style.pointerEvents = 'none';
+  }
   const formatTags = Object.fromEntries(
     Object.entries(tags_chosen)
       .map(([key, value]) => [
@@ -103,8 +109,8 @@ const get_recom_res = () => {
   };
 
   // console.log("tags chosen:", tags_chosen);
-  var INFS_ROUTE_ORDER =
-    JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [];
+  var INFS_ROUTE_ORDER = isForPreview ?
+    JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [] : [];
   INFS_ROUTE_ORDER.forEach((item, index) => {
     if (deepEqualWithoutKey(item, current_route_path, ["Record"])) {
       INFS_ROUTE_ORDER[index] = {
@@ -113,8 +119,8 @@ const get_recom_res = () => {
       };
     }
   });
-  var INFS_ROUTE_RES =
-    JSON.parse(localStorage.getItem(`INFS_ROUTE_RES_${Brand}`)) || [];
+  var INFS_ROUTE_RES = isForPreview ?
+    JSON.parse(localStorage.getItem(`INFS_ROUTE_RES_${Brand}`)) || [] : [];
 
   const matchIndex = INFS_ROUTE_ORDER.findIndex((item) =>
     deepEqualWithoutKey(item, current_route_path, ["Record"])
@@ -126,14 +132,17 @@ const get_recom_res = () => {
     INFS_ROUTE_RES.push(matchedItem); // 將物件推到 RES 陣列
 
     // 更新 localStorage
-    localStorage.setItem(
-      `INFS_ROUTE_ORDER_${Brand}`,
-      JSON.stringify(INFS_ROUTE_ORDER)
-    );
-    localStorage.setItem(
-      `INFS_ROUTE_RES_${Brand}`,
-      JSON.stringify(INFS_ROUTE_RES)
-    );
+    if (!isForPreview) {
+      localStorage.setItem(
+        `INFS_ROUTE_ORDER_${Brand}`,
+        JSON.stringify(INFS_ROUTE_ORDER)
+      );
+      localStorage.setItem(
+        `INFS_ROUTE_RES_${Brand}`,
+        JSON.stringify(INFS_ROUTE_RES)
+      );
+    }
+
   }
   // tags_chosen = {};
 
@@ -143,21 +152,23 @@ const get_recom_res = () => {
   )
     .then((response) => response.json())
     .then((response) => {
-      setTimeout(() => {
-        const messageData = {
-          type: "result",
-          value: true,
-        };
-        window.parent.postMessage(messageData, "*");
-        console.error("Message", response);
-        show_results(response);
-      }, 1500);
+      // setTimeout(() => {
+      const messageData = {
+        type: "result",
+        value: true,
+      };
+      window.parent.postMessage(messageData, "*");
+      console.error("Message", response);
+      show_results(response);
+      // }, 1500);
     })
     .catch((err) => {
       console.error("err", err);
     })
     .finally(() => {
-      $("#loadingbar_recom").fadeOut(3000);
+      setTimeout(() => {
+        $("#loadingbar_recom").fadeOut(500);
+      }, 2200)
     });
 };
 
@@ -267,22 +278,19 @@ const show_results = (response) => {
     }
     $(`#container-recom`).find(".axd_selections").append(`
       <div class="axd_selection cursor-pointer update_delete">
- <a href="${
-   response.Item[i].Link
- }" target="_blank" class="update_delete" style="text-decoration: none;">
+ <a href="${response.Item[i].Link
+      }" target="_blank" class="update_delete" style="text-decoration: none;">
     <div style="overflow: hidden;">
-         <img class="c-recom" id="container-recom-${i}" data-item="0"  src="./../../img/img-default-large.png" data-src=" ${
-      response.Item[i].Imgsrc
-    }" onerror="this.onerror=null;this.src='./../../img/img-default-large.png'"
+         <img class="c-recom" id="container-recom-${i}" data-item="0"  src="./../../img/img-default-large.png" data-src=" ${response.Item[i].Imgsrc
+      }" onerror="this.onerror=null;this.src='./../../img/img-default-large.png'"
          ></div>
          <div class="recom-info">
          <p class="recom-text item-title line-ellipsis-2" id="recom-${i}-text">${ItemName}</p>
            <div class="discount-content">
-             <p class="item-price recom-price">${
-               response.Item[i].sale_price ||
-               response.Item[i].price ||
-               "-"
-             }</p>
+             <p class="item-price recom-price">${response.Item[i].sale_price ||
+      response.Item[i].price ||
+      "-"
+      }</p>
              </div>
          </div>
  </a>
@@ -401,6 +409,15 @@ const show_results = (response) => {
   } else if (finalitemCount >= 4) {
     selectionContainer.classList.add("four-elements");
   }
+
+  var resultActions = document.querySelector(".result-actions");
+  // 禁用該元素的點擊操作
+  if (resultActions) {
+    setTimeout(() => {
+      resultActions.style.pointerEvents = 'auto';
+    }, 1500)
+  }
+
 };
 
 // 深度比較函數（排除指定屬性）
@@ -441,9 +458,9 @@ const fetchData = async () => {
     // 塞空值
     const response = await fetch(
       "https://xjsoc4o2ci.execute-api.ap-northeast-1.amazonaws.com/v0/extension/run_product?Brand=" +
-        Brand +
-        "&ClothID=" +
-        ClothID,
+      Brand +
+      "&ClothID=" +
+      ClothID,
       options
     );
     const data = await response.json();
@@ -452,10 +469,10 @@ const fetchData = async () => {
     current_Route = obj.Product.Routes[0]["Route"] || "";
     all_Route = obj.Product.Routes[0]["TagGroups_order"] || [];
     // 比較當前路線是否已存在
-    var INFS_ROUTE_ORDER =
-      JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [];
-    var INFS_ROUTE_RES =
-      JSON.parse(localStorage.getItem(`INFS_ROUTE_RES_${Brand}`)) || [];
+    var INFS_ROUTE_ORDER = isForPreview ?
+      JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [] : [];
+    var INFS_ROUTE_RES = isForPreview ?
+      JSON.parse(localStorage.getItem(`INFS_ROUTE_RES_${Brand}`)) || [] : [];
     // 當前路線
     current_route_path = {
       Route: current_Route,
@@ -479,10 +496,12 @@ const fetchData = async () => {
         tags_chosen = match.Record;
       } else {
         INFS_ROUTE_ORDER.push(current_route_path);
-        localStorage.setItem(
-          `INFS_ROUTE_ORDER_${Brand}`,
-          JSON.stringify(INFS_ROUTE_ORDER)
-        );
+        if (!isForPreview) {
+          localStorage.setItem(
+            `INFS_ROUTE_ORDER_${Brand}`,
+            JSON.stringify(INFS_ROUTE_ORDER)
+          );
+        }
       }
     }
 
@@ -514,37 +533,36 @@ const fetchData = async () => {
                     <div class="c_header" id="container-x-header" style="border-bottom: 4px solid #F5F5F4">
                         
                         <img class="type_backarrow" id="container-${r.replaceAll(
-                          " ",
-                          ""
-                        )}-backarrow" src="${iconNext}" width="100%"
+          " ",
+          ""
+        )}-backarrow" src="${iconNext}" width="100%"
                         height="100%" >
                         <div class="header-text">
                             <span style="margin-bottom: 0.3em">${r}</span>
-                            <p class="desc-container">${
-                              Route_in_frame[r].length > 0
-                                ? Route_in_frame[r][0].Description?.S
-                                : ""
-                            }</p>
+                            <p class="desc-container">${Route_in_frame[r].length > 0
+          ? Route_in_frame[r][0].Description?.S
+          : ""
+        }</p>
                         </div>
                         <img class='c-${r.replaceAll(
-                          " ",
-                          ""
-                        )} skip icon-next type_backarrow flipped-image' src="${iconNext}" width="100%"
+          " ",
+          ""
+        )} skip icon-next type_backarrow flipped-image' src="${iconNext}" width="100%"
                         height="100%" >
                     </div>
 
                         <div class="selection_scroll slide swiper-container-${r.replaceAll(
-                          " ",
-                          ""
-                        )}">
+          " ",
+          ""
+        )}">
                             <div class="swiper-wrapper" >
                             </div>         
                         </div>
                     
                          <div class="pagination-${r.replaceAll(
-                           " ",
-                           ""
-                         )} pag-margin dot-btns" style="text-align: center; ">
+          " ",
+          ""
+        )} pag-margin dot-btns" style="text-align: center; ">
                         </div>
                      <div class="con-footer">
                         <a class='c-${r.replaceAll(" ", "")} skip'>略過</a>
@@ -951,8 +969,8 @@ const fetchData = async () => {
           console.log(".c-" + currentRoute);
 
           // 檢查並設定預設值
-          var INFS_ROUTE_ORDER =
-            JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [];
+          var INFS_ROUTE_ORDER = isForPreview ?
+            JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [] : [];
           const match = INFS_ROUTE_ORDER.find((item) =>
             deepEqualWithoutKey(item, current_route_path, ["Record"])
           );
@@ -993,38 +1011,40 @@ const fetchData = async () => {
             .on(mytap, function (e) {
               console.error('$(this) SKIP', $(this))
               // if ($(this).text() == "略過") {
-                var tag = `c-${all_Route[fs]}`;
-                $(`.${tag}.tag-selected`).removeClass("tag-selected");
-                $(".tag-selected").removeClass("tag-selected");
-                tags_chosen[all_Route[fs].replaceAll(" ", "")] = [
-                  {
-                    Description: "example",
-                    Imgsrc: "https://example.com/imageB1.png",
-                    Name: "example",
-                    Tag: tag,
-                    TagGroup: all_Route[fs],
-                  },
-                ];
-                // 修改符合條件的物件後更新 INFS_ROUTE_ORDER
-                var INFS_ROUTE_ORDER =
-                  JSON.parse(
-                    localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)
-                  ) || [];
-                INFS_ROUTE_ORDER.forEach((item, index) => {
-                  if (
-                    deepEqualWithoutKey(item, current_route_path, ["Record"])
-                  ) {
-                    INFS_ROUTE_ORDER[index] = {
-                      ...item,
-                      Record: tags_chosen, // 修改 Record
-                    };
-                  }
-                });
+              var tag = `c-${all_Route[fs]}`;
+              $(`.${tag}.tag-selected`).removeClass("tag-selected");
+              $(".tag-selected").removeClass("tag-selected");
+              tags_chosen[all_Route[fs].replaceAll(" ", "")] = [
+                {
+                  Description: "example",
+                  Imgsrc: "https://example.com/imageB1.png",
+                  Name: "example",
+                  Tag: tag,
+                  TagGroup: all_Route[fs],
+                },
+              ];
+              // 修改符合條件的物件後更新 INFS_ROUTE_ORDER
+              var INFS_ROUTE_ORDER = isForPreview ?
+                JSON.parse(
+                  localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)
+                ) || [] : [];
+              INFS_ROUTE_ORDER.forEach((item, index) => {
+                if (
+                  deepEqualWithoutKey(item, current_route_path, ["Record"])
+                ) {
+                  INFS_ROUTE_ORDER[index] = {
+                    ...item,
+                    Record: tags_chosen, // 修改 Record
+                  };
+                }
+              });
+              if (!isForPreview) {
                 localStorage.setItem(
                   `INFS_ROUTE_ORDER_${Brand}`,
                   JSON.stringify(INFS_ROUTE_ORDER)
                 );
-                // console.error("error skip add", tags_chosen);
+              }
+              // console.error("error skip add", tags_chosen);
               // }
               // console.log("skip", all_Route[fs]);
               if (fs == all_Route.length - 1) {
@@ -1082,7 +1102,7 @@ const fetchData = async () => {
                 const hasRes =
                   document.querySelector("#container-recom .update_delete") !==
                   null;
-                  const get_recom_res_throttled = throttle(get_recom_res, 3000);
+                const get_recom_res_throttled = throttle(get_recom_res, 3000);
 
                 if (!hasRes) {
                   get_recom_res_throttled();
@@ -1116,10 +1136,12 @@ const fetchData = async () => {
                   };
                 }
               });
-              localStorage.setItem(
-                `INFS_ROUTE_ORDER_${Brand}`,
-                JSON.stringify(INFS_ROUTE_ORDER)
-              );
+              if (!isForPreview) {
+                localStorage.setItem(
+                  `INFS_ROUTE_ORDER_${Brand}`,
+                  JSON.stringify(INFS_ROUTE_ORDER)
+                );
+              }
             });
           $(`#container-${all_Route[fs].replaceAll(" ", "")}-backarrow`).on(
             mytap,
@@ -1175,6 +1197,7 @@ const fetchData = async () => {
   }
 };
 var tap = window.ontouchstart === null ? "touchend" : "click";
+
 $(".icon-inffits").on(tap, function () {
   $(".icon-inffits").toggleClass("open");
   $(".text-inffits").toggleClass("visible");
@@ -1198,6 +1221,16 @@ if (tap === "click") {
       $(".text-inffits").removeClass("visible");
     }
   );
+  $(".text-inffits").hover(
+    function () {
+      $(".icon-inffits").addClass("open");
+      $(".text-inffits").addClass("visible");
+    },
+    function () {
+      $(".icon-inffits").removeClass("open");
+      $(".text-inffits").removeClass("visible");
+    }
+  );
 
   $(".icon-reminder").hover(
     function () {
@@ -1209,6 +1242,7 @@ if (tap === "click") {
       $(".text-reminder").removeClass("visible");
     }
   );
+
 }
 
 $("#start-button").on(tap, function () {
@@ -1321,9 +1355,9 @@ window.addEventListener("message", async (event) => {
     $("#intro-page").fadeIn(800);
 
     //finish Loading
-    $("#loadingbar").hide();
-    $("#pback").show();
-    $("#containerback").show();
+    // $("#loadingbar").hide();
+    // $("#pback").show();
+    // $("#containerback").show();
   } else {
   }
   // console.log("Message received from parent:", event.data);

@@ -1,4 +1,60 @@
-@charset "UTF-8";
+class ShadowComponent extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
+
+    async connectedCallback() {
+        await this.render();
+        this._initialize();
+    }
+
+    _initialize() {
+        // 註冊 postMessage 訊息處理器
+        window.addEventListener("message", (event) => {
+            // 處理從 <iframe> 來的訊息
+            // console.log("接收到來自 iframe 的訊息：", event.data);
+            if (event.data.type === "result") {
+                const triggerButton = this.shadowRoot.querySelector(".ai-pd-container__trigger");
+                if (event.data.value) {
+                    triggerButton.classList.add("ai-pd-container__trigger--result");
+                } else {
+                    triggerButton.classList.remove("ai-pd-container__trigger--result");
+                }
+            }
+            if (event.data.type === "closeModal") {
+                if (event.data.value) {
+                    const triggerButton = this.shadowRoot.querySelector(".ai-pd-container__trigger");
+                    const inffitsCblocKoverlay = this.shadowRoot.querySelector("#inffits_cblock--pd--overlay");
+                    if (triggerButton && inffitsCblocKoverlay) {
+                        $(inffitsCblocKoverlay).fadeOut(); // 隱藏 overlay
+                        triggerButton.classList.toggle("ai-pd-container__trigger--search");
+                        triggerButton.classList.toggle("ai-pd-container__trigger--close");
+                    }
+                }
+            }
+        });
+    }
+
+    async render() {
+        const shadow = this.shadowRoot;
+
+        // 引入 Bootstrap CSS 和 jQuery，並附加至 shadow DOM
+        const bootstrapCSS = document.createElement('link');
+        bootstrapCSS.rel = 'stylesheet';
+        bootstrapCSS.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';
+
+        const jqScript = document.createElement('script');
+        jqScript.src = 'https://code.jquery.com/jquery-3.6.0.min.js';
+        jqScript.defer = true;
+
+        const bootstrapScript = document.createElement('script');
+        bootstrapScript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
+        bootstrapScript.defer = true;
+
+        const customIframeStyle = document.createElement('style');
+        customIframeStyle.textContent = `
+        @charset "UTF-8";
 /* figtree-latin-300-normal */
 @font-face {
   font-family: "Figtree";
@@ -134,7 +190,7 @@ body {
   position: relative;
 }
 @media screen and (min-width: 480px) {
-  .ai-pd-container #inffits_cblock {
+  .ai-pd-container #inffits_cblock--pd {
     margin: 0 !important;
     top: unset !important;
     right: unset !important;
@@ -190,7 +246,7 @@ body {
   display: none;
 }
 .ai-pd-container .ai-pd-container__trigger--result:not(.ai-pd-container__trigger--search) .ai-pd-container__icon {
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20fill%3D%22none%22%3E%3Cg%20clip-path%3D%22url(%23clip0_3305_2871)%22%3E%3Cpath%20d%3D%22M5.24895%2019.1485C7.59554%2025.3933%2014.5602%2028.5533%2020.8049%2026.2067C27.0496%2023.8602%2030.2097%2016.8955%2027.8631%2010.6508C25.5165%204.40604%2018.5519%201.24597%2012.3072%203.59256C6.06243%205.93914%202.90236%2012.9038%205.24895%2019.1485Z%22%20fill%3D%22url(%23paint0_linear_3305_2871)%22%2F%3E%3Cpath%20d%3D%22M16.956%2030.812C25.285%2030.812%2032.037%2024.06%2032.037%2015.731C32.037%207.40202%2025.285%200.650024%2016.956%200.650024C8.627%200.650024%201.875%207.40202%201.875%2015.731C1.875%2024.06%208.627%2030.812%2016.956%2030.812ZM27.787%2015.731C27.787%2021.7128%2022.9378%2026.562%2016.956%2026.562C10.9742%2026.562%206.125%2021.7128%206.125%2015.731C6.125%209.74923%2010.9742%204.90002%2016.956%204.90002C22.9378%204.90002%2027.787%209.74923%2027.787%2015.731Z%22%20fill%3D%22%231E1E19%22%20stroke%3D%22%231E1E19%22%20stroke-width%3D%220.25%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M24.0633%2025.2728C24.8444%2024.4917%2026.1107%2024.4917%2026.8918%2025.2728L33.511%2031.8921C34.2921%2032.6731%2034.2921%2033.9394%2033.511%2034.7205C32.73%2035.5015%2031.4636%2035.5015%2030.6826%2034.7205L24.0633%2028.1012C23.2823%2027.3202%2023.2823%2026.0538%2024.0633%2025.2728Z%22%20fill%3D%22%231E1E19%22%2F%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M21.3034%2016.6005H22.0534C22.0534%2014.9978%2023.3527%2013.6985%2024.9554%2013.6985V12.9485V12.1985C23.3527%2012.1985%2022.0534%2010.8992%2022.0534%209.29651H21.3034H20.5534C20.5534%2010.8992%2019.2541%2012.1985%2017.6514%2012.1985V12.9485V13.6985C19.2541%2013.6985%2020.5534%2014.9978%2020.5534%2016.6005H21.3034Z%22%20fill%3D%22%231E1E19%22%2F%3E%3Crect%20x%3D%2225.978%22%20y%3D%2231.7047%22%20width%3D%226.33129%22%20height%3D%2210.7663%22%20rx%3D%223%22%20transform%3D%22rotate(-45%2025.978%2031.7047)%22%20fill%3D%22%231E1E19%22%2F%3E%3C%2Fg%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22paint0_linear_3305_2871%22%20x1%3D%2212.3072%22%20y1%3D%223.59256%22%20x2%3D%2220.1721%22%20y2%3D%2224.5227%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20stop-color%3D%22%23F9FE9F%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23CBE2E2%22%2F%3E%3C%2FlinearGradient%3E%3CclipPath%20id%3D%22clip0_3305_2871%22%3E%3Crect%20width%3D%2240%22%20height%3D%2240%22%20fill%3D%22white%22%2F%3E%3C%2FclipPath%3E%3C%2Fdefs%3E%3C%2Fsvg%3E");
+   background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20fill%3D%22none%22%3E%3Cg%20clip-path%3D%22url(%23clip0_3305_2871)%22%3E%3Cpath%20d%3D%22M5.24895%2019.1485C7.59554%2025.3933%2014.5602%2028.5533%2020.8049%2026.2067C27.0496%2023.8602%2030.2097%2016.8955%2027.8631%2010.6508C25.5165%204.40604%2018.5519%201.24597%2012.3072%203.59256C6.06243%205.93914%202.90236%2012.9038%205.24895%2019.1485Z%22%20fill%3D%22url(%23paint0_linear_3305_2871)%22%2F%3E%3Cpath%20d%3D%22M16.956%2030.812C25.285%2030.812%2032.037%2024.06%2032.037%2015.731C32.037%207.40202%2025.285%200.650024%2016.956%200.650024C8.627%200.650024%201.875%207.40202%201.875%2015.731C1.875%2024.06%208.627%2030.812%2016.956%2030.812ZM27.787%2015.731C27.787%2021.7128%2022.9378%2026.562%2016.956%2026.562C10.9742%2026.562%206.125%2021.7128%206.125%2015.731C6.125%209.74923%2010.9742%204.90002%2016.956%204.90002C22.9378%204.90002%2027.787%209.74923%2027.787%2015.731Z%22%20fill%3D%22%231E1E19%22%20stroke%3D%22%231E1E19%22%20stroke-width%3D%220.25%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M24.0633%2025.2728C24.8444%2024.4917%2026.1107%2024.4917%2026.8918%2025.2728L33.511%2031.8921C34.2921%2032.6731%2034.2921%2033.9394%2033.511%2034.7205C32.73%2035.5015%2031.4636%2035.5015%2030.6826%2034.7205L24.0633%2028.1012C23.2823%2027.3202%2023.2823%2026.0538%2024.0633%2025.2728Z%22%20fill%3D%22%231E1E19%22%2F%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M21.3034%2016.6005H22.0534C22.0534%2014.9978%2023.3527%2013.6985%2024.9554%2013.6985V12.9485V12.1985C23.3527%2012.1985%2022.0534%2010.8992%2022.0534%209.29651H21.3034H20.5534C20.5534%2010.8992%2019.2541%2012.1985%2017.6514%2012.1985V12.9485V13.6985C19.2541%2013.6985%2020.5534%2014.9978%2020.5534%2016.6005H21.3034Z%22%20fill%3D%22%231E1E19%22%2F%3E%3Crect%20x%3D%2225.978%22%20y%3D%2231.7047%22%20width%3D%226.33129%22%20height%3D%2210.7663%22%20rx%3D%223%22%20transform%3D%22rotate(-45%2025.978%2031.7047)%22%20fill%3D%22%231E1E19%22%2F%3E%3C%2Fg%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22paint0_linear_3305_2871%22%20x1%3D%2212.3072%22%20y1%3D%223.59256%22%20x2%3D%2220.1721%22%20y2%3D%2224.5227%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20stop-color%3D%22%23F9FE9F%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23CBE2E2%22%2F%3E%3C%2FlinearGradient%3E%3CclipPath%20id%3D%22clip0_3305_2871%22%3E%3Crect%20width%3D%2240%22%20height%3D%2240%22%20fill%3D%22white%22%2F%3E%3C%2FclipPath%3E%3C%2Fdefs%3E%3C%2Fsvg%3E");
 }
 .ai-pd-container .ai-pd-container__trigger--result:not(.ai-pd-container__trigger--close) .ai-pd-container__icon {
   background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20fill%3D%22none%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M24.0633%2025.2728C24.8444%2024.4917%2026.1107%2024.4917%2026.8918%2025.2728L33.511%2031.8921C34.2921%2032.6731%2034.2921%2033.9394%2033.511%2034.7205C32.73%2035.5015%2031.4636%2035.5015%2030.6826%2034.7205L24.0633%2028.1012C23.2823%2027.3202%2023.2823%2026.0538%2024.0633%2025.2728Z%22%20fill%3D%22%231E1E19%22%2F%3E%3Crect%20x%3D%2225.978%22%20y%3D%2231.7047%22%20width%3D%226.33129%22%20height%3D%2210.7663%22%20rx%3D%223%22%20transform%3D%22rotate(-45%2025.978%2031.7047)%22%20fill%3D%22%231E1E19%22%2F%3E%3Cg%20filter%3D%22url(%23filter0_b_3305_3475)%22%3E%3Cellipse%20cx%3D%2216.9998%22%20cy%3D%2215.8828%22%20rx%3D%2213.3714%22%20ry%3D%2213.3714%22%20fill%3D%22%23FCFCF8%22%20fill-opacity%3D%220.3%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M16.956%2030.812C25.285%2030.812%2032.037%2024.06%2032.037%2015.731C32.037%207.40202%2025.285%200.650024%2016.956%200.650024C8.627%200.650024%201.875%207.40202%201.875%2015.731C1.875%2024.06%208.627%2030.812%2016.956%2030.812ZM27.787%2015.731C27.787%2021.7128%2022.9378%2026.562%2016.956%2026.562C10.9742%2026.562%206.125%2021.7128%206.125%2015.731C6.125%209.74923%2010.9742%204.90002%2016.956%204.90002C22.9378%204.90002%2027.787%209.74923%2027.787%2015.731Z%22%20fill%3D%22%233C3C39%22%20stroke%3D%22%233C3C39%22%20stroke-width%3D%220.25%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M21.3034%2016.6005H22.0534C22.0534%2014.9978%2023.3527%2013.6985%2024.9554%2013.6985V12.9485V12.1985C23.3527%2012.1985%2022.0534%2010.8992%2022.0534%209.29651H21.3034H20.5534C20.5534%2010.8992%2019.2541%2012.1985%2017.6514%2012.1985V12.9485V13.6985C19.2541%2013.6985%2020.5534%2014.9978%2020.5534%2016.6005H21.3034Z%22%20fill%3D%22%231E1E19%22%2F%3E%3Cdefs%3E%3Cfilter%20id%3D%22filter0_b_3305_3475%22%20x%3D%22-28.3716%22%20y%3D%22-29.4886%22%20width%3D%2290.7427%22%20height%3D%2290.7429%22%20filterUnits%3D%22userSpaceOnUse%22%20color-interpolation-filters%3D%22sRGB%22%3E%3CfeFlood%20flood-opacity%3D%220%22%20result%3D%22BackgroundImageFix%22%2F%3E%3CfeGaussianBlur%20in%3D%22BackgroundImageFix%22%20stdDeviation%3D%2216%22%2F%3E%3CfeComposite%20in2%3D%22SourceAlpha%22%20operator%3D%22in%22%20result%3D%22effect1_backgroundBlur_3305_3475%22%2F%3E%3CfeBlend%20mode%3D%22normal%22%20in%3D%22SourceGraphic%22%20in2%3D%22effect1_backgroundBlur_3305_3475%22%20result%3D%22shape%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3C%2Fsvg%3E");
@@ -1099,4 +1155,144 @@ a.update_delete .discount-content .item-price--original {
   to {
     opacity: 0;
   }
-}/*# sourceMappingURL=iframe_ai_pd_style.css.map */
+}`
+        // 自定义样式
+        const shadowStyle = document.createElement('style');
+        shadowStyle.textContent = `
+      /* Desktop */
+      @media screen and (min-width: 480px) {
+        #inffits_cblock--pd {
+          position: fixed;
+          right: 0;
+          bottom: 0;
+          height: 700px;
+          width: 480px !important;
+        }
+        #tryon--pd {
+          margin: auto;
+          height: 700px;
+          width: 480px !important;
+        }
+      }
+
+      /* Tablets */
+      @media screen and (min-width: 355px) and (max-width: 479px) {
+        #inffits_cblock--pd {
+          position: fixed;
+          right: 0;
+          bottom: 0;
+        }
+        #tryon--pd {
+          margin: auto;
+          width: 355px !important;
+        }
+      }
+    `;
+        shadow.appendChild(bootstrapCSS);
+        shadow.appendChild(jqScript);
+        shadow.appendChild(bootstrapScript);
+        shadow.appendChild(customIframeStyle);
+        shadow.appendChild(shadowStyle);
+
+        // 使用 MutationObserver 監視 shadow DOM 中的元素變化
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList') {
+                    // 確保按鈕元素已經渲染
+                    const triggerButton = this.shadowRoot.querySelector(".ai-pd-container__trigger");
+                    const inffitsCblocKoverlay = this.shadowRoot.querySelector("#inffits_cblock--pd--overlay");
+                    if (triggerButton && inffitsCblocKoverlay) {
+                        // 按鈕元素存在，執行事件綁定
+                        triggerButton.addEventListener("pointerdown", (e) => {
+                            if (triggerButton.classList.contains("ai-pd-container__trigger--search")) {
+                                $(inffitsCblocKoverlay).fadeIn(); // 顯示 overlay
+                            } else {
+                                $(inffitsCblocKoverlay).fadeOut(); // 隱藏 overlay
+
+                            }
+                            triggerButton.classList.toggle("ai-pd-container__trigger--search");
+                            triggerButton.classList.toggle("ai-pd-container__trigger--close");
+                        });
+                        // 按鈕元素存在，執行事件綁定
+                        inffitsCblocKoverlay.addEventListener("pointerdown", (e) => {
+                            $(inffitsCblocKoverlay).fadeOut(); // 隱藏 overlay
+
+                            triggerButton.classList.toggle("ai-pd-container__trigger--search");
+                            triggerButton.classList.toggle("ai-pd-container__trigger--close");
+                        });
+                    }
+                    observer.disconnect(); // 一旦事件綁定完成後，停止監視
+                }
+            });
+        });
+
+        // 配置 MutationObserver 來監視 childList 變化
+        observer.observe(shadow, { childList: true, subtree: true });
+    }
+
+    // Public method to initialize with custom parameters
+    init(brand, url) {
+        this.ExtensionsMkt(brand, url);
+    }
+
+    // Internal function to fetch and render the data
+    ExtensionsMkt(brand, url) {
+        const requestData = {
+            Brand: brand,
+            url: url || decodeURI(document.location.href.split('//')[1].toLowerCase())
+        };
+
+        const options = {
+            method: 'POST',
+            headers: { accept: 'application/json', 'content-type': 'application/json' },
+            body: JSON.stringify(requestData)
+        };
+
+        fetch('https://api.inffits.com/httpmpi/mkt_products_involve', options)
+            .then(response => response.json())
+            .then(res => {
+                if (res && res.length > 0) {
+                    const aiSearchPdTemplate = `
+                        <div class="ai-pd-container">
+                            <button class="ai-pd-container__trigger ai-pd-container__trigger--search" type="button">
+                                <div class="ai-pd-container__icon"></div>
+                                <img class="ai-pd-container__icon--alert" src="https://raw.githubusercontent.com/infFITSDevelopment/pop-ad/refs/heads/main/icon-alert.svg"></img>
+                            </button>
+                            <div id="inffits_cblock--pd--overlay" style=" display: none;position: fixed;width: 100%;height: 100%;top: 0px;left: 0px; z-index: 999;background: rgba(0, 0, 0, 0.5);transform: none;">
+                                <div id="inffits_cblock--pd" style="z-index: 60;display: block;position: absolute; inset: 0;">
+                                    <div id="tryon--pd" style="height: 100%;width:100%;display:flex;justify-content:center;align-items:center;">
+                                        <iframe id="inffits_tryon--pd_window" style="height: 100%;width: 100%;visibility: visible;position: relative;border: none;outline: none;z-index: 14;max-width: 95vw;margin: 0 auto;" src="${window.location.port === "5501" ? "./iframe_container_module.html" : "https://ts-iframe-8ysy.vercel.app/iframe_container_module.html"}"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    $(this.shadowRoot).append(aiSearchPdTemplate);
+
+
+
+                    // 獲取 iframe 的 contentWindow
+                    const iframeElement = this.shadowRoot.getElementById("inffits_tryon--pd_window");
+                    if (iframeElement) {
+                        const iframe_container = iframeElement.contentWindow;
+
+                        // 確保 iframe 加載完成再傳送 postMessage
+                        iframeElement.onload = () => {
+                            const iframe_preview_obj = {
+                                id: `${res[0].ClothID}` || `${brand}_All`,
+                                header: "from_preview",
+                                brand: `${brand}`,
+                            };
+                            // 傳送 postMessage 到 iframe
+                            iframe_container.postMessage(iframe_preview_obj, "*");
+                        };
+                    } else {
+                        console.error("iframe 元素未找到，無法傳送 postMessage");
+                    }
+                }
+            });
+    }
+}
+
+// Define the custom element
+customElements.define('shadow-component', ShadowComponent);

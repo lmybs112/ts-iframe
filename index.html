@@ -33,7 +33,7 @@
       customCSS.type = "text/css";
       // customCSS.href = "./../css/iframe_ai_pd_style.css";
       customCSS.href =
-        window.location.port === "5500"
+        window.location.port === "5501"
           ? "./../css/iframe_ai_pd_style.css"
           : "https://cdn.jsdelivr.net/gh/lmybs112/ts-iframe@1.0.20/css/iframe_ai_pd_style.css";
       document.head.appendChild(customCSS);
@@ -113,7 +113,7 @@
                 margin: 0 auto;
             "
             src="${
-              window.location.port === "5500"
+              window.location.port === "5501"
                 ? "./iframe_container_module.html"
                 : "https://ts-iframe-8ysy.vercel.app/iframe_container_module.html"
             }"
@@ -163,7 +163,7 @@
 
           // 確保 iframe 加載完成再傳送 postMessage
           iframeElement.onload = () => {
-            if (window.location.port === "5500") {
+            if (window.location.port === "5501") {
               const iframe_preview_obj = {
                 id: "INFS_All",
                 header: "from_preview",
