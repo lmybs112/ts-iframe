@@ -11,7 +11,7 @@ let all_Route;
 let isFirst = true;
 let throttleTimer = null;
 let isForPreview = window.location.href.includes("myinffits") || window.location.href.includes("localhost")
-console.error('isForPreview', isForPreview)
+console.error('!isForPreview', !isForPreview)
 
 function throttle(fn, delay) {
   let isFirstCall = true; // 用來判斷是否是第一次調用
@@ -110,7 +110,7 @@ const get_recom_res = () => {
   };
 
   // console.log("tags chosen:", tags_chosen);
-  var INFS_ROUTE_ORDER = isForPreview ?
+  var INFS_ROUTE_ORDER = !isForPreview ?
     JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [] : [];
   INFS_ROUTE_ORDER.forEach((item, index) => {
     if (deepEqualWithoutKey(item, current_route_path, ["Record"])) {
@@ -120,7 +120,7 @@ const get_recom_res = () => {
       };
     }
   });
-  var INFS_ROUTE_RES = isForPreview ?
+  var INFS_ROUTE_RES = !isForPreview ?
     JSON.parse(localStorage.getItem(`INFS_ROUTE_RES_${Brand}`)) || [] : [];
 
   const matchIndex = INFS_ROUTE_ORDER.findIndex((item) =>
@@ -470,9 +470,9 @@ const fetchData = async () => {
     current_Route = obj.Product.Routes[0]["Route"] || "";
     all_Route = obj.Product.Routes[0]["TagGroups_order"] || [];
     // 比較當前路線是否已存在
-    var INFS_ROUTE_ORDER = isForPreview ?
+    var INFS_ROUTE_ORDER = !isForPreview ?
       JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [] : [];
-    var INFS_ROUTE_RES = isForPreview ?
+    var INFS_ROUTE_RES = !isForPreview ?
       JSON.parse(localStorage.getItem(`INFS_ROUTE_RES_${Brand}`)) || [] : [];
     // 當前路線
     current_route_path = {
@@ -970,7 +970,7 @@ const fetchData = async () => {
           console.log(".c-" + currentRoute);
 
           // 檢查並設定預設值
-          var INFS_ROUTE_ORDER = isForPreview ?
+          var INFS_ROUTE_ORDER = !isForPreview ?
             JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [] : [];
           const match = INFS_ROUTE_ORDER.find((item) =>
             deepEqualWithoutKey(item, current_route_path, ["Record"])
@@ -1025,7 +1025,7 @@ const fetchData = async () => {
                 },
               ];
               // 修改符合條件的物件後更新 INFS_ROUTE_ORDER
-              var INFS_ROUTE_ORDER = isForPreview ?
+              var INFS_ROUTE_ORDER = !isForPreview ?
                 JSON.parse(
                   localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)
                 ) || [] : [];
