@@ -198,7 +198,7 @@ body {
   }
 }
 .ai-pd-container .ai-pd-container__trigger {
-  z-index: 9999;
+  z-index: 99999992;
   position: fixed;
   left: 12px;
   bottom: 12px;
@@ -1258,7 +1258,7 @@ a.update_delete .discount-content .item-price--original {
                                 <div class="ai-pd-container__icon"></div>
                                 <img class="ai-pd-container__icon--alert" src="https://raw.githubusercontent.com/infFITSDevelopment/pop-ad/refs/heads/main/icon-alert.svg"></img>
                             </button>
-                            <div id="inffits_cblock--pd--overlay" style=" display: none;position: fixed;width: 100%;height: 100%;top: 0px;left: 0px; z-index: 999;background: rgba(0, 0, 0, 0.5);transform: none;">
+                            <div id="inffits_cblock--pd--overlay" style=" display: none;position: fixed;width: 100%;height: 100%;top: 0px;left: 0px; z-index: 99999991;background: rgba(0, 0, 0, 0.5);transform: none;">
                                 <div id="inffits_cblock--pd" style="z-index: 60;display: block;position: absolute; inset: 0;">
                                     <div id="tryon--pd" style="height: 100%;width:100%;display:flex;justify-content:center;align-items:center;">
                                         <iframe id="inffits_tryon--pd_window" style="height: 100%;width: 100%;visibility: visible;position: relative;border: none;outline: none;z-index: 14;max-width: 95vw;margin: 0 auto;" src="${window.location.port === "5501" ? "./iframe_container_module.html" : "https://ts-iframe-8ysy.vercel.app/iframe_container_module.html"}"></iframe>
