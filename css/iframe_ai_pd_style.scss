@@ -1058,7 +1058,7 @@ body {
       line-height: 18px; /* 120% */
       letter-spacing: 0.6px;
       margin-bottom: 0 !important;
-      padding-bottom: 5px;
+      padding-bottom: 3px;
       @media screen and (min-width: 480px) {
         text-align: center;
         font-size: 18px;
@@ -1099,7 +1099,10 @@ body {
   }
 }
 #container-recom .c_header {
+  max-height: 65px;
+  @media screen and (min-width: 480px) {
   max-height: 93px;
+  }
 }
 .loading-text {
   color: #787974;
