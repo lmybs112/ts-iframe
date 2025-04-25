@@ -1,6 +1,8 @@
 var reset;
 var ClothID = "";
 var Brand = "";
+var SpecifyTags = [];
+var SpecifyKeywords = [];
 // var ClothID = "TDA_All";
 // var Brand = "TDA";
 var tags_chosen = {};
@@ -106,6 +108,8 @@ const get_recom_res = () => {
       Brand: Brand,
       Tags: tags_chosen,
       NUM: 12,
+      SpecifyTags: SpecifyTags,
+      SpecifyKeywords: SpecifyKeywords
     }),
   };
 
@@ -469,6 +473,8 @@ const fetchData = async () => {
     if (!obj.Product) return;
     current_Route = obj.Product.Routes[0]["Route"] || "";
     all_Route = obj.Product.Routes[0]["TagGroups_order"] || [];
+    SpecifyTags = obj.Product.Routes[0]["SpecifyTags"] || [];
+    SpecifyKeywords = obj.Product.Routes[0]["SpecifyKeywords"] || [];
     // 比較當前路線是否已存在
     var INFS_ROUTE_ORDER = !isForPreview ?
       JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [] : [];
@@ -1282,6 +1288,8 @@ $("#recommend-btn").on(tap, function () {
       Brand: Brand,
       Tags: tags_chosen,
       NUM: 12,
+      SpecifyTags: SpecifyTags,
+      SpecifyKeywords: SpecifyKeywords
     }),
   };
   const userAgent = navigator.userAgent.toLowerCase();
