@@ -1217,40 +1217,40 @@ $(".icon-reminder").on(tap, function () {
   $(".icon-inffits").removeClass("open");
   $(".text-inffits").removeClass("visible");
 });
-if (tap === "click") {
-  $(".icon-inffits").hover(
-    function () {
-      $(".icon-inffits").addClass("open");
-      $(".text-inffits").addClass("visible");
-    },
-    function () {
-      $(".icon-inffits").removeClass("open");
-      $(".text-inffits").removeClass("visible");
-    }
-  );
-  $(".text-inffits").hover(
-    function () {
-      $(".icon-inffits").addClass("open");
-      $(".text-inffits").addClass("visible");
-    },
-    function () {
-      $(".icon-inffits").removeClass("open");
-      $(".text-inffits").removeClass("visible");
-    }
-  );
+// if (tap === "click") {
+//   $(".icon-inffits").hover(
+//     function () {
+//       $(".icon-inffits").addClass("open");
+//       $(".text-inffits").addClass("visible");
+//     },
+//     function () {
+//       $(".icon-inffits").removeClass("open");
+//       $(".text-inffits").removeClass("visible");
+//     }
+//   );
+//   $(".text-inffits").hover(
+//     function () {
+//       $(".icon-inffits").addClass("open");
+//       $(".text-inffits").addClass("visible");
+//     },
+//     function () {
+//       $(".icon-inffits").removeClass("open");
+//       $(".text-inffits").removeClass("visible");
+//     }
+//   );
 
-  $(".icon-reminder").hover(
-    function () {
-      $(".icon-reminder").addClass("open");
-      $(".text-reminder").addClass("visible");
-    },
-    function () {
-      $(".icon-reminder").removeClass("open");
-      $(".text-reminder").removeClass("visible");
-    }
-  );
+//   $(".icon-reminder").hover(
+//     function () {
+//       $(".icon-reminder").addClass("open");
+//       $(".text-reminder").addClass("visible");
+//     },
+//     function () {
+//       $(".icon-reminder").removeClass("open");
+//       $(".text-reminder").removeClass("visible");
+//     }
+//   );
 
-}
+// }
 
 $("#start-button").on(tap, function () {
   $("#recommend-title").text("專屬商品推薦");
