@@ -1237,9 +1237,12 @@ a.update_delete .discount-content .item-price--original {
 
     // Internal function to fetch and render the data
     ExtensionsMkt(brand, url) {
+
+      const urlObj = new URL(document.location.href);
+      const baseUrl = urlObj.host + urlObj.pathname;
         const requestData = {
             Brand: brand,
-            url: url || decodeURI(document.location.href.split('//')[1].toLowerCase())
+            url: url || baseUrl.toLowerCase()
         };
 
         const options = {
