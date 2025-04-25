@@ -92,11 +92,11 @@ const get_recom_res = () => {
   if(isFetching) return;
   isFetching = true;
   $("#loadingbar_recom").show();
-  var resultActions = document.querySelector(".result-actions");
-  // 禁用該元素的點擊操作
-  if (resultActions) {
-    resultActions.style.pointerEvents = 'none';
-  }
+  // var resultActions = document.querySelector(".result-actions");
+  // // 禁用該元素的點擊操作
+  // if (resultActions) {
+  //   resultActions.style.pointerEvents = 'none';
+  // }
   const formatTags = Object.fromEntries(
     Object.entries(tags_chosen)
       .map(([key, value]) => [
@@ -484,13 +484,13 @@ const show_results = (response) => {
     selectionContainer.classList.add("four-elements");
   }
 
-  var resultActions = document.querySelector(".result-actions");
-  // 禁用該元素的點擊操作
-  if (resultActions) {
-    setTimeout(() => {
-      resultActions.style.pointerEvents = 'auto';
-    }, 1500)
-  }
+  // var resultActions = document.querySelector(".result-actions");
+  // // 禁用該元素的點擊操作
+  // if (resultActions) {
+  //   setTimeout(() => {
+  //     resultActions.style.pointerEvents = 'auto';
+  //   }, 1500)
+  // }
 
 };
 
