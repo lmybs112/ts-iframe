@@ -12,8 +12,8 @@ let current_Route;
 let all_Route;
 let isFirst = true;
 let throttleTimer = null;
-let isForPreview = window.location.href.includes("myinffits") || window.location.href.includes("localhost")
-console.error('isForPreview', isForPreview)
+let isForPreview = window.location.href.toLocaleLowerCase().includes("myinffits")
+// console.error('isForPreview------------', isForPreview)
 
 function throttle(fn, delay) {
   let isFirstCall = true; // 用來判斷是否是第一次調用
@@ -132,7 +132,7 @@ const get_recom_res = () => {
   );
 
   // 如果找到了，則將其移到 INFS_ROUTE_RES
-  if (matchIndex !== -1) {
+  if (matchIndex !== -1 & !isForPreview) {
     const matchedItem = INFS_ROUTE_ORDER.splice(matchIndex, 1)[0]; // 移除並取得物件
     INFS_ROUTE_RES.push(matchedItem); // 將物件推到 RES 陣列
 
@@ -147,7 +147,6 @@ const get_recom_res = () => {
         JSON.stringify(INFS_ROUTE_RES)
       );
     }
-
   }
   // tags_chosen = {};
 
@@ -193,7 +192,8 @@ const getEmbedded = () => {
     body: JSON.stringify(requestData),
   };
   fetch(
-    "https://gha6kqf5ff.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
+    "https://api.inffits.com/HTTP_inf_bhv_cdp_product_recommendation/extension/recom_product",
+    // "https://gha6kqf5ff.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
     options
   )
     .then((response) => response.json())
@@ -226,6 +226,70 @@ const getEmbedded = () => {
       const formatData = {
         Item: formatItems,
       };
+      $("#recommend-title").text("猜你可能喜歡");
+      $("#recommend-desc").text("目前無符合結果，推薦熱門商品給你。");
+      $("#recommend-btn").text("換批推薦");
+      show_results(formatData);
+    })
+    .catch((err) => {
+      console.error(err);
+      getEmbeddedForTest();
+    });
+};
+
+const getEmbeddedForTest = () => {
+  const requestData = {
+    Brand: "JERSCY",
+    LGVID: "",
+    MRID: "",
+    recom_num: "12",
+  };
+  const options = {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(requestData),
+  };
+  fetch(
+    "https://api.inffits.com/HTTP_inf_bhv_cdp_product_recommendation/extension/recom_product",
+    // "https://gha6kqf5ff.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
+    options
+  )
+    .then((response) => response.json())
+    .then((response) => {
+      let jsonData = response.map((item) => {
+        let newItem = Object.assign({}, item);
+        newItem.sale_price = item.sale_price
+          ? parseInt(item.sale_price.replace(/\D/g, "")).toLocaleString()
+          : "";
+        newItem.price = parseInt(
+          item.price.replace(/\D/g, "")
+        ).toLocaleString();
+        return newItem;
+      });
+      const formatItems = jsonData.map((jsonDataItem) => {
+        return {
+          Imgsrc: jsonDataItem.image_link,
+          Link: jsonDataItem.link,
+          ItemName: jsonDataItem.title,
+          sale_price: parseInt(
+            String(jsonDataItem.sale_price || 0).replace(/\D/g, "")
+          ).toLocaleString(),
+          price: parseInt(
+            String(jsonDataItem.price || 0).replace(/\D/g, "")
+          ).toLocaleString(),
+          ...jsonDataItem,
+        };
+      });
+
+      const formatData = {
+        Item: formatItems,
+      };
+      $("#recommend-title").text("猜你可能喜歡");
+      $("#recommend-desc").text("目前無符合結果，推薦熱門商品給你。");
+      $("#recommend-btn").text("換批推薦");
       show_results(formatData);
     })
     .catch((err) => {
@@ -488,7 +552,7 @@ const fetchData = async () => {
     };
     // 過濾相符的物件
     let match;
-    if (isFirst) {
+    if (isFirst && !isForPreview) {
       isFirst = false;
       match = INFS_ROUTE_RES.find((item) =>
         deepEqualWithoutKey(item, current_route_path, ["Record"])
@@ -981,12 +1045,13 @@ const fetchData = async () => {
           const match = INFS_ROUTE_ORDER.find((item) =>
             deepEqualWithoutKey(item, current_route_path, ["Record"])
           );
-          if (match) {
+          if (match && !isForPreview) {
             tags_chosen = match.Record;
           }
+          console.error('has record--------', isForPreview)
           // console.error(`BIND INFS_ROUTE_ORDER`, INFS_ROUTE_ORDER);
           // console.error(`BIND current_route_path`, current_route_path);
-          if (Object.keys(tags_chosen).length > 0) {
+          if (Object.keys(tags_chosen).length > 0 && !isForPreview) {
             if (
               tags_chosen[currentRoute] &&
               tags_chosen[currentRoute].length > 0
@@ -1205,6 +1270,7 @@ const fetchData = async () => {
 };
 var tap = window.ontouchstart === null ? "touchend" : "click";
 
+
 $(".icon-inffits").on(tap, function () {
   $(".icon-inffits").toggleClass("open");
   $(".text-inffits").toggleClass("visible");
@@ -1217,6 +1283,7 @@ $(".icon-reminder").on(tap, function () {
   $(".icon-inffits").removeClass("open");
   $(".text-inffits").removeClass("visible");
 });
+
 // if (tap === "click") {
 //   $(".icon-inffits").hover(
 //     function () {
@@ -1255,6 +1322,7 @@ $(".icon-reminder").on(tap, function () {
 $("#start-button").on(tap, function () {
   $("#recommend-title").text("專屬商品推薦");
   $("#recommend-desc").text("根據您的偏好，精選以下單品。"); // 使用淡入動畫
+  $("#recommend-btn").text("刷新推薦");
   // 隱藏介紹頁面，顯示第一個推薦內容頁面
   $("#intro-page").hide();
   $("#container-" + all_Route[0]).show();
