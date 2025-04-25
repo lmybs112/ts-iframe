@@ -713,8 +713,7 @@ body {
     margin-bottom: 26px;
   }
 }
-  .footer .result-actions #coupon-btn,
-  .footer .result-actions #recommend-btn {
+.footer .result-actions #recommend-btn {
   border-radius: 100px;
   color: #fcfcf8;
   text-align: center;
@@ -730,17 +729,10 @@ body {
   box-shadow: none;
   transition: all 300ms ease-out;
 }
-.footer .result-actions #coupon-btn{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.footer .result-actions #coupon-btn:hover,
 .footer .result-actions #recommend-btn:hover {
   background-color: #43adff;
 }
 @media screen and (min-width: 480px) {
-  .footer .result-actions #coupon-btn,
   .footer .result-actions #recommend-btn {
     height: 45px;
   }

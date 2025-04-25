@@ -80,9 +80,9 @@ $(document).ready(function () {
   // $("#intro-page").show();
 
   //finish Loading
-  $("#loadingbar").hide();
-  $("#pback").show();
-  $("#containerback").show();
+  // $("#loadingbar").hide();
+  // $("#pback").show();
+  // $("#containerback").show();
 
   // fetchData();
 });
@@ -538,6 +538,10 @@ const fetchData = async () => {
       options
     );
     const data = await response.json();
+    $("#loadingbar").hide();
+    $("#pback").show();
+    $("#containerback").show();
+    $("#intro_page").show();
     obj = data;
     if (!obj.Product) return;
     current_Route = obj.Product.Routes[0]["Route"] || "";
