@@ -86,7 +86,11 @@ $(document).ready(function () {
 
   // fetchData();
 });
+
+let isFetching = false; // 新增標誌
 const get_recom_res = () => {
+  if(isFetching) return;
+  isFetching = true;
   $("#loadingbar_recom").show();
   var resultActions = document.querySelector(".result-actions");
   // 禁用該元素的點擊操作
@@ -172,6 +176,7 @@ const get_recom_res = () => {
     .finally(() => {
       setTimeout(() => {
         $("#loadingbar_recom").fadeOut(500);
+          isFetching = false;
       }, 2200)
     });
 };
