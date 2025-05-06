@@ -12,7 +12,9 @@ let current_Route;
 let all_Route;
 let isFirst = true;
 let throttleTimer = null;
-let isForPreview = window.location.href.toLocaleLowerCase().includes("myinffits")
+let isForPreview = window.location.href
+  .toLocaleLowerCase()
+  .includes("myinffits");
 // console.error('isForPreview------------', isForPreview)
 
 function throttle(fn, delay) {
@@ -89,7 +91,7 @@ $(document).ready(function () {
 
 let isFetching = false; // 新增標誌
 const get_recom_res = () => {
-  if(isFetching) return;
+  if (isFetching) return;
   isFetching = true;
   $("#loadingbar_recom").show();
   // var resultActions = document.querySelector(".result-actions");
@@ -113,13 +115,14 @@ const get_recom_res = () => {
       Tags: tags_chosen,
       NUM: 12,
       SpecifyTags: SpecifyTags,
-      SpecifyKeywords: SpecifyKeywords
+      SpecifyKeywords: SpecifyKeywords,
     }),
   };
 
   // console.log("tags chosen:", tags_chosen);
-  var INFS_ROUTE_ORDER = !isForPreview ?
-    JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [] : [];
+  var INFS_ROUTE_ORDER = !isForPreview
+    ? JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || []
+    : [];
   INFS_ROUTE_ORDER.forEach((item, index) => {
     if (deepEqualWithoutKey(item, current_route_path, ["Record"])) {
       INFS_ROUTE_ORDER[index] = {
@@ -128,15 +131,16 @@ const get_recom_res = () => {
       };
     }
   });
-  var INFS_ROUTE_RES = !isForPreview ?
-    JSON.parse(localStorage.getItem(`INFS_ROUTE_RES_${Brand}`)) || [] : [];
+  var INFS_ROUTE_RES = !isForPreview
+    ? JSON.parse(localStorage.getItem(`INFS_ROUTE_RES_${Brand}`)) || []
+    : [];
 
   const matchIndex = INFS_ROUTE_ORDER.findIndex((item) =>
     deepEqualWithoutKey(item, current_route_path, ["Record"])
   );
 
   // 如果找到了，則將其移到 INFS_ROUTE_RES
-  if (matchIndex !== -1 & !isForPreview) {
+  if ((matchIndex !== -1) & !isForPreview) {
     const matchedItem = INFS_ROUTE_ORDER.splice(matchIndex, 1)[0]; // 移除並取得物件
     INFS_ROUTE_RES.push(matchedItem); // 將物件推到 RES 陣列
 
@@ -176,17 +180,18 @@ const get_recom_res = () => {
     .finally(() => {
       setTimeout(() => {
         $("#loadingbar_recom").fadeOut(500);
-          isFetching = false;
-      }, 2200)
+        isFetching = false;
+      }, 2200);
     });
 };
 
 const getEmbedded = () => {
   const requestData = {
     Brand: Brand,
-    LGVID: "",
+    LGVID: "SObQG1eZ0oxzKmpgT2dc",
     MRID: "",
     recom_num: "12",
+    PID: "627b5ab044a027000fde0add",
   };
   const options = {
     method: "POST",
@@ -198,19 +203,30 @@ const getEmbedded = () => {
   };
   fetch(
     "https://api.inffits.com/HTTP_inf_bhv_cdp_product_recommendation/extension/recom_product",
-    // "https://gha6kqf5ff.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
     options
   )
     .then((response) => response.json())
     .then((response) => {
-      let jsonData = response.map((item) => {
+      let jsonData = getRandomElements(response["bhv"], 6).map((item) => {
         let newItem = Object.assign({}, item);
         newItem.sale_price = item.sale_price
-          ? parseInt(item.sale_price.replace(/\D/g, "")).toLocaleString()
+          ? parseInt(item.sale_price.replace(/\D/g, "")).toLocaleString(
+              "en-US",
+              {
+                style: "currency",
+                currency: "TWD",
+                minimumFractionDigits: 0,
+              }
+            )
           : "";
-        newItem.price = parseInt(
-          item.price.replace(/\D/g, "")
-        ).toLocaleString();
+        newItem.price = parseInt(item.price.replace(/\D/g, "")).toLocaleString(
+          "en-US",
+          {
+            style: "currency",
+            currency: "TWD",
+            minimumFractionDigits: 0,
+          }
+        );
         return newItem;
       });
       const formatItems = jsonData.map((jsonDataItem) => {
@@ -218,15 +234,14 @@ const getEmbedded = () => {
           Imgsrc: jsonDataItem.image_link,
           Link: jsonDataItem.link,
           ItemName: jsonDataItem.title,
-          sale_price: parseInt(
-            String(jsonDataItem.sale_price || 0).replace(/\D/g, "")
-          ).toLocaleString(),
-          price: parseInt(
-            String(jsonDataItem.price || 0).replace(/\D/g, "")
-          ).toLocaleString(),
+          sale_price: jsonDataItem.sale_price,
+          price:  jsonDataItem.price,
           ...jsonDataItem,
         };
       });
+
+      console.error("jsonData", jsonData);
+      console.error("formatItems", formatItems);
 
       const formatData = {
         Item: formatItems,
@@ -242,12 +257,27 @@ const getEmbedded = () => {
     });
 };
 
+function getRandomElements(arr, count) {
+  const result = [];
+  const usedIndexes = new Set();
+
+  while (result.length < count) {
+    const randomIndex = Math.floor(Math.random() * arr.length);
+    if (!usedIndexes.has(randomIndex)) {
+      result.push(arr[randomIndex]);
+      usedIndexes.add(randomIndex);
+    }
+  }
+
+  return result;
+}
 const getEmbeddedForTest = () => {
   const requestData = {
     Brand: "JERSCY",
-    LGVID: "",
+    LGVID: "SObQG1eZ0oxzKmpgT2dc",
     MRID: "",
     recom_num: "12",
+    PID: "627b5ab044a027000fde0add",
   };
   const options = {
     method: "POST",
@@ -259,19 +289,30 @@ const getEmbeddedForTest = () => {
   };
   fetch(
     "https://api.inffits.com/HTTP_inf_bhv_cdp_product_recommendation/extension/recom_product",
-    // "https://gha6kqf5ff.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
     options
   )
     .then((response) => response.json())
     .then((response) => {
-      let jsonData = response.map((item) => {
+      let jsonData = getRandomElements(response["bhv"], 6).map((item) => {
         let newItem = Object.assign({}, item);
         newItem.sale_price = item.sale_price
-          ? parseInt(item.sale_price.replace(/\D/g, "")).toLocaleString()
+          ? parseInt(item.sale_price.replace(/\D/g, "")).toLocaleString(
+              "en-US",
+              {
+                style: "currency",
+                currency: "TWD",
+                minimumFractionDigits: 0,
+              }
+            )
           : "";
-        newItem.price = parseInt(
-          item.price.replace(/\D/g, "")
-        ).toLocaleString();
+        newItem.price = parseInt(item.price.replace(/\D/g, "")).toLocaleString(
+          "en-US",
+          {
+            style: "currency",
+            currency: "TWD",
+            minimumFractionDigits: 0,
+          }
+        );
         return newItem;
       });
       const formatItems = jsonData.map((jsonDataItem) => {
@@ -279,15 +320,14 @@ const getEmbeddedForTest = () => {
           Imgsrc: jsonDataItem.image_link,
           Link: jsonDataItem.link,
           ItemName: jsonDataItem.title,
-          sale_price: parseInt(
-            String(jsonDataItem.sale_price || 0).replace(/\D/g, "")
-          ).toLocaleString(),
-          price: parseInt(
-            String(jsonDataItem.price || 0).replace(/\D/g, "")
-          ).toLocaleString(),
+          sale_price: jsonDataItem.sale_price,
+          price:  jsonDataItem.price,
           ...jsonDataItem,
         };
       });
+
+      console.error("jsonData", jsonData);
+      console.error("formatItems", formatItems);
 
       const formatData = {
         Item: formatItems,
@@ -301,6 +341,68 @@ const getEmbeddedForTest = () => {
       console.error(err);
     });
 };
+
+
+// const getEmbeddedForTest = () => {
+//   const requestData = {
+//     Brand: "JERSCY",
+//     LGVID: "",
+//     MRID: "",
+//     recom_num: "12",
+//   };
+//   const options = {
+//     method: "POST",
+//     headers: {
+//       accept: "application/json",
+//       "content-type": "application/json",
+//     },
+//     body: JSON.stringify(requestData),
+//   };
+//   fetch(
+//     // "https://ldiusfc4ib.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
+//     "https://api.inffits.com/HTTP_inf_bhv_cdp_product_recommendation/extension/recom_product",
+//     // "https://gha6kqf5ff.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
+//     options
+//   )
+//     .then((response) => response.json())
+//     .then((response) => {
+//       let jsonData = response.map((item) => {
+//         let newItem = Object.assign({}, item);
+//         newItem.sale_price = item.sale_price
+//           ? parseInt(item.sale_price.replace(/\D/g, "")).toLocaleString()
+//           : "";
+//         newItem.price = parseInt(
+//           item.price.replace(/\D/g, "")
+//         ).toLocaleString();
+//         return newItem;
+//       });
+//       const formatItems = jsonData.map((jsonDataItem) => {
+//         return {
+//           Imgsrc: jsonDataItem.image_link,
+//           Link: jsonDataItem.link,
+//           ItemName: jsonDataItem.title,
+//           sale_price: parseInt(
+//             String(jsonDataItem.sale_price || 0).replace(/\D/g, "")
+//           ).toLocaleString(),
+//           price: parseInt(
+//             String(jsonDataItem.price || 0).replace(/\D/g, "")
+//           ).toLocaleString(),
+//           ...jsonDataItem,
+//         };
+//       });
+
+//       const formatData = {
+//         Item: formatItems,
+//       };
+//       $("#recommend-title").text("猜你可能喜歡");
+//       $("#recommend-desc").text("目前無符合結果，推薦熱門商品給你。");
+//       $("#recommend-btn").text("換批推薦");
+//       show_results(formatData);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//     });
+// };
 
 const show_results = (response) => {
   $("#container-recom").show();
@@ -352,19 +454,20 @@ const show_results = (response) => {
     }
     $(`#container-recom`).find(".axd_selections").append(`
       <div class="axd_selection cursor-pointer update_delete">
- <a href="${response.Item[i].Link
-      }" target="_blank" class="update_delete" style="text-decoration: none;">
+ <a href="${
+   response.Item[i].Link
+ }" target="_blank" class="update_delete" style="text-decoration: none;">
     <div style="overflow: hidden;">
-         <img class="c-recom" id="container-recom-${i}" data-item="0"  src="./../../img/img-default-large.png" data-src=" ${response.Item[i].Imgsrc
-      }" onerror="this.onerror=null;this.src='./../../img/img-default-large.png'"
+         <img class="c-recom" id="container-recom-${i}" data-item="0"  src="./../../img/img-default-large.png" data-src=" ${
+      response.Item[i].Imgsrc
+    }" onerror="this.onerror=null;this.src='./../../img/img-default-large.png'"
          ></div>
          <div class="recom-info">
          <p class="recom-text item-title line-ellipsis-2" id="recom-${i}-text">${ItemName}</p>
            <div class="discount-content">
-             <p class="item-price recom-price">${response.Item[i].sale_price ||
-      response.Item[i].price ||
-      "-"
-      }</p>
+             <p class="item-price recom-price">${
+               response.Item[i].sale_price || response.Item[i].price || "-"
+             }</p>
              </div>
          </div>
  </a>
@@ -491,7 +594,6 @@ const show_results = (response) => {
   //     resultActions.style.pointerEvents = 'auto';
   //   }, 1500)
   // }
-
 };
 
 // 深度比較函數（排除指定屬性）
@@ -532,9 +634,9 @@ const fetchData = async () => {
     // 塞空值
     const response = await fetch(
       "https://xjsoc4o2ci.execute-api.ap-northeast-1.amazonaws.com/v0/extension/run_product?Brand=" +
-      Brand +
-      "&ClothID=" +
-      ClothID,
+        Brand +
+        "&ClothID=" +
+        ClothID,
       options
     );
     const data = await response.json();
@@ -549,10 +651,12 @@ const fetchData = async () => {
     SpecifyTags = obj.Product.Routes[0]["SpecifyTags"] || [];
     SpecifyKeywords = obj.Product.Routes[0]["SpecifyKeywords"] || [];
     // 比較當前路線是否已存在
-    var INFS_ROUTE_ORDER = !isForPreview ?
-      JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [] : [];
-    var INFS_ROUTE_RES = !isForPreview ?
-      JSON.parse(localStorage.getItem(`INFS_ROUTE_RES_${Brand}`)) || [] : [];
+    var INFS_ROUTE_ORDER = !isForPreview
+      ? JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || []
+      : [];
+    var INFS_ROUTE_RES = !isForPreview
+      ? JSON.parse(localStorage.getItem(`INFS_ROUTE_RES_${Brand}`)) || []
+      : [];
     // 當前路線
     current_route_path = {
       Route: current_Route,
@@ -613,36 +717,37 @@ const fetchData = async () => {
                     <div class="c_header" id="container-x-header" style="border-bottom: 4px solid #F5F5F4">
                         
                         <img class="type_backarrow" id="container-${r.replaceAll(
-          " ",
-          ""
-        )}-backarrow" src="${iconNext}" width="100%"
+                          " ",
+                          ""
+                        )}-backarrow" src="${iconNext}" width="100%"
                         height="100%" >
                         <div class="header-text">
                             <span style="margin-bottom: 0.3em">${r}</span>
-                            <p class="desc-container">${Route_in_frame[r].length > 0
-          ? Route_in_frame[r][0].Description?.S
-          : ""
-        }</p>
+                            <p class="desc-container">${
+                              Route_in_frame[r].length > 0
+                                ? Route_in_frame[r][0].Description?.S
+                                : ""
+                            }</p>
                         </div>
                         <img class='c-${r.replaceAll(
-          " ",
-          ""
-        )} skip icon-next type_backarrow flipped-image' src="${iconNext}" width="100%"
+                          " ",
+                          ""
+                        )} skip icon-next type_backarrow flipped-image' src="${iconNext}" width="100%"
                         height="100%" >
                     </div>
 
                         <div class="selection_scroll slide swiper-container-${r.replaceAll(
-          " ",
-          ""
-        )}">
+                          " ",
+                          ""
+                        )}">
                             <div class="swiper-wrapper" >
                             </div>         
                         </div>
                     
                          <div class="pagination-${r.replaceAll(
-          " ",
-          ""
-        )} pag-margin dot-btns" style="text-align: center; ">
+                           " ",
+                           ""
+                         )} pag-margin dot-btns" style="text-align: center; ">
                         </div>
                      <div class="con-footer">
                         <a class='c-${r.replaceAll(" ", "")} skip'>略過</a>
@@ -1049,15 +1154,17 @@ const fetchData = async () => {
           console.log(".c-" + currentRoute);
 
           // 檢查並設定預設值
-          var INFS_ROUTE_ORDER = !isForPreview ?
-            JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || [] : [];
+          var INFS_ROUTE_ORDER = !isForPreview
+            ? JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) ||
+              []
+            : [];
           const match = INFS_ROUTE_ORDER.find((item) =>
             deepEqualWithoutKey(item, current_route_path, ["Record"])
           );
           if (match && !isForPreview) {
             tags_chosen = match.Record;
           }
-          console.error('has record--------', isForPreview)
+          console.error("has record--------", isForPreview);
           // console.error(`BIND INFS_ROUTE_ORDER`, INFS_ROUTE_ORDER);
           // console.error(`BIND current_route_path`, current_route_path);
           if (Object.keys(tags_chosen).length > 0 && !isForPreview) {
@@ -1090,7 +1197,7 @@ const fetchData = async () => {
           $(".c-" + currentRoute + ".skip")
             .off(mytap)
             .on(mytap, function (e) {
-              console.error('$(this) SKIP', $(this))
+              console.error("$(this) SKIP", $(this));
               // if ($(this).text() == "略過") {
               var tag = `c-${all_Route[fs]}`;
               $(`.${tag}.tag-selected`).removeClass("tag-selected");
@@ -1105,14 +1212,13 @@ const fetchData = async () => {
                 },
               ];
               // 修改符合條件的物件後更新 INFS_ROUTE_ORDER
-              var INFS_ROUTE_ORDER = !isForPreview ?
-                JSON.parse(
-                  localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)
-                ) || [] : [];
+              var INFS_ROUTE_ORDER = !isForPreview
+                ? JSON.parse(
+                    localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)
+                  ) || []
+                : [];
               INFS_ROUTE_ORDER.forEach((item, index) => {
-                if (
-                  deepEqualWithoutKey(item, current_route_path, ["Record"])
-                ) {
+                if (deepEqualWithoutKey(item, current_route_path, ["Record"])) {
                   INFS_ROUTE_ORDER[index] = {
                     ...item,
                     Record: tags_chosen, // 修改 Record
@@ -1279,7 +1385,6 @@ const fetchData = async () => {
 };
 var tap = window.ontouchstart === null ? "touchend" : "click";
 
-
 $(".icon-inffits").on(tap, function () {
   $(".icon-inffits").toggleClass("open");
   $(".text-inffits").toggleClass("visible");
@@ -1366,7 +1471,7 @@ $("#recommend-btn").on(tap, function () {
       Tags: tags_chosen,
       NUM: 12,
       SpecifyTags: SpecifyTags,
-      SpecifyKeywords: SpecifyKeywords
+      SpecifyKeywords: SpecifyKeywords,
     }),
   };
   const userAgent = navigator.userAgent.toLowerCase();
