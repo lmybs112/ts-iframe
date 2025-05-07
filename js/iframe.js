@@ -248,7 +248,7 @@ const getEmbedded = () => {
       };
       $("#recommend-title").text("猜你可能喜歡");
       $("#recommend-desc").text("目前無符合結果，推薦熱門商品給你。");
-      $("#recommend-btn").text("換批推薦");
+      $("#recommend-btn").text("刷新推薦");
       show_results(formatData);
     })
     .catch((err) => {
@@ -334,7 +334,7 @@ const getEmbeddedForTest = () => {
       };
       $("#recommend-title").text("猜你可能喜歡");
       $("#recommend-desc").text("目前無符合結果，推薦熱門商品給你。");
-      $("#recommend-btn").text("換批推薦");
+      $("#recommend-btn").text("刷新推薦");
       show_results(formatData);
     })
     .catch((err) => {
@@ -396,7 +396,7 @@ const getEmbeddedForTest = () => {
 //       };
 //       $("#recommend-title").text("猜你可能喜歡");
 //       $("#recommend-desc").text("目前無符合結果，推薦熱門商品給你。");
-//       $("#recommend-btn").text("換批推薦");
+//       $("#recommend-btn").text("刷新推薦");
 //       show_results(formatData);
 //     })
 //     .catch((err) => {
