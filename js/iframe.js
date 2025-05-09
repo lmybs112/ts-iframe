@@ -163,7 +163,7 @@ const get_recom_res = () => {
     options
   )
     .then((response) => response.json())
-    .then((response) => {
+    .then(async (response) => {
       // setTimeout(() => {
       const messageData = {
         type: "result",
@@ -171,7 +171,7 @@ const get_recom_res = () => {
       };
       window.parent.postMessage(messageData, "*");
       console.error("Message", response);
-      show_results(response);
+     await show_results(response);
       // }, 1500);
     })
     .catch((err) => {
@@ -179,7 +179,7 @@ const get_recom_res = () => {
     })
     .finally(() => {
       setTimeout(() => {
-        $("#loadingbar_recom").fadeOut(500);
+        // $("#loadingbar_recom").fadeOut(500);
         isFetching = false;
       }, 2200);
     });
@@ -336,6 +336,8 @@ const getEmbeddedForTest = () => {
       $("#recommend-desc").text("目前無符合結果，推薦熱門商品給你。");
       $("#recommend-btn").text("刷新推薦");
       show_results(formatData);
+      $("#container-recom").show();
+  
     })
     .catch((err) => {
       console.error(err);
@@ -405,7 +407,6 @@ const getEmbeddedForTest = () => {
 // };
 
 const show_results = (response) => {
-  $("#container-recom").show();
   //只出現其中三個}
   const itemCount = response?.Item?.length || 0;
   // 如果項目數量小於 3，只顯示所有可用的項目
@@ -439,6 +440,8 @@ const show_results = (response) => {
     //             </div>
     //              `);
     return;
+  }else{
+    $("#container-recom").show();
   }
   // const finalitem = getRandomNumbers(itemCount - 1, 3);
   const finalitem = getRandomNumbers(itemCount, displayCount);
