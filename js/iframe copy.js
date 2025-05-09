@@ -1,9 +1,9 @@
 var reset;
-var Route = "";
+var ClothID = "";
 var Brand = "";
 var SpecifyTags = [];
 var SpecifyKeywords = [];
-// var Route = "TDA_All";
+// var ClothID = "TDA_All";
 // var Brand = "TDA";
 var tags_chosen = {};
 let startX, endX;
@@ -633,10 +633,10 @@ const fetchData = async () => {
     var obj;
     // 塞空值
     const response = await fetch(
-      "https://xjsoc4o2ci.execute-api.ap-northeast-1.amazonaws.com/v0/extension/run_routeproduct?Brand=" +
+      "https://xjsoc4o2ci.execute-api.ap-northeast-1.amazonaws.com/v0/extension/run_product?Brand=" +
         Brand +
-        "&Route=" +
-        Route,
+        "&ClothID=" +
+        ClothID,
       options
     );
     const data = await response.json();
@@ -646,10 +646,10 @@ const fetchData = async () => {
     $("#intro_page").show();
     obj = data;
     if (!obj.Product) return;
-    current_Route = obj.Product["Route"] || "";
-    all_Route = obj.Product["TagGroups_order"] || [];
-    SpecifyTags = obj.Product["SpecifyTags"] || [];
-    SpecifyKeywords = obj.Product["SpecifyKeywords"] || [];
+    current_Route = obj.Product.Routes[0]["Route"] || "";
+    all_Route = obj.Product.Routes[0]["TagGroups_order"] || [];
+    SpecifyTags = obj.Product.Routes[0]["SpecifyTags"] || [];
+    SpecifyKeywords = obj.Product.Routes[0]["SpecifyKeywords"] || [];
     // 比較當前路線是否已存在
     var INFS_ROUTE_ORDER = !isForPreview
       ? JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || []
@@ -1352,7 +1352,7 @@ const fetchData = async () => {
 
               const message = {
                 header: "from_preview",
-                id: Route,
+                id: ClothID,
                 brand: Brand,
                 // id: "TDA_All",
                 // brand: "TDA"
@@ -1537,9 +1537,9 @@ window.addEventListener("message", async (event) => {
     // location.reload();
     await Initial();
 
-    Route = event.data.id;
+    ClothID = event.data.id;
     Brand = event.data.brand;
-    // console.log("change Route: brand:", Route, Brand);
+    // console.log("change clothID: brand:", ClothID, Brand);
 
     fetchData();
 
