@@ -1282,7 +1282,8 @@ a.update_delete .discount-content .item-price--original {
                         // 確保 iframe 加載完成再傳送 postMessage
                         iframeElement.onload = () => {
                             const iframe_preview_obj = {
-                                id: `${res[0].ClothID}` || `${brand}_All`,
+                                // id: `${res[0].ClothID}` || `${brand}_All`,
+                                id: `${res[0].Route}`,
                                 header: "from_preview",
                                 brand: `${brand}`,
                             };
