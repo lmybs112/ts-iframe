@@ -16,6 +16,7 @@ let isForPreview = window.location.href
   .toLocaleLowerCase()
   .includes("myinffits");
 // console.error('isForPreview------------', isForPreview)
+let firstResult = {};
 
 function throttle(fn, delay) {
   let isFirstCall = true; // 用來判斷是否是第一次調用
@@ -171,7 +172,8 @@ const get_recom_res = () => {
       };
       window.parent.postMessage(messageData, "*");
       console.error("Message", response);
-     await show_results(response);
+      firstResult = response;
+      await show_results(response, true);
       // }, 1500);
     })
     .catch((err) => {
@@ -185,7 +187,7 @@ const get_recom_res = () => {
     });
 };
 
-const getEmbedded = () => {
+const getEmbedded = async () => {
   const requestData = {
     Brand: Brand,
     LGVID: "SObQG1eZ0oxzKmpgT2dc",
@@ -201,60 +203,54 @@ const getEmbedded = () => {
     },
     body: JSON.stringify(requestData),
   };
-  fetch(
-    "https://api.inffits.com/HTTP_inf_bhv_cdp_product_recommendation/extension/recom_product",
-    options
-  )
-    .then((response) => response.json())
-    .then((response) => {
-      let jsonData = getRandomElements(response["bhv"], 6).map((item) => {
-        let newItem = Object.assign({}, item);
-        newItem.sale_price = item.sale_price
-          ? parseInt(item.sale_price.replace(/\D/g, "")).toLocaleString(
-              "en-US",
-              {
-                style: "currency",
-                currency: "TWD",
-                minimumFractionDigits: 0,
-              }
-            )
-          : "";
-        newItem.price = parseInt(item.price.replace(/\D/g, "")).toLocaleString(
-          "en-US",
-          {
+
+  try {
+    const response = await fetch(
+      "https://api.inffits.com/HTTP_inf_bhv_cdp_product_recommendation/extension/recom_product",
+      options
+    );
+    const data = await response.json();
+    let jsonData = getRandomElements(data["bhv"], 6).map((item) => {
+      let newItem = Object.assign({}, item);
+      newItem.sale_price = item.sale_price
+        ? parseInt(item.sale_price.replace(/\D/g, "")).toLocaleString("en-US", {
             style: "currency",
             currency: "TWD",
             minimumFractionDigits: 0,
-          }
-        );
-        return newItem;
+          })
+        : "";
+      newItem.price = parseInt(item.price.replace(/\D/g, "")).toLocaleString("en-US", {
+        style: "currency",
+        currency: "TWD",
+        minimumFractionDigits: 0,
       });
-      const formatItems = jsonData.map((jsonDataItem) => {
-        return {
-          Imgsrc: jsonDataItem.image_link,
-          Link: jsonDataItem.link,
-          ItemName: jsonDataItem.title,
-          sale_price: jsonDataItem.sale_price,
-          price:  jsonDataItem.price,
-          ...jsonDataItem,
-        };
-      });
-
-      console.error("jsonData", jsonData);
-      console.error("formatItems", formatItems);
-
-      const formatData = {
-        Item: formatItems,
-      };
-      $("#recommend-title").text("猜你可能喜歡");
-      $("#recommend-desc").text("目前無符合結果，推薦熱門商品給你。");
-      $("#recommend-btn").text("刷新推薦");
-      show_results(formatData);
-    })
-    .catch((err) => {
-      console.error(err);
-      getEmbeddedForTest();
+      return newItem;
     });
+
+    const formatItems = jsonData.map((jsonDataItem) => ({
+      Imgsrc: jsonDataItem.image_link,
+      Link: jsonDataItem.link,
+      ItemName: jsonDataItem.title,
+      sale_price: jsonDataItem.sale_price,
+      price: jsonDataItem.price,
+      ...jsonDataItem,
+    }));
+
+    console.error("jsonData", jsonData);
+    console.error("formatItems", formatItems);
+
+    const formatData = {
+      Item: formatItems,
+    };
+
+    $("#recommend-title").text("猜你可能喜歡");
+    $("#recommend-desc").text("目前無符合結果，推薦熱門商品給你。");
+    $("#recommend-btn").text("刷新推薦");
+    show_results(formatData);
+  } catch (err) {
+    console.error(err);
+    getEmbeddedForTest();
+  }
 };
 
 function getRandomElements(arr, count) {
@@ -321,7 +317,7 @@ const getEmbeddedForTest = () => {
           Link: jsonDataItem.link,
           ItemName: jsonDataItem.title,
           sale_price: jsonDataItem.sale_price,
-          price:  jsonDataItem.price,
+          price: jsonDataItem.price,
           ...jsonDataItem,
         };
       });
@@ -337,13 +333,11 @@ const getEmbeddedForTest = () => {
       $("#recommend-btn").text("刷新推薦");
       show_results(formatData);
       $("#container-recom").show();
-  
     })
     .catch((err) => {
       console.error(err);
     });
 };
-
 
 // const getEmbeddedForTest = () => {
 //   const requestData = {
@@ -406,7 +400,7 @@ const getEmbeddedForTest = () => {
 //     });
 // };
 
-const show_results = (response) => {
+const show_results = (response, isFirst = false) => {
   //只出現其中三個}
   const itemCount = response?.Item?.length || 0;
   // 如果項目數量小於 3，只顯示所有可用的項目
@@ -421,6 +415,19 @@ const show_results = (response) => {
   //   }
   //   return randomNumbers;
   // }
+
+function getTopCommonIndices() {
+  // 取得排序後的索引值陣列
+  const indices = firstResult.Item
+    .map((item, index) => ({ index, common: item.COMMON }))
+    .sort((a, b) => b.common - a.common)
+    .map(obj => obj.index);
+
+  // 取前最多 3 筆
+  return indices.slice(0, 3);
+}
+
+
   function getRandomNumbers(max, count) {
     let randomNumbers = [];
     while (randomNumbers.length < count) {
@@ -434,19 +441,14 @@ const show_results = (response) => {
 
   if (itemCount === 0 || !response) {
     getEmbedded();
-    // $(`#container-recom`).find(".axd_selections").html(`
-    //               <div class="update_delete" style="font-size:14px">
-    //             您選擇的商品沒有最合適建議 請您參考相關商品
-    //             </div>
-    //              `);
     return;
-  }else{
+  } else {
     $("#container-recom").show();
   }
   // const finalitem = getRandomNumbers(itemCount - 1, 3);
-  const finalitem = getRandomNumbers(itemCount, displayCount);
+  const finalitem =  isFirst ? getTopCommonIndices():getRandomNumbers(itemCount, displayCount);
+  console.error('finalitem', finalitem)
   const finalitemCount = 3;
-  //for(let i = 0 ; i < itemCount; i++){
   $(`#container-recom`).find(".axd_selections").html("");
 
   for (let ii in finalitem) {
@@ -476,51 +478,6 @@ const show_results = (response) => {
  </a>
   </div>
  `);
-    // $(`#container-recom`).find(".axd_selections").append(`
-    //          <div class="axd_selection cursor-pointer update_delete">
-    //     <a href="${
-    //       response.Item[i].Link
-    //     }" target="_blank" class="update_delete" style="text-decoration: none;">
-    //        <div style="overflow: hidden;">
-    //             <img class="c-recom" id="container-recom-${i}" data-item="0"  src="./../../img/img-default-large.png" data-src=" ${
-    //   response.Item[i].Imgsrc
-    // }" onerror="this.onerror=null;this.src='./../../img/img-default-large.png'"
-    //             ></div>
-    //             <div class="recom-info">
-    //             <p class="recom-text item-title line-ellipsis-2" id="recom-${i}-text">${ItemName}</p>
-    //            ${
-    //              response.Item[i].sale_price
-    //                ? `
-    //            <div class="discount-content">
-    //                 <p class="item-price recom-price">$
-
-    //                 ${parseInt(
-    //                   (typeof response.Item[i].price === "string"
-    //                     ? response.Item[i].price
-    //                     : String(response.Item[i].price) || "0"
-    //                   ).replace(/\D/g, "")
-    //                 ).toLocaleString()}</p>
-    //                 <p class="item-price--original" style="display:none">$${parseInt(
-    //                   response.Item[i].sale_price.replace(/\D/g, "")
-    //                 ).toLocaleString()}</p>
-    //                 </div>
-    //             `
-    //                : ` <p class="item-price--original recom-price">$${
-    //                    response.Item[i].price
-    //                      ? parseInt(
-    //                          (typeof response.Item[i].price === "string"
-    //                            ? response.Item[i].price
-    //                            : String(response.Item[i].price) || "0"
-    //                          ).replace(/\D/g, "")
-    //                        ).toLocaleString()
-    //                      : ""
-    //                  }</p>`
-    //            }
-    //             </div>
-    //     </a>
-    //      </div>
-    //     `);
-
     $(`#container-recom img.c-recom`).each(function () {
       var $img = $(this);
 
@@ -589,14 +546,6 @@ const show_results = (response) => {
   } else if (finalitemCount >= 4) {
     selectionContainer.classList.add("four-elements");
   }
-
-  // var resultActions = document.querySelector(".result-actions");
-  // // 禁用該元素的點擊操作
-  // if (resultActions) {
-  //   setTimeout(() => {
-  //     resultActions.style.pointerEvents = 'auto';
-  //   }, 1500)
-  // }
 };
 
 // 深度比較函數（排除指定屬性）
@@ -1445,8 +1394,10 @@ $("#start-button").on(tap, function () {
   $("#container-" + all_Route[0]).show();
 });
 
-$("#recommend-btn").on(tap, function () {
+$("#recommend-btn").on(tap, async function () {
   $("#loadingbar_recom").hide();
+
+  console.log("firstResult", firstResult);
   const $loadingOverlay = $('<div id="loading-overlay"></div>')
     .css({
       position: "absolute",
@@ -1460,29 +1411,8 @@ $("#recommend-btn").on(tap, function () {
     })
     .appendTo("#container-recom");
 
-  const formatTags = Object.fromEntries(
-    Object.entries(tags_chosen).map(([key, value]) => [
-      key,
-      value.filter((item) => item.Name !== "example"),
-    ])
-  );
-  let options = {
-    method: "POST",
-    headers: { accept: "application/json", "content-type": "application/json" },
-    body: JSON.stringify({
-      Brand: Brand,
-      Tags: tags_chosen,
-      NUM: 12,
-      SpecifyTags: SpecifyTags,
-      SpecifyKeywords: SpecifyKeywords,
-    }),
-  };
   const userAgent = navigator.userAgent.toLowerCase();
-  // const isMobile = /mobile|android|iphone|ipad|phone|tablet|ipod/.test(
-  //   userAgent
-  // ); // 手機版的條件，寬度小於等於 768px
   const isMobile = /mobile|android|iphone|ipod|phone/.test(userAgent);
-
   const backgroundImage = isMobile
     ? "./../img/recom-loading-mobile.gif" // 手機版背景
     : "./../img/recom-loading-desktop.gif"; // 桌面版背景
@@ -1491,32 +1421,105 @@ $("#recommend-btn").on(tap, function () {
     `rgba(255, 255, 255, 0.9) url('${backgroundImage}') no-repeat center center / contain`
   );
 
-  fetch(
-    "https://ldiusfc4ib.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
-    options
-  )
-    .then((response) => response.json())
-    .then((response) => {
-      const messageData = {
-        type: "result",
-        value: true,
-      };
-      window.parent.postMessage(messageData, "*");
-      show_results(response);
-      $("#recommend-title").text("精選推薦商品");
-      $("#recommend-desc").text("更多您可能喜愛的商品");
-    })
-    .catch((err) => {
-      console.error("err", err);
-    })
-    .finally(() => {
+  const messageData = {
+    type: "result",
+    value: true,
+  };
+  window.parent.postMessage(messageData, "*");
+  if (firstResult.Item.length <= 3) {
+    await getEmbedded().finally(()=>{
       setTimeout(() => {
         $loadingOverlay.fadeOut(300, function () {
           $(this).remove();
         });
       }, 1000);
-    });
+     });
+  } else {
+    show_results(firstResult);
+    $("#recommend-title").text("精選推薦商品");
+    $("#recommend-desc").text("更多您可能喜愛的商品");
+
+    setTimeout(() => {
+      $loadingOverlay.fadeOut(300, function () {
+        $(this).remove();
+      });
+    }, 1000);
+  }
 });
+
+// FIXME BK
+// $("#recommend-btn").on(tap, function () {
+//   $("#loadingbar_recom").hide();
+//   const $loadingOverlay = $('<div id="loading-overlay"></div>')
+//     .css({
+//       position: "absolute",
+//       top: 0,
+//       left: 0,
+//       width: "100%",
+//       height: "100%",
+//       background:
+//         "rgba(255, 255, 255, 0.9) url('./../img/recom-loading-desktop.gif') no-repeat center center / contain",
+//       zIndex: 9999,
+//     })
+//     .appendTo("#container-recom");
+
+//   const formatTags = Object.fromEntries(
+//     Object.entries(tags_chosen).map(([key, value]) => [
+//       key,
+//       value.filter((item) => item.Name !== "example"),
+//     ])
+//   );
+//   let options = {
+//     method: "POST",
+//     headers: { accept: "application/json", "content-type": "application/json" },
+//     body: JSON.stringify({
+//       Brand: Brand,
+//       Tags: tags_chosen,
+//       NUM: 12,
+//       SpecifyTags: SpecifyTags,
+//       SpecifyKeywords: SpecifyKeywords,
+//     }),
+//   };
+//   const userAgent = navigator.userAgent.toLowerCase();
+//   // const isMobile = /mobile|android|iphone|ipad|phone|tablet|ipod/.test(
+//   //   userAgent
+//   // ); // 手機版的條件，寬度小於等於 768px
+//   const isMobile = /mobile|android|iphone|ipod|phone/.test(userAgent);
+
+//   const backgroundImage = isMobile
+//     ? "./../img/recom-loading-mobile.gif" // 手機版背景
+//     : "./../img/recom-loading-desktop.gif"; // 桌面版背景
+//   $("#loading-overlay").css(
+//     "background",
+//     `rgba(255, 255, 255, 0.9) url('${backgroundImage}') no-repeat center center / contain`
+//   );
+
+//   fetch(
+//     "https://ldiusfc4ib.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
+//     options
+//   )
+//     .then((response) => response.json())
+//     .then((response) => {
+//       const messageData = {
+//         type: "result",
+//         value: true,
+//       };
+//       window.parent.postMessage(messageData, "*");
+//       show_results(response);
+//       $("#recommend-title").text("精選推薦商品");
+//       $("#recommend-desc").text("更多您可能喜愛的商品");
+//     })
+//     .catch((err) => {
+//       console.error("err", err);
+//     })
+//     .finally(() => {
+//       setTimeout(() => {
+//         $loadingOverlay.fadeOut(300, function () {
+//           $(this).remove();
+//         });
+//       }, 1000);
+//     });
+// });
 
 $("#startover").on(tap, function () {
   $("#loadingbar_recom").hide();
