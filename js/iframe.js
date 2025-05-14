@@ -12,6 +12,7 @@ let current_Route;
 let all_Route;
 let isFirst = true;
 let throttleTimer = null;
+let formatTagGroupMap = {};
 let isForPreview = window.location.href
   .toLocaleLowerCase()
   .includes("myinffits");
@@ -219,11 +220,14 @@ const getEmbedded = async () => {
             minimumFractionDigits: 0,
           })
         : "";
-      newItem.price = parseInt(item.price.replace(/\D/g, "")).toLocaleString("en-US", {
-        style: "currency",
-        currency: "TWD",
-        minimumFractionDigits: 0,
-      });
+      newItem.price = parseInt(item.price.replace(/\D/g, "")).toLocaleString(
+        "en-US",
+        {
+          style: "currency",
+          currency: "TWD",
+          minimumFractionDigits: 0,
+        }
+      );
       return newItem;
     });
 
@@ -416,17 +420,18 @@ const show_results = (response, isFirst = false) => {
   //   return randomNumbers;
   // }
 
-function getTopCommonIndices() {
-  // 取得排序後的索引值陣列
-  const indices = firstResult.Item
-    .map((item, index) => ({ index, common: item.COMMON }))
-    .sort((a, b) => b.common - a.common)
-    .map(obj => obj.index);
+  function getTopCommonIndices() {
+    // 取得排序後的索引值陣列
+    const indices = firstResult.Item.map((item, index) => ({
+      index,
+      common: item.COMMON,
+    }))
+      .sort((a, b) => b.common - a.common)
+      .map((obj) => obj.index);
 
-  // 取前最多 3 筆
-  return indices.slice(0, 3);
-}
-
+    // 取前最多 3 筆
+    return indices.slice(0, 3);
+  }
 
   function getRandomNumbers(max, count) {
     let randomNumbers = [];
@@ -446,8 +451,10 @@ function getTopCommonIndices() {
     $("#container-recom").show();
   }
   // const finalitem = getRandomNumbers(itemCount - 1, 3);
-  const finalitem =  isFirst ? getTopCommonIndices():getRandomNumbers(itemCount, displayCount);
-  console.error('finalitem', finalitem)
+  const finalitem = isFirst
+    ? getTopCommonIndices()
+    : getRandomNumbers(itemCount, displayCount);
+  console.error("finalitem", finalitem);
   const finalitemCount = 3;
   $(`#container-recom`).find(".axd_selections").html("");
 
@@ -602,6 +609,22 @@ const fetchData = async () => {
     all_Route = obj.Product["TagGroups_order"] || [];
     SpecifyTags = obj.Product["SpecifyTags"] || [];
     SpecifyKeywords = obj.Product["SpecifyKeywords"] || [];
+    const formatTagGroupMap = (() => {
+      const product = obj?.Product;
+      const order = Array.isArray(product?.TagGroups_order)
+        ? product.TagGroups_order
+        : [];
+      const descriptions = Array.isArray(product?.TagGroups_Description)
+        ? product.TagGroups_Description
+        : [];
+      return order.reduce((map, key, index) => {
+        if (descriptions[index] != null) {
+          // 排除 undefined 或 null
+          map[key] = descriptions[index];
+        }
+        return map;
+      }, {});
+    })();
     // 比較當前路線是否已存在
     var INFS_ROUTE_ORDER = !isForPreview
       ? JSON.parse(localStorage.getItem(`INFS_ROUTE_ORDER_${Brand}`)) || []
@@ -676,9 +699,11 @@ const fetchData = async () => {
                         <div class="header-text">
                             <span style="margin-bottom: 0.3em">${r}</span>
                             <p class="desc-container">${
+                              formatTagGroupMap?.[r] ??
+                              (Array.isArray(Route_in_frame?.[r]) &&
                               Route_in_frame[r].length > 0
-                                ? Route_in_frame[r][0].Description?.S
-                                : ""
+                                ? Route_in_frame[r][0]?.Description?.S ?? ""
+                                : "")
                             }</p>
                         </div>
                         <img class='c-${r.replaceAll(
@@ -1427,13 +1452,13 @@ $("#recommend-btn").on(tap, async function () {
   };
   window.parent.postMessage(messageData, "*");
   if (firstResult.Item.length <= 3) {
-    await getEmbedded().finally(()=>{
+    await getEmbedded().finally(() => {
       setTimeout(() => {
         $loadingOverlay.fadeOut(300, function () {
           $(this).remove();
         });
       }, 1000);
-     });
+    });
   } else {
     show_results(firstResult);
     $("#recommend-title").text("精選推薦商品");
