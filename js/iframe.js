@@ -16,6 +16,10 @@ let formatTagGroupMap = {};
 let isForPreview = window.location.href
   .toLocaleLowerCase()
   .includes("myinffits");
+
+let isForReferral = window.location.href
+  .toLocaleLowerCase()
+  .includes("referral");
 // console.error('isForPreview------------', isForPreview)
 let firstResult = {};
 
@@ -96,6 +100,14 @@ const get_recom_res = () => {
   if (isFetching) return;
   isFetching = true;
   $("#loadingbar_recom").show();
+  if (isForReferral) {
+    const messageData = {
+      type: "loadingBar",
+      value: true,
+    };
+    window.parent.postMessage(messageData, "*");
+  }
+
   // var resultActions = document.querySelector(".result-actions");
   // // 禁用該元素的點擊操作
   // if (resultActions) {
@@ -161,7 +173,8 @@ const get_recom_res = () => {
   // tags_chosen = {};
 
   fetch(
-    "https://ldiusfc4ib.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
+    "https://api.inffits.com/http_mkt_extensions_recom/recom_product",
+    // "https://ldiusfc4ib.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
     options
   )
     .then((response) => response.json())
@@ -181,6 +194,13 @@ const get_recom_res = () => {
       console.error("err", err);
     })
     .finally(() => {
+      if (isForReferral) {
+        const messageData = {
+          type: "loadingBar",
+          value: false,
+        };
+        window.parent.postMessage(messageData, "*");
+      }
       setTimeout(() => {
         // $("#loadingbar_recom").fadeOut(500);
         isFetching = false;
@@ -1138,13 +1158,20 @@ const fetchData = async () => {
           const match = INFS_ROUTE_ORDER.find((item) =>
             deepEqualWithoutKey(item, current_route_path, ["Record"])
           );
-          if (match && !isForPreview) {
+          const skipShowResult = isForPreview || isForReferral;
+          if (match && !skipShowResult) {
             tags_chosen = match.Record;
           }
-          console.error("has record--------", isForPreview);
+          if (skipShowResult) {
+            tags_chosen = {};
+          }
+          // console.error("has record--------", isForPreview);
           // console.error(`BIND INFS_ROUTE_ORDER`, INFS_ROUTE_ORDER);
           // console.error(`BIND current_route_path`, current_route_path);
-          if (Object.keys(tags_chosen).length > 0 && !isForPreview) {
+          if (
+            (Object.keys(tags_chosen).length > 0 && !isForPreview) ||
+            (Object.keys(tags_chosen).length > 0 && !isForReferral)
+          ) {
             if (
               tags_chosen[currentRoute] &&
               tags_chosen[currentRoute].length > 0
