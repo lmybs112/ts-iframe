@@ -214,7 +214,7 @@ const getEmbedded = async () => {
     LGVID: "SObQG1eZ0oxzKmpgT2dc",
     MRID: "",
     recom_num: "12",
-    PID: "627b5ab044a027000fde0add",
+    PID: "",
   };
   const options = {
     method: "POST",
@@ -297,7 +297,7 @@ const getEmbeddedForTest = () => {
     LGVID: "SObQG1eZ0oxzKmpgT2dc",
     MRID: "",
     recom_num: "12",
-    PID: "627b5ab044a027000fde0add",
+    PID: "",
   };
   const options = {
     method: "POST",
