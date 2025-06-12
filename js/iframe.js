@@ -313,7 +313,7 @@ const getEmbeddedForTest = () => {
   )
     .then((response) => response.json())
     .then((response) => {
-      let jsonData = getRandomElements(response["bhv"], 6).map((item) => {
+      let jsonData = getRandomElements(response["bhv"], response["bhv"].length < 6 ? response["bhv"].length : 6).map((item) => {
         let newItem = Object.assign({}, item);
         newItem.sale_price = item.sale_price
           ? parseInt(item.sale_price.replace(/\D/g, "")).toLocaleString(
