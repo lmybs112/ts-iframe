@@ -1078,12 +1078,16 @@ body {
       // line-height: 16px; /* 123.077% */
       // letter-spacing: 0.78px;
       color: #a3a39f;
-      text-align: center;
+      // text-align: center;
+      text-align: left;
+      padding: 0 4px;
       font-family: "Noto Sans TC", "Figtree", sans-serif;
       font-size: 14px;
       font-style: normal;
       font-weight: 400;
       line-height: 16px; /* 114.286% */
+      max-height: 32px;
+      overflow-y:scroll;
       letter-spacing: 0.84px;
       @media screen and (min-width: 480px) {
         // font-family: "Chocolate Classical Sans";
@@ -1093,6 +1097,7 @@ body {
         // letter-spacing: 0.75px;
         font-size: 16px;
         line-height: 18px; /* 112.5% */
+        max-height:36px;
         letter-spacing: 0.8px;
       }
     }
