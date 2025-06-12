@@ -937,6 +937,9 @@ body {
     letter-spacing: 0.8px;
   }
 }
+.c_header .header-text #recommend-desc {
+  text-align: center;
+}
 
 #container-recom .c_header {
   max-height: 65px;
