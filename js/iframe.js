@@ -357,6 +357,10 @@ const getEmbeddedForTest = () => {
       $("#recommend-btn").text("刷新推薦");
       show_results(formatData);
       $("#container-recom").show();
+      localStorage.setItem(
+        `INFS_ROUTE_RES_${Brand}`,
+        JSON.stringify([])
+      );
     })
     .catch((err) => {
       console.error(err);
@@ -466,6 +470,10 @@ const show_results = (response, isFirst = false) => {
 
   if (itemCount === 0 || !response) {
     getEmbedded();
+    localStorage.setItem(
+      `INFS_ROUTE_RES_${Brand}`,
+      JSON.stringify([])
+    );
     return;
   } else {
     $("#container-recom").show();
